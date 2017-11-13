@@ -1,99 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System.Linq;
-using UnityEngine.SceneManagement;
 
-public class WorldManager : GameManager
+public class WorldManager : MonoBehaviour
 {
-    public static WorldManager worldInstance;
+    /// <summary>
+    /// The static instance of the world manager. Allows other scripts to
+    /// reference it.
+    /// </summary>
+    public static WorldManager instance = null;
 
-    //private int mapNumberOfColumns;
-    //private int mapNumberOfRows;
+    /// <summary>The world of the current mission. Tied to a tilemap theme.</summary>
+    public int world = 1;
+
+    /// <summary>The level of the current mission in that world.</summary>
+    public int level = 1;
 
     private void Awake()
     {
-        worldInstance = this;
+        // Keep track of our singleton instance
+        if (instance == null)
+            instance = this;
+
+        // There can only be one world manager instance.
+        else if (instance != this)
+            Destroy(gameObject);
+
+        // Reloading scene will not trigger the world manager to be destroyed.
+        DontDestroyOnLoad(gameObject);
     }
-    /*
-    public override void loadWorldOne1()
-    {
-        // MAP
-        mapNumberOfColumns = 6;
-        mapNumberOfRows = 1;
-        map = new List<List<Tile>>();
-        for (int i = 0; i < mapNumberOfColumns; i++)
-        {
-            List<Tile> row = new List<Tile>();
-            //Debug.Log("Created: " + "row List");
-
-            // Number of Columns
-            for (int j = 0; j < mapNumberOfRows; j++)
-            {
-                Tile tile = ((GameObject)(Instantiate(TilePrefab, new Vector2(i - Mathf.Floor(mapNumberOfColumns / 2), -j + Mathf.Floor(mapNumberOfRows / 2)), Quaternion.Euler(new Vector3())))).GetComponent<Tile>();
-                tile.gridPosition = new Vector2(i, j);
-
-                // Add random impassible terrain
-                if (i != 0 && j != 0 && j != mapNumberOfRows - 1 && i != mapNumberOfColumns - 1)
-                {
-                    if (Random.Range(0, 5) > 3)
-                        tile.impassible = true;
-                }
-                //----------------------------
-
-                row.Add(tile);
-            }
-            map.Add(row);
-        }
-
-        // CHARACTERS
-        // Playable characters
-        UserPlayer player;
-
-        player = ((GameObject)(Instantiate(UserPlayerPrefab, new Vector2(0 - (mapNumberOfColumns / 2), -0 + (mapNumberOfRows / 2)), Quaternion.Euler(new Vector3())))).GetComponent<UserPlayer>();
-        player.gridPosition = new Vector2(0, 0);
-        map[(int)player.gridPosition.x][(int)player.gridPosition.y].occupiedAlly = true;
-        player.playerName = "Mang0";
-
-        players.Add(player);
-        playersGridPosition.Add(player.gridPosition);
-
-        // Bots
-        AIPlayer aiPlayer;
-
-        aiPlayer = ((GameObject)(Instantiate(AIPlayerPrefab, new Vector2((mapNumberOfColumns / 2) - 1, -(0f)), Quaternion.Euler(new Vector3())))).GetComponent<AIPlayer>();
-        aiPlayer.gridPosition = new Vector2(5, 0);
-        map[(int)aiPlayer.gridPosition.x][(int)aiPlayer.gridPosition.y].occupiedAI = true;
-        aiPlayer.playerName = "Bot";
-
-        aiPlayers.Add(aiPlayer);
-        aiPlayersGridPosition.Add(aiPlayer.gridPosition);
-    }
-    public override void loadWorldOne2()
-    {
-        mapNumberOfColumns = 6;
-        mapNumberOfRows = 2;
-        map = new List<List<Tile>>();
-        for (int i = 0; i < mapNumberOfColumns; i++)
-        {
-            List<Tile> row = new List<Tile>();
-            //Debug.Log("Created: " + "row List");
-
-            // Number of Columns
-            for (int j = 0; j < mapNumberOfRows; j++)
-            {
-                Tile tile = ((GameObject)(Instantiate(TilePrefab, new Vector2(i - Mathf.Floor(mapNumberOfColumns / 2), -j + Mathf.Floor(mapNumberOfRows / 2)), Quaternion.Euler(new Vector3())))).GetComponent<Tile>();
-                tile.gridPosition = new Vector2(i, j);
-
-                // Add impassible terrain
-                if(tile.gridPosition == new Vector2(3,1))
-                    tile.impassible = true;
-                //----------------------------
-
-                row.Add(tile);
-            }
-            map.Add(row);
-        }
-    }
-    */
 }
