@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 37ea5c850b3090a48bbe2b7364c949ec
+timeCreated: 1508021093
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - TilePrefab: {fileID: 1024509915131598, guid: 042008a83be7587438d206857f2483b1,
+      type: 2}
+  - UserPlayerPrefab: {fileID: 1342658569855126, guid: 4e22120b1d2b91343895218eee30ba08,
+      type: 2}
+  - ChargerPlayerPrefab: {fileID: 1210805214524062, guid: 01e6de92a29a70243934208ed4fb0d76,
+      type: 2}
+  - BasicAI: {fileID: 1749494865077870, guid: 8cd3124f06bc72741bb9eded4d14d030, type: 2}
+  - ShielderAI: {fileID: 1456095583164302, guid: 2a720e925b1195d46aebed18497755a6,
+      type: 2}
+  - DummyAI: {fileID: 1382232422915650, guid: 905cbf722ced6b849a86bd80f040fbf2, type: 2}
+  - MovementOptions: {fileID: 1375874788456960, guid: 8b4a57237af89114e9ebd40b4b7ab5a0,
+      type: 2}
+  - userPlayerCheck: {instanceID: 0}
+  - chargerPlayerCheck: {instanceID: 0}
+  - basicAICheck: {instanceID: 0}
+  - shielderAICheck: {instanceID: 0}
+  - dummyAICheck: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
