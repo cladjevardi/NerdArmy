@@ -2,12 +2,6 @@
 
 public class SoundManager : MonoBehaviour
 {
-    /// <summary>
-    /// The static instance of the sound manager. Allows other scripts to
-    /// reference and make calls for music and sound effects.
-    /// </summary>
-    public static SoundManager instance = null;
-
     /// <summary>The audio source reference which will play sound effects.</summary>
     public AudioSource soundEffectSource;
 
@@ -19,20 +13,6 @@ public class SoundManager : MonoBehaviour
 
     /// <summary>The highest a sound effect will be randomly pitched.</summary>
     public float highPitchRange = 1.05f;
-
-    void Awake()
-    {
-        // Keep track of our singleton instance
-        if (instance == null)
-            instance = this;
-
-        // There can only be one sound manager instance.
-        else if (instance != this)
-            Destroy(gameObject);
-
-        // Reloading scene will not trigger the sound manager to be destroyed.
-        DontDestroyOnLoad(gameObject);
-    }
 
     /// <summary>Play a single sound clip.</summary>
     /// <param name="clip">The sound effect clip to play.</param>

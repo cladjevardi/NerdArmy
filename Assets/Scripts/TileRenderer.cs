@@ -51,51 +51,24 @@ public class TileRenderer : MonoBehaviour
     /// <summary>The visual scale of the grid.</summary>
     private float scale = 2.5f;
 
-    /// <summary>The x coordinate of the tile.</summary>
-    private float x = 0;
-
-    /// <summary>The y coordinate of the tile.</summary>
-    private float y = 0;
-
+    /// <summary>The position of the tile.</summary>
+    private Vector2 position;
+    
     /// <summary>Tile materials at every layer.</summary>
     private Material[] materials = new Material[(int)TileLayer.LAYER_COUNT];
 
     /// <summary>Tile meshes at every layer.</summary>
     private GameObject[] gameObjects = new GameObject[(int)TileLayer.LAYER_COUNT];
 
-    /// <summary>Creates a layered TileRenderer to be used for a tilemap.</summary>
-    /// <param name="x">The x coordinate of the tile layer.</param>
-    /// <param name="y">The y coordinate of the tile layer.</param>
-    public TileRenderer(float x, float y)
-    {
-        // Create the game objects and assign a mesh filter and renderer.
-        for (int index = 0; index < (int)TileLayer.LAYER_COUNT; ++index)
-        {
-            materials[index] = null;
-            gameObjects[index] = new GameObject("GameObject_" + ((TileLayer)(index)).ToString());
-            gameObjects[index].transform.parent = transform;
-            MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-            MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
-        }
-
-        // Constructor sets up the meshes.
-        SetPosition(x, y);
-    }
-
     /// <summary>
     /// Reset the coordinate of the TileRenderer. This moves all layers to the
     /// new coordinate by destroying all meshes and regenerating them.
     /// </summary>
-    /// <param name="x">The new x coordinate.</param>
-    /// <param name="y">The new y coordinate.</param>
-    public void SetPosition(float x, float y)
+    /// <param name="position">The new position.</param>
+    public void SetPosition(Vector2 position)
     {
         // Store the values.
-        this.x = x;
-        this.y = y;
-
-        // Set the parent name to the coordinate.
-        name = "TILE_" + x.ToString() + "_" + y.ToString();
+        this.position = position;
 
         // Redraw all meshes in new coordinate.
         RegenerateMeshes();
@@ -118,10 +91,8 @@ public class TileRenderer : MonoBehaviour
         materials[(int)layer] = material;
 
         // Regenerate the mesh on that layer.
-        if (material = null)
-        {
+        if (material == null)
             GenerateMesh(layer);
-        }
 
         // Return the material we changed from.
         return oldMaterial;
@@ -164,12 +135,46 @@ public class TileRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// Destroy a mesh at specified layer.
+    /// </summary>
+    /// <param name="layer">The layer of the mesh to destroy.</param>
+    private void DestroyMesh(TileLayer layer)
+    {
+        // Destroy the mesh at that layer.
+        if (gameObjects[(int)layer] != null)
+        {
+            DestroyObject(gameObjects[(int)layer]);
+            gameObjects[(int)layer] = null;
+        }
+    }
+
+    /// <summary>
+    /// Allocate mesh at specified layer.
+    /// </summary>
+    /// <param name="layer">The layer of the mesh to create.</param>
+    private void AllocateMesh(TileLayer layer)
+    {
+        // Create a custom mesh at the specified layer.
+        if (gameObjects[(int)layer] == null)
+        {
+            gameObjects[(int)layer] = new GameObject("GameObject_" + layer.ToString());
+            gameObjects[(int)layer].transform.parent = transform;
+            gameObjects[(int)layer].AddComponent<MeshFilter>();
+            gameObjects[(int)layer].AddComponent<MeshRenderer>();
+        }
+    }
+
+    /// <summary>
     /// Generates the mesh for the current cooridnate and material. This
     /// function is safe to call again
     /// </summary>
     /// <param name="layer">The layer to generate the mesh on.</param>
     private void GenerateMesh(TileLayer layer)
     {
+        // TODO: Clean this up.
+        DestroyMesh(layer);
+        AllocateMesh(layer);
+
         // Add a mesh filter and mesh renderer.
         MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
         MeshRenderer renderer = gameObjects[(int)layer].GetComponent<MeshRenderer>();
@@ -184,7 +189,10 @@ public class TileRenderer : MonoBehaviour
         renderer.material.color = new Color(255, 255, 255,
             (layer == TileLayer.LAYER_HIGHLIGHTS) ? 100 : 255);
 
-        // Get the z order.
+        // Get positional information.
+        // Get the z order from the layer.
+        float x = position.x;
+        float y = position.y;
         float z = GetZOrder(layer);
 
         // Create the list of vertices.

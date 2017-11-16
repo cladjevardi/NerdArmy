@@ -5,16 +5,10 @@ using UnityEngine;
 public class GameLoader : MonoBehaviour
 {
     /// <summary>
-    /// The single instance of a game manager. This class is just there.
+    /// The single instance of a game manager. This class manages
+    /// gameplay.
     /// </summary>
     public GameObject gameManager;
-
-    /// <summary>
-    /// The singleton instance of a sound manager. This class manages
-    /// correcting repetitive sound effects and background music
-    /// outside the scope of each scene for continuous playback.
-    /// </summary>
-    public GameObject soundManager;
 
     /// <summary>
     /// Initialize our global statics to be referenced from other
@@ -23,9 +17,6 @@ public class GameLoader : MonoBehaviour
     void Start()
     {
         if (GameManager.instance == null)
-            Instantiate(gameManager);
-
-        if (SoundManager.instance == null)
-            Instantiate(soundManager);
+            Instantiate(gameManager, transform);
     }
 }

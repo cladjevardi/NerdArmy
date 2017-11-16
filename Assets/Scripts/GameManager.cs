@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,24 +9,70 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     /// <summary>
-    /// The class that manages which world we go to.
-    public GameObject worldManager;
+    /// The sound manager for the game. This class can be invoked through
+    /// GameManager.instance.soundManager.
+    /// </summary>
+    private GameObject _soundManager = null;
+    public GameObject soundManager
+    {
+        get { return _soundManager; }
+        internal set { _soundManager = value; }
+    }
 
+    /// <summary>
+    /// The world manager for the game. This class can be invoked through
+    /// GameManager.instance.worldManager.
+    /// </summary>
+    private GameObject _worldManager = null;
+    public GameObject worldManager
+    {
+        get { return _worldManager; }
+        internal set { _worldManager = value; }
+    }
+
+    /// <summary>
+    /// The material pallete off tiles to use for tile renderer.
+    /// </summary>
+    public Material[] tileMaterials;
+
+    /// <summary>
+    /// The material pallete of effects to use for tile renderer.
+    /// </summary>
+    public Material[] effectMaterials;
+
+    /// <summary>
+    /// The list of unit materials.
+    /// </summary>
+    public Material[] unitMaterials;
+
+    /// <summary>Setup our singleton instance.</summary>
     private void Awake()
     {
         // Keep track of our singleton instance
         if (instance == null)
             instance = this;
-
-        // There can only be one game manager instance.
         else if (instance != this)
             Destroy(gameObject);
 
-        // Create the global instance of the world manager.
-        if (WorldManager.instance == null)
-            Instantiate(worldManager);
-
         // Reloading scene will not trigger the game manager to be destroyed.
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        // Assign the GameManager as the parent.
+        if (soundManager == null)
+        {
+            soundManager = new GameObject("SoundManager");
+            soundManager.transform.parent = transform;
+            soundManager.AddComponent<SoundManager>();
+        }
+
+        if (worldManager == null)
+        {
+            worldManager = new GameObject("WorldManager");
+            worldManager.transform.parent = transform;
+            worldManager.AddComponent<WorldManager>();
+        }
     }
 }

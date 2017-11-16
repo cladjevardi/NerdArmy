@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 
-public class Tile
+public class Tile : MonoBehaviour
 {
     /// <summary>
-    /// Tile constructor. Tile must have a set of coordinates.
+    /// The renderer for the tile.
     /// </summary>
-    /// <param name="position">The grid position.</param>
-    public Tile(Vector2 position)
+    private GameObject _tileRenderer = null;
+    public GameObject tileRenderer
     {
-        _position = position;
+        get { return _tileRenderer; }
+        internal set { _tileRenderer = value; }
     }
 
     /// <summary>
@@ -18,23 +19,7 @@ public class Tile
     public Vector2 position
     {
         get { return _position; }
-        set
-        {
-            if (_renderer == null)
-                _renderer = new TileRenderer(_position.x, _position.y);
-            _renderer.SetPosition(_position.x, _position.y);
-            _position = value;
-        }
-    }
-
-    /// <summary>
-    /// The renderer for the tile.
-    /// </summary>
-    private TileRenderer _renderer = null;
-    public TileRenderer renderer
-    {
-        get { return _renderer; }
-        set { _renderer = value; }
+        set { _position = value; }
     }
 
     /// <summary>
@@ -75,5 +60,13 @@ public class Tile
     {
         get { return _occupiedFaction; }
         set { _occupiedFaction = value; }
+    }
+
+    /// <summary>Call at creation of object.</summary>
+    private void Awake()
+    {
+        _tileRenderer = new GameObject("TileRenderer");
+        _tileRenderer.transform.parent = transform;
+        _tileRenderer.AddComponent<TileRenderer>();
     }
 }

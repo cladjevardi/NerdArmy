@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class WorldManager : MonoBehaviour
 {
-    /// <summary>
-    /// The static instance of the world manager. Allows other scripts to
-    /// reference it.
-    /// </summary>
-    public static WorldManager instance = null;
-
     /// <summary>The world of the current mission. Tied to a tilemap theme.</summary>
     public int world = 0;
 
@@ -16,14 +10,17 @@ public class WorldManager : MonoBehaviour
     public int level = 0;
 
     /// <summary>The players current roster.</summary>
-    public List<Unit> roster = new List<Unit>();
+    private List<Unit> roster = new List<Unit>();
 
     /// <summary>The entire map and list of units and enemies.</summary>
-    public TileMap tileMap = new TileMap();
+    private GameObject tileMap = null;
 
     private void LoadLevel()
     {
-        tileMap.GenerateMap(roster, world, level);
+        Debug.Log("Loading level \"" + world + "-" + level + "\"");
+
+        // Tell TileMap to generate the level.
+        tileMap.GetComponent<TileMap>().GenerateMap(roster, world, level);
     }
 
     private void Start()
@@ -32,23 +29,18 @@ public class WorldManager : MonoBehaviour
         roster.Add(UnitFactory.Create(UnitType.MAINCHARACTER));
 
         // Start the game off at 1-1.
-        world = 1;
-        level = 1;
+        //world = 1;
+        //level = 1;
 
         // TODO: Display some sort of world selection.
+        LoadLevel();
     }
 
     private void Awake()
     {
-        // Keep track of our singleton instance
-        if (instance == null)
-            instance = this;
-
-        // There can only be one world manager instance.
-        else if (instance != this)
-            Destroy(gameObject);
-
-        // Reloading scene will not trigger the world manager to be destroyed.
-        DontDestroyOnLoad(gameObject);
+        // Create the TileMap object.
+        tileMap = new GameObject("TileMap");
+        tileMap.transform.parent = transform;
+        tileMap.AddComponent<TileMap>();
     }
 }
