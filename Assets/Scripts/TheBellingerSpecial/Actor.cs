@@ -7,7 +7,7 @@ using NerdArmy;
 /// The unity representation of a unit in combat or a mission. This information
 /// represents temporary status.
 /// </summary>
-public class Actor : MonoBehaviour
+public class Actor
 {
     /// <summary>
     /// The Unit information. Use UnitFactor.Create() a cutout UnitType.
@@ -40,7 +40,29 @@ public class Actor : MonoBehaviour
         set { _health = value; }
     }
 
-    // TODO: Grid positional information.
-    // TODO: Graphical representation in combats. You can use unit.type to get
-    // the UnitType of the unit for implementation details.
+    /// <summary>
+    /// Unit positional information.
+    /// </summary>
+    private Vector2 _position = Vector2.zero;
+    public Vector2 position
+    {
+        get { return _position; }
+        set
+        {
+            if (_renderer == null)
+                _renderer = new TileRenderer(_position.x, _position.y);
+            _renderer.SetPosition(_position.x, _position.y);
+            _position = value;
+        }
+    }
+
+    /// <summary>
+    /// The renderer for the tile.
+    /// </summary>
+    private TileRenderer _renderer = null;
+    public TileRenderer renderer
+    {
+        get { return _renderer; }
+        set { _renderer = value; }
+    }
 }
