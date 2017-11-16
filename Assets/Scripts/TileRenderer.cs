@@ -83,6 +83,10 @@ public class TileRenderer : MonoBehaviour
         // Store the material that was currently set.
         Material oldMaterial = materials[(int)layer];
 
+        // Ensure there is a game object at this layer.
+        if (gameObjects[(int)layer] == null)
+            AllocateMesh(layer);
+
         // Get the renderer component and assign the current material to the mesh.
         MeshRenderer renderer = gameObjects[(int)layer].GetComponent<MeshRenderer>();
         renderer.material = material;
@@ -171,10 +175,6 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The layer to generate the mesh on.</param>
     private void GenerateMesh(TileLayer layer)
     {
-        // TODO: Clean this up.
-        DestroyMesh(layer);
-        AllocateMesh(layer);
-
         // Add a mesh filter and mesh renderer.
         MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
         MeshRenderer renderer = gameObjects[(int)layer].GetComponent<MeshRenderer>();
