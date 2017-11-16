@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using NerdArmy;
+﻿using UnityEngine;
 
 /// <summary>
 /// The unity representation of a unit in combat or a mission. This information

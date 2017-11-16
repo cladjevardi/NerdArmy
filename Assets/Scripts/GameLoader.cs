@@ -4,30 +4,28 @@ using UnityEngine;
 
 public class GameLoader : MonoBehaviour
 {
-	/// <summary>
-	/// The single instance of a world manager. This class manages
-	/// the players roster that move from mission to mission.
-	/// </summary>
-	public GameObject worldManager;
+    /// <summary>
+    /// The single instance of a game manager. This class is just there.
+    /// </summary>
+    public GameObject gameManager;
 
-	/// <summary>
-	/// The singleton instance of a sound manager. This class manages
-	/// correcting repetitive sound effects and background music
-	/// outside the scope of each scene for continuous playback.
-	/// </summary>
-	public GameObject soundManager;
+    /// <summary>
+    /// The singleton instance of a sound manager. This class manages
+    /// correcting repetitive sound effects and background music
+    /// outside the scope of each scene for continuous playback.
+    /// </summary>
+    public GameObject soundManager;
 
-	void Start ()
-	{
-		if (GameManager.instance == null)
-			Instantiate(worldManager);
+    /// <summary>
+    /// Initialize our global statics to be referenced from other
+    /// scripts.
+    /// </summary>
+    void Start()
+    {
+        if (GameManager.instance == null)
+            Instantiate(gameManager);
 
-		if (SoundManager.instance == null)
-			Instantiate(soundManager);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        if (SoundManager.instance == null)
+            Instantiate(soundManager);
+    }
 }
