@@ -132,14 +132,17 @@ public class TileMap : MonoBehaviour
         foreach (Unit unit in roster)
         {
             // Create the new actor.
-            Actor actor = new Actor();
+            Vector2 position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex++];
+            string objectName = "Tile_" + position.x + "_" + position.y;
+            Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.unit = unit;
             actor.owner = Owner.PLAYER1; // Assign player to roster.
             actor.health = unit.baseMaxHealth;
             actor.position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex++];
-            //actor.tileRenderer.SetMaterial(
-            //    TileRenderer.TileLayer.LAYER_UNITS,
-            //    GetUnitMaterial(unit.type));
+            actor.tileRenderer.GetComponent<TileRenderer>().SetPosition(actor.position);
+            actor.tileRenderer.GetComponent<TileRenderer>().SetMaterial(
+                TileRenderer.TileLayer.LAYER_UNITS,
+                GetUnitMaterial(unit.type));
 
             // Add the actor to the mission.
             actors.Add(actor);
