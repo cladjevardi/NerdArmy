@@ -117,7 +117,7 @@ public class Tile : MonoBehaviour
             {
                 // Display a highlight effect over this tile.
                 tileRenderer.GetComponent<TileRenderer>()
-                    .SetEffectMaterial(TileRenderer.TileLayer.LAYER_ROOF, 0);
+                    .SetEffectMaterial(TileRenderer.TileLayer.LAYER_HIGHLIGHTS, 0);
             }
             _moveHighlight = value;
         }
