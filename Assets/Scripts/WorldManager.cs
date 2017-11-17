@@ -27,10 +27,11 @@ public class WorldManager : MonoBehaviour
     {
         // Give the player a main character to start the game.
         roster.Add(UnitFactory.Create(UnitType.MAINCHARACTER));
+        roster.Add(UnitFactory.Create(UnitType.CHARGER));
 
         // Start the game off at 1-1.
-        //world = 1;
-        //level = 1;
+        world = 1;
+        level = 1;
 
         // TODO: Display some sort of world selection.
         LoadLevel();

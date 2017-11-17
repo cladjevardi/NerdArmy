@@ -4,12 +4,6 @@ using System.Collections.Generic;
 
 public class TileMap : MonoBehaviour
 {
-    /// <summary>Map row count.</summary>
-    public int rows = 8;
-
-    /// <summary>Map column count.</summary>
-    public int columns = 8;
-
     /// <summary>In-memory data of each tile.</summary>
     [HideInInspector]
     public List<List<Tile>> tiles = new List<List<Tile>>();
@@ -31,17 +25,17 @@ public class TileMap : MonoBehaviour
     /// </summary>
     private Transform mapHolder;
 
-    private void InitializeMap(int rows, int column)
+    private void InitializeMap(int rows, int columns)
     {
         // Clear any previous map information.
         tiles.Clear();
 
         // Allocate the map
         tiles = new List<List<Tile>>();
-        for (int i = -4; i < columns - 4; i++)
+        for (int i = -3; i < columns - 3; i++)
         {
             List<Tile> row = new List<Tile>();
-            for (int j = -4; j < rows - 4; j++)
+            for (int j = -2; j < rows - 2; j++)
             {
                 Vector2 position = new Vector2(i, j);
                 Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
@@ -132,20 +126,25 @@ public class TileMap : MonoBehaviour
         foreach (Unit unit in roster)
         {
             // Create the new actor.
-            Vector2 position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex++];
-            string objectName = "Tile_" + position.x + "_" + position.y;
+            Vector2 position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex];
+            string objectName = "Actor_" + Owner.PLAYER1 + "_" 
+                + spawnIndex + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
+            actor.transform.parent = transform;
             actor.unit = unit;
             actor.owner = Owner.PLAYER1; // Assign player to roster.
             actor.health = unit.baseMaxHealth;
-            actor.position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex++];
-            actor.tileRenderer.GetComponent<TileRenderer>().SetPosition(actor.position);
+            actor.position = position;
+            actor.tileRenderer.GetComponent<TileRenderer>().SetPosition(position);
             actor.tileRenderer.GetComponent<TileRenderer>().SetMaterial(
                 TileRenderer.TileLayer.LAYER_UNITS,
                 GetUnitMaterial(unit.type));
 
             // Add the actor to the mission.
             actors.Add(actor);
+
+            // Increment the spawn location to prevent collision.
+            spawnIndex++;
         }
 
         // TODO: Based on mission add enemy actors
@@ -159,8 +158,8 @@ public class TileMap : MonoBehaviour
     public void GenerateMap(List<Unit> roster, int world, int level)
     {
         // TODO: Lookup the world and level get the dimensions we need to create.
-        int rows = 8;
-        int columns = 8;
+        int rows = 4;
+        int columns = 6;
 
         // Allocate the tile map.
         InitializeMap(rows, columns);

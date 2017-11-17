@@ -49,7 +49,7 @@ public class TileRenderer : MonoBehaviour
     }
 
     /// <summary>The visual scale of the grid.</summary>
-    private float scale = 1.5f;
+    private float scale = 2.5f;
 
     /// <summary>The position of the tile.</summary>
     private Vector2 position;
@@ -186,8 +186,8 @@ public class TileRenderer : MonoBehaviour
         renderer.material = materials[(int)layer];
 
         // Adjust the alpha for the highlight layer.
-        renderer.material.color = new Color(255, 255, 255,
-            (layer == TileLayer.LAYER_HIGHLIGHTS) ? 100 : 255);
+        if (layer == TileLayer.LAYER_HIGHLIGHTS)
+            renderer.material.color = new Color(255, 255, 255, 100);
 
         // Get positional information.
         // Get the z order from the layer.
