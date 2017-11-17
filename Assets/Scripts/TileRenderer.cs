@@ -95,7 +95,7 @@ public class TileRenderer : MonoBehaviour
         materials[(int)layer] = material;
 
         // Regenerate the mesh on that layer.
-        if (material == null)
+        if (material != null)
             GenerateMesh(layer);
 
         // Return the material we changed from.
