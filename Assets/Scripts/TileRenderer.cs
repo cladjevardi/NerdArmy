@@ -187,7 +187,7 @@ public class TileRenderer : MonoBehaviour
 
         // Adjust the alpha for the highlight layer.
         if (layer == TileLayer.LAYER_HIGHLIGHTS)
-            renderer.material.color = new Color(255, 255, 255, 100);
+            renderer.material.color = new Color(1f, 1f, 1f, 0.4f);
 
         // Get positional information.
         // Get the z order from the layer.
