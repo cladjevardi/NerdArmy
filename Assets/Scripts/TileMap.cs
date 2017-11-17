@@ -38,10 +38,10 @@ public class TileMap : MonoBehaviour
 
         // Allocate the map
         tiles = new List<List<Tile>>();
-        for (int i = 0; i < columns; i++)
+        for (int i = -4; i < columns - 4; i++)
         {
             List<Tile> row = new List<Tile>();
-            for (int j = 0; j < rows; j++)
+            for (int j = -4; j < rows - 4; j++)
             {
                 Vector2 position = new Vector2(i, j);
                 Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
