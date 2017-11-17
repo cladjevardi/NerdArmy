@@ -5,11 +5,44 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// The renderer for the tile.
     /// </summary>
-    private GameObject _tileRenderer = null;
-    public GameObject tileRenderer
+    private GameObject tileRenderer = null;
+
+    /// <summary>
+    /// Set the material of the the floor tile that renders below all other tiles.
+    /// </summary>
+    /// <param name="tileId">The GameManager tile identifier of the material.</param>
+    public void SetFloorMaterial(int tileId)
     {
-        get { return _tileRenderer; }
-        internal set { _tileRenderer = value; }
+        tileRenderer.GetComponent<TileRenderer>()
+            .SetTileMaterial(TileRenderer.TileLayer.LAYER_FLOOR, tileId);
+    }
+
+    /// <summary>
+    /// An object renders above floor tiles and has a transparency layer to
+    /// show the floor beneath it. This can be used for immoveable textures
+    /// that don't really fit the behaviour of an Actor.
+    /// </summary>
+    /// <param name="tileId">The GameManager tile identifier of the material.</param>
+    public void SetObjectMaterial(int tileId)
+    {
+        tileRenderer.GetComponent<TileRenderer>()
+            .SetTileMaterial(TileRenderer.TileLayer.LAYER_OBJECT, tileId);
+    }
+
+    /// <summary>
+    /// Set the material of a tile that renders above the unit layer. This can be
+    /// used for trees, roofs, or brush where you want to obscure presence. Flying
+    /// units are the only exception and render above the roof layer.
+    /// </summary>
+    /// <param name="tileId">The GameManager tile identifier of the material.</param>
+    public void SetRoofMaterial(int tileId)
+    {
+        // If the acting faction can see under this roof tile.
+        tileRenderer.GetComponent<TileRenderer>().SetColor(
+            TileRenderer.TileLayer.LAYER_ROOF,
+            new Color(1.0f, 1.0f, 1.0f, _canSeeUnder ? 0.2f : 1.0f));
+        tileRenderer.GetComponent<TileRenderer>()
+            .SetTileMaterial(TileRenderer.TileLayer.LAYER_ROOF, tileId);
     }
 
     /// <summary>
@@ -18,8 +51,8 @@ public class Tile : MonoBehaviour
     private Vector2 _position = Vector2.zero;
     public Vector2 position
     {
-        get { return _position; }
-        set { _position = value; }
+        get { return tileRenderer.GetComponent<TileRenderer>().GetPosition(); }
+        set { tileRenderer.GetComponent<TileRenderer>().SetPosition(value); }
     }
 
     /// <summary>
@@ -62,11 +95,39 @@ public class Tile : MonoBehaviour
         set { _occupiedFaction = value; }
     }
 
+    /// <summary>Whether a roof tile can be seen under.</summary>
+    private bool _canSeeUnder = false;
+    public bool canSeeUnder
+    {
+        get { return _canSeeUnder; }
+        set { _canSeeUnder = value; }
+    }
+
+    /// <summary>
+    /// Whether there is a movement highlight effect
+    /// being displayed on this tile.
+    /// </summary>
+    private bool _moveHighlight = false;
+    public bool moveHighlight
+    {
+        get { return _moveHighlight; }
+        set
+        {
+            if (value)
+            {
+                // Display a highlight effect over this tile.
+                tileRenderer.GetComponent<TileRenderer>()
+                    .SetEffectMaterial(TileRenderer.TileLayer.LAYER_ROOF, 0);
+            }
+            _moveHighlight = value;
+        }
+    }
+
     /// <summary>Call at creation of object.</summary>
     private void Awake()
     {
-        _tileRenderer = new GameObject("TileRenderer");
-        _tileRenderer.transform.parent = transform;
-        _tileRenderer.AddComponent<TileRenderer>();
+        tileRenderer = new GameObject("TileRenderer");
+        tileRenderer.transform.parent = transform;
+        tileRenderer.AddComponent<TileRenderer>();
     }
 }

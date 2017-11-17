@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Represents ownership of a given unit. Players can be assigned as AI or
@@ -256,6 +257,9 @@ public interface Unit
     /// <summary>The base armor of the unit when dealt damage.</summary>
     int baseArmor { get; }
 
+    /// <summary>Whether the unit flies.</summary>
+    bool flying { get; }
+
     /// <summary>The list of abilities the unit has available.</summary>
     List<AbiliyType> abilities { get; }
 
@@ -330,6 +334,11 @@ public class MainCharacter : Unit
     public int baseArmor
     {
         get { return 0; }
+    }
+
+    public bool flying
+    {
+        get { return false; }
     }
 
     public List<AbiliyType> abilities
@@ -441,6 +450,11 @@ public class Charger : Unit
         get { return 0; }
     }
 
+    public bool flying
+    {
+        get { return false; }
+    }
+
     public List<AbiliyType> abilities
     {
         get
@@ -545,6 +559,11 @@ public class Magician : Unit
     public int baseArmor
     {
         get { return 0; }
+    }
+
+    public bool flying
+    {
+        get { return false; }
     }
 
     public List<AbiliyType> abilities
@@ -654,6 +673,11 @@ public class Elementalist : Unit
         get { return 0; }
     }
 
+    public bool flying
+    {
+        get { return false; }
+    }
+
     public List<AbiliyType> abilities
     {
         get
@@ -760,6 +784,11 @@ public class Bomber : Unit
         get { return 0; }
     }
 
+    public bool flying
+    {
+        get { return false; }
+    }
+
     public List<AbiliyType> abilities
     {
         get
@@ -823,6 +852,7 @@ public class Gumball : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -879,6 +909,7 @@ public class Eagle : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return true; } }
     public List<AbiliyType> abilities
     {
         get
@@ -935,6 +966,7 @@ public class RunningMan : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 4; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -991,6 +1023,7 @@ public class RedArcher : Unit
     public int baseMaxRange { get { return 3; } }
     public int baseMovement { get { return 1; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1047,6 +1080,7 @@ public class BlackArcher : Unit
     public int baseMaxRange { get { return 2; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1103,6 +1137,7 @@ public class Backpack : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1159,6 +1194,7 @@ public class Shield : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 1; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1215,6 +1251,7 @@ public class Ditto : Unit
     public int baseMaxRange { get { return 2; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1271,6 +1308,7 @@ public class Lightbulb : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get
@@ -1327,6 +1365,7 @@ public class Hedgehog : Unit
     public int baseMaxRange { get { return 1; } }
     public int baseMovement { get { return 2; } }
     public int baseArmor { get { return 0; } }
+    public bool flying { get { return false; } }
     public List<AbiliyType> abilities
     {
         get

@@ -49,16 +49,22 @@ public class TileRenderer : MonoBehaviour
     }
 
     /// <summary>The visual scale of the grid.</summary>
-    private float scale = 2.5f;
+    private float gridScale = 2.5f;
 
     /// <summary>The position of the tile.</summary>
     private Vector2 position;
     
     /// <summary>Tile materials at every layer.</summary>
-    private Material[] materials = new Material[(int)TileLayer.LAYER_COUNT];
+    private MaterialId[] materials = new MaterialId[(int)TileLayer.LAYER_COUNT];
 
     /// <summary>Tile meshes at every layer.</summary>
     private GameObject[] gameObjects = new GameObject[(int)TileLayer.LAYER_COUNT];
+
+    /// <summary>
+    /// The color to apply over the material. This can be used for
+    /// alpha highlights. Or highlighting an enemy/item to the payer.
+    /// </summary>
+    private Color[] colors = new Color[(int)TileLayer.LAYER_COUNT];
 
     /// <summary>
     /// Reset the coordinate of the TileRenderer. This moves all layers to the
@@ -74,14 +80,92 @@ public class TileRenderer : MonoBehaviour
         RegenerateMeshes();
     }
 
+    /// <summary>
+    /// Get the positional information of the rendered tile.
+    /// </summary>
+    /// <returns>Returns the current position of the tile.</returns>
+    public Vector2 GetPosition()
+    {
+        return position;
+    }
+
+    /// <summary>
+    /// Set the color of the material. This can be used to highlight a unit
+    /// or tile a specific color, or to add an alpha channel.
+    /// </summary>
+    /// <param name="layer">The tile layer to apply the color highlight to.</param>
+    /// <param name="color">The new color to assign the tile.</param>
+    /// <returns>The previously assigned color.</returns>
+    public Color SetColor(TileLayer layer, Color color)
+    {
+        // Store the color that was currently set.
+        Color oldColor = colors[(int)layer];
+
+        // When generate mesh is called this color will be applied over it.
+        colors[(int)layer] = color;
+
+        // Return the color we changed from.
+        return oldColor;
+    }
+
+    /// <summary>Get the color of a specific tile layer.</summary>
+    /// <param name="layer">The tile layer to get the color from.</param>
+    /// <returns>The currently set color for a tile layer.</returns>
+    public Color GetColor(TileLayer layer)
+    {
+        return colors[(int)layer];
+    }
+
+    /// <summary>Resets a layers color overlay.</summary>
+    /// <param name="layer">The layer to reset.</param>
+    public void ResetColor(TileLayer layer)
+    {
+        // Highlight layer automatically receives an alpha channel.
+        colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f,
+            (layer == TileLayer.LAYER_HIGHLIGHTS) ? 0.4f : 1.0f);
+    }
+
+    /// <summary>
+    /// Helper function for setting a tile specific material.
+    /// </summary>
+    /// <param name="layer">The layer of the material you want to set.</param>
+    /// <param name="id">The id of the tile material.</param>
+    /// <returns>The previously assigned material.</returns>
+    public MaterialId SetTileMaterial(TileLayer layer, int id)
+    {
+        return SetMaterial(layer, new MaterialId(id, MaterialType.TILE));
+    }
+
+    /// <summary>
+    /// Helper function for setting a unit specific material.
+    /// </summary>
+    /// <param name="layer">The layer of the material you want to set.</param>
+    /// <param name="id">The id of the tile material.</param>
+    /// <returns>The previously assigned material.</returns>
+    public MaterialId SetUnitMaterial(TileLayer layer, int id)
+    {
+        return SetMaterial(layer, new MaterialId(id, MaterialType.UNIT));
+    }
+
+    /// <summary>
+    /// Helper function for setting a effect specific material.
+    /// </summary>
+    /// <param name="layer">The layer of the material you want to set.</param>
+    /// <param name="id">The id of the tile material.</param>
+    /// <returns>The previously assigned material.</returns>
+    public MaterialId SetEffectMaterial(TileLayer layer, int id)
+    {
+        return SetMaterial(layer, new MaterialId(id, MaterialType.EFFECT));
+    }
+
     /// <summary>Sets the material of the specified layer.</summary>
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="material">The material you want to set the tile to.</param>
     /// <returns>The previously assigned material.</returns>
-    public Material SetMaterial(TileLayer layer, Material material)
+    public MaterialId SetMaterial(TileLayer layer, MaterialId materialId)
     {
         // Store the material that was currently set.
-        Material oldMaterial = materials[(int)layer];
+        MaterialId oldMaterial = materials[(int)layer];
 
         // Ensure there is a game object at this layer.
         if (gameObjects[(int)layer] == null)
@@ -89,23 +173,23 @@ public class TileRenderer : MonoBehaviour
 
         // Get the renderer component and assign the current material to the mesh.
         MeshRenderer renderer = gameObjects[(int)layer].GetComponent<MeshRenderer>();
-        renderer.material = material;
+        renderer.material = materialId.GetMaterial();
 
         // Store the material for later.
-        materials[(int)layer] = material;
+        materials[(int)layer] = materialId;
 
         // Regenerate the mesh on that layer.
-        if (material != null)
+        if (renderer.material != null)
             GenerateMesh(layer);
 
         // Return the material we changed from.
         return oldMaterial;
     }
 
-    /// <summary>Get the material of the mesh from the specified layer.</summary>
+    /// <summary>Get the materialId of the mesh from the specified layer.</summary>
     /// <param name="layer">The layer to pull the material from.</param>
     /// <returns>Returns the material at that layer.</returns>
-    public Material GetMaterial(TileLayer layer)
+    public MaterialId GetMaterial(TileLayer layer)
     {
         return materials[(int)layer];
     }
@@ -150,6 +234,8 @@ public class TileRenderer : MonoBehaviour
             DestroyObject(gameObjects[(int)layer]);
             gameObjects[(int)layer] = null;
         }
+
+        ResetColor(layer);
     }
 
     /// <summary>
@@ -165,6 +251,8 @@ public class TileRenderer : MonoBehaviour
             gameObjects[(int)layer].transform.parent = transform;
             gameObjects[(int)layer].AddComponent<MeshFilter>();
             gameObjects[(int)layer].AddComponent<MeshRenderer>();
+
+            ResetColor(layer);
         }
     }
 
@@ -183,11 +271,10 @@ public class TileRenderer : MonoBehaviour
         filter.mesh.Clear();
 
         // Assign the tile material to the renderer.
-        renderer.material = materials[(int)layer];
+        renderer.material = materials[(int)layer].GetMaterial();
 
-        // Adjust the alpha for the highlight layer.
-        if (layer == TileLayer.LAYER_HIGHLIGHTS)
-            renderer.material.color = new Color(1f, 1f, 1f, 0.4f);
+        // Apply the tile specific color highlight.
+        renderer.material.color = colors[(int)layer];
 
         // Get positional information.
         // Get the z order from the layer.
@@ -197,10 +284,22 @@ public class TileRenderer : MonoBehaviour
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(x * scale            , y * scale            , z * scale);
-        verts[1] = new Vector3(x * scale + 1 * scale, y * scale            , z * scale);
-        verts[2] = new Vector3(x * scale            , y * scale + 1 * scale, z * scale);
-        verts[3] = new Vector3(x * scale + 1 * scale, y * scale + 1 * scale, z * scale);
+        verts[0] = new Vector3(
+            x * gridScale, 
+            y * gridScale,
+            z * gridScale);
+        verts[1] = new Vector3(
+            x * gridScale + 1 * gridScale,
+            y * gridScale,
+            z * gridScale);
+        verts[2] = new Vector3(
+            x * gridScale,
+            y * gridScale + 1 * gridScale,
+            z * gridScale);
+        verts[3] = new Vector3(
+            x * gridScale + 1 * gridScale,
+            y * gridScale + 1 * gridScale,
+            z * gridScale);
 
         // Create the list of uvmap coordinates pull from the texture. Currently set
         // to use the entire material image.

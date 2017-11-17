@@ -41,61 +41,14 @@ public class TileMap : MonoBehaviour
                 Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
                 tile.transform.parent = transform;
                 tile.position = position;
-                tile.tileRenderer.GetComponent<TileRenderer>().SetPosition(position);
 
                 // TODO: This should be based on the world tile pallete.
-                tile.tileRenderer.GetComponent<TileRenderer>().SetMaterial(
-                    TileRenderer.TileLayer.LAYER_FLOOR,
-                    GameManager.instance.tileMaterials[0]);
+                tile.SetFloorMaterial(0);
 
                 // Add the tile to the map.
                 row.Add(tile);
             }
             tiles.Add(row);
-        }
-    }
-
-    private Material GetUnitMaterial(UnitType unitType)
-    {
-        switch(unitType)
-        {
-            // Hero units.
-            case UnitType.MAINCHARACTER:
-                return GameManager.instance.unitMaterials[0];
-            case UnitType.CHARGER:
-                return GameManager.instance.unitMaterials[1];
-            case UnitType.MAGICIAN:
-                return GameManager.instance.unitMaterials[2];
-            case UnitType.ELEMENTALIST:
-                return GameManager.instance.unitMaterials[3];
-            case UnitType.BOMBER:
-                return GameManager.instance.unitMaterials[4];
-
-            // Enemy units.
-            case UnitType.GUMBALL:
-                return GameManager.instance.unitMaterials[5];
-            case UnitType.EAGLE:
-                return GameManager.instance.unitMaterials[6];
-            case UnitType.RUNNINGMAN:
-                return GameManager.instance.unitMaterials[7];
-            case UnitType.REDARCHER:
-                return GameManager.instance.unitMaterials[8];
-            case UnitType.BLACKARCHER:
-                return GameManager.instance.unitMaterials[9];
-            case UnitType.BACKPACK:
-                return GameManager.instance.unitMaterials[10];
-            case UnitType.SHIELD:
-                return GameManager.instance.unitMaterials[11];
-            case UnitType.DITTO:
-                return GameManager.instance.unitMaterials[12];
-            case UnitType.LIGHTBULB:
-                return GameManager.instance.unitMaterials[13];
-            case UnitType.HEDGEHOG:
-                return GameManager.instance.unitMaterials[14];
-
-            // Not implemented or NONE will trigger this.
-            default:
-                throw new ArgumentException("Invalid unit type", "type");
         }
     }
 
@@ -131,15 +84,11 @@ public class TileMap : MonoBehaviour
                 + spawnIndex + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.transform.parent = transform;
+            actor.position = position;
             actor.unit = unit;
             actor.owner = Owner.PLAYER1; // Assign player to roster.
             actor.health = unit.baseMaxHealth;
-            actor.position = position;
-            actor.tileRenderer.GetComponent<TileRenderer>().SetPosition(position);
-            actor.tileRenderer.GetComponent<TileRenderer>().SetMaterial(
-                TileRenderer.TileLayer.LAYER_UNITS,
-                GetUnitMaterial(unit.type));
-
+            
             // Add the actor to the mission.
             actors.Add(actor);
 
