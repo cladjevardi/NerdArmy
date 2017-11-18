@@ -29,11 +29,11 @@ public class TileMap : MonoBehaviour
     /// Initialize the map of tiles.
     /// </summary>
     /// <param name="missionTiles">Mission tile data.</param>
-    private void InitializeMap(List<MissionData.MissionTile> missionTiles)
+    private void InitializeMap(List<MissionTile> missionTiles)
     {
         // Iterate through each tile from the mission loaded
         // and create the map.
-        foreach (MissionData.MissionTile missionTile in missionTiles)
+        foreach (MissionTile missionTile in missionTiles)
         {
             Tile tile = new GameObject("Tile_" + missionTile.position.x + "_" + missionTile.position.y).AddComponent<Tile>();
             tile.transform.parent = transform;
@@ -94,9 +94,9 @@ public class TileMap : MonoBehaviour
     /// Add enemy actors to the map.
     /// </summary>
     /// <param name="missionEnemies">The list of enemies.</param>
-    private void AddEnemies(List<MissionData.MissionEnemy> missionEnemies)
+    private void AddEnemies(List<MissionEnemy> missionEnemies)
     {
-        foreach (MissionData.MissionEnemy enemy in missionEnemies)
+        foreach (MissionEnemy enemy in missionEnemies)
         {
             Unit unit = UnitFactory.Create(enemy.type);
             string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.type.ToString();
@@ -113,23 +113,23 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
-    /// Create mission from mission metadata.
+    /// Construct a mission from the mission database.
     /// </summary>
-    /// <param name="roster"></param>
-    /// <param name="missionData"></param>
-    public void GenerateMission(List<Unit> roster, MissionData missionData)
+    /// <param name="roster">The list of player controlled units.</param>
+    /// <param name="missionSchematic">The blueprints for building a mission.</param>
+    public void GenerateMission(List<Unit> roster, MissionSchematic missionSchematic)
     {
         // Clear any previous map information.
         tiles.Clear();
         actors.Clear();
 
         // Allocate the tile map.
-        InitializeMap(missionData.tiles);
+        InitializeMap(missionSchematic.tiles);
 
         // Add the list of player controlled actors to the map.
-        AddRoster(roster, missionData.rosterSpawns);
+        AddRoster(roster, missionSchematic.rosterSpawns);
 
         // Add the list of enemy controlled actors to the map.
-        AddEnemies(missionData.enemies);
+        AddEnemies(missionSchematic.enemies);
     }
 }

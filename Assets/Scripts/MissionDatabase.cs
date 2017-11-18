@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class MissionDatabase
 {
-    /// <summary>World mission metadata.</summary>
-    private List<List<MissionData>> worldMissionData;
+    /// <summary>World mission blueprints.</summary>
+    private List<List<MissionSchematic>> worldMissionData;
 
-    /// <summary>The constructor that builds all world mission metadata.</summary>
+    /// <summary>The constructor that builds all world mission blueprints.</summary>
     public MissionDatabase()
     {
         // TODO: Load this data from XML or level editor generated file. Not
         // entirely a scalable solution to store everything in memory.
 
-        worldMissionData = new List<List<MissionData>>() {
+        worldMissionData = new List<List<MissionSchematic>>() {
 
             // World 1
-            new List<MissionData>() {
+            new List<MissionSchematic>() {
 
                 // World 1-1
-                new MissionData("World 1-1",
-                    new List<MissionData.MissionTile>() {
-                        new MissionData.MissionTile(new Vector2(-2, 0), 0, -1, -1, 1, false, false),
-                        new MissionData.MissionTile(new Vector2(-1, 0), 0, -1, -1, 1, false, false),
-                        new MissionData.MissionTile(new Vector2(-0, 0), 0, -1, -1, 1, false, false),
-                        new MissionData.MissionTile(new Vector2(1, 0), 0, -1, -1, 1, false, false),
-                        new MissionData.MissionTile(new Vector2(2, 0), 0, -1, -1, 1, false, false),
-                        new MissionData.MissionTile(new Vector2(3, 0), 0, -1, -1, 1, false, false),
+                new MissionSchematic("World 1-1",
+                    new List<MissionTile>() {
+                        new MissionTile(new Vector2(-2, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(-1, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(-0, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(1, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(2, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(3, 0), 0, -1, -1, 1, false, false),
                     },
-                    new List<MissionData.MissionEnemy>() {
-                        new MissionData.MissionEnemy(new Vector2(3, 0), UnitType.GUMBALL)
+                    new List<MissionEnemy>() {
+                        new MissionEnemy(new Vector2(3, 0), UnitType.GUMBALL)
                     },
                     new List<Vector2>() {
                         new Vector2(-2, 0),
@@ -38,89 +38,164 @@ public class MissionDatabase
                 ),
 
                 // World 1-2
-                new MissionData("World 1-2",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 1-2",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-3
-                new MissionData("World 1-3",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 1-3",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-4
-                new MissionData("World 1-4",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 1-4",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-5
-                new MissionData("World 1-5",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 1-5",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
             },
 
             // World 2
-            new List<MissionData>() {
+            new List<MissionSchematic>() {
 
                 // World 2-1
-                new MissionData("World 2-1",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 2-1",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-2
-                new MissionData("World 2-2",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 2-2",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-3
-                new MissionData("World 2-3",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 2-3",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-4
-                new MissionData("World 2-4",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 2-4",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-5
-                new MissionData("World 2-5",
-                    new List<MissionData.MissionTile>(),
-                    new List<MissionData.MissionEnemy>(),
+                new MissionSchematic("World 2-5",
+                    new List<MissionTile>(),
+                    new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
             },
 
             // World 3
-            new List<MissionData>(),
+            new List<MissionSchematic>(),
             // World 4
-            new List<MissionData>(),
+            new List<MissionSchematic>(),
             // World 5
-            new List<MissionData>(),
+            new List<MissionSchematic>(),
         };
     }
 
-    /// <summary>Retrieve a missions metadata.</summary>
+    /// <summary>Retrieve a missions blueprints.</summary>
     /// <param name="world">The world id of the mission.</param>
     /// <param name="level">The level id of the mission.</param>
-    /// <returns>Returns the missions metadata.</returns>
-    public MissionData GetMission(int world, int level)
+    /// <returns>Returns the missions blueprints.</returns>
+    public MissionSchematic GetMission(int world, int level)
     {
         return worldMissionData[world - 1][level - 1];
+    }
+}
+
+/// <summary>
+/// The metadata that makes up a tile to be displayed in a mission.
+/// </summary>
+public class MissionTile
+{
+    /// <summary>The position of the tile.</summary>
+    public Vector2 position;
+
+    /// <summary>The floor tile material id. Found in GameManager.</summary>
+    public int floorMaterialId;
+
+    /// <summary>The object tile material id. Found in GameManager.</summary>
+    public int objectMaterialId;
+
+    /// <summary>The roof tile material id. Found in GameManager.</summary>
+    public int roofMaterialId;
+
+    /// <summary>The movement cost moving onto this tile.</summary>
+    public int movementCost;
+
+    /// <summary>Whether this tile disallows ground units to move through it.</summary>
+    public bool groundCollision;
+
+    /// <summary>Whether this tile disallows air units to move through it.</summary>
+    public bool airCollision;
+
+    /// <summary>
+    /// The constructor for creating a mission tile.
+    /// </summary>
+    /// <param name="position">The position of the tile.</param>
+    /// <param name="floorMaterialId">The floor material id.</param>
+    /// <param name="objectMaterialId">The object material id.</param>
+    /// <param name="roofMaterialId">The roof material id.</param>
+    /// <param name="movementCost">The cost to move to this tile.</param>
+    /// <param name="groundCollision">Disallow ground unit movement.</param>
+    /// <param name="airCollision">Disallow air unit movement.</param>
+    public MissionTile(Vector2 position, int floorMaterialId, int objectMaterialId,
+        int roofMaterialId, int movementCost, bool groundCollision, bool airCollision)
+    {
+        // Set tile information.
+        this.position = position;
+        this.floorMaterialId = floorMaterialId;
+        this.objectMaterialId = objectMaterialId;
+        this.roofMaterialId = roofMaterialId;
+        this.movementCost = movementCost;
+        this.groundCollision = groundCollision;
+        this.airCollision = airCollision;
+    }
+}
+
+
+/// <summary>
+/// The metadata that makes up a list of enemies to place down during a mission.
+/// </summary>
+public class MissionEnemy
+{
+    /// <summary>The position of the enemy unit in the mission.</summary>
+    public Vector2 position;
+
+    /// <summary>The type of enemy unit to place.</summary>
+    public UnitType type;
+
+    /// <summary>
+    /// The constructor for assigning enemies to a mission.
+    /// </summary>
+    /// <param name="position">The position of the enemy.</param>
+    /// <param name="type">The type of enemy.</param>
+    public MissionEnemy(Vector2 position, UnitType type)
+    {
+        // Set the enemy mission information.
+        this.position = position;
+        this.type = type;
     }
 }
 
@@ -128,7 +203,7 @@ public class MissionDatabase
 /// Data that makes up an entire mission. Used to construct and display
 /// predefined levels.
 /// </summary>
-public class MissionData
+public class MissionSchematic
 {
     /// <summary>The name of the mission.</summary>
     public string name;
@@ -157,7 +232,7 @@ public class MissionData
     /// <param name="tiles">The tile mission data.</param>
     /// <param name="enemies">The list of enemies.</param>
     /// <param name="rosterSpawns">The list of friendly spawning positions.</param>
-    public MissionData(string name, List<MissionTile> tiles,
+    public MissionSchematic(string name, List<MissionTile> tiles,
         List<MissionEnemy> enemies, List<Vector2> rosterSpawns)
     {
         // Set complete mission data.
@@ -167,79 +242,5 @@ public class MissionData
         this.rosterSpawns = rosterSpawns;
 
         // TODO: Add mission dialog.
-    }
-
-    /// <summary>
-    /// The metadata that makes up a tile to be displayed in a mission.
-    /// </summary>
-    public class MissionTile
-    {
-        /// <summary>The position of the tile.</summary>
-        public Vector2 position;
-
-        /// <summary>The floor tile material id. Found in GameManager.</summary>
-        public int floorMaterialId;
-
-        /// <summary>The object tile material id. Found in GameManager.</summary>
-        public int objectMaterialId;
-
-        /// <summary>The roof tile material id. Found in GameManager.</summary>
-        public int roofMaterialId;
-
-        /// <summary>The movement cost moving onto this tile.</summary>
-        public int movementCost;
-
-        /// <summary>Whether this tile disallows ground units to move through it.</summary>
-        public bool groundCollision;
-
-        /// <summary>Whether this tile disallows air units to move through it.</summary>
-        public bool airCollision;
-
-        /// <summary>
-        /// The constructor for creating a mission tile.
-        /// </summary>
-        /// <param name="position">The position of the tile.</param>
-        /// <param name="floorMaterialId">The floor material id.</param>
-        /// <param name="objectMaterialId">The object material id.</param>
-        /// <param name="roofMaterialId">The roof material id.</param>
-        /// <param name="movementCost">The cost to move to this tile.</param>
-        /// <param name="groundCollision">Disallow ground unit movement.</param>
-        /// <param name="airCollision">Disallow air unit movement.</param>
-        public MissionTile(Vector2 position, int floorMaterialId, int objectMaterialId,
-            int roofMaterialId, int movementCost, bool groundCollision, bool airCollision)
-        {
-            // Set tile information.
-            this.position = position;
-            this.floorMaterialId = floorMaterialId;
-            this.objectMaterialId = objectMaterialId;
-            this.roofMaterialId = roofMaterialId;
-            this.movementCost = movementCost;
-            this.groundCollision = groundCollision;
-            this.airCollision = airCollision;
-        }
-    }
-
-    /// <summary>
-    /// The metadata that makes up a list of enemies to place down during a mission.
-    /// </summary>
-    public class MissionEnemy
-    {
-        /// <summary>The position of the enemy unit in the mission.</summary>
-        public Vector2 position;
-
-        /// <summary>The type of enemy unit to place.</summary>
-        public UnitType type;
-
-        /// <summary>
-        /// The constructor for assigning enemies to a mission.
-        /// </summary>
-        /// <param name="position">The position of the enemy.</param>
-        /// <param name="type">The type of enemy.</param>
-        public MissionEnemy(Vector2 position, UnitType type)
-        {
-            // Set the enemy mission information.
-            this.position = position;
-            this.type = type;
-        }
     }
 }
