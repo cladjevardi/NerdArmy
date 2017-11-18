@@ -21,11 +21,11 @@ public class WorldManager : MonoBehaviour
     private void LoadLevel()
     {
         // Tell TileMap to generate the level.
-        MissionData missionData = missionDatabase.GetMission(world, level);
-        Debug.Log("Loading " + missionData.name);
-        tileMap.name = missionData.name;
+        MissionSchematic missionSchematic = missionDatabase.GetMission(world, level);
+        Debug.Log("Loading " + missionSchematic.name);
+        tileMap.name = missionSchematic.name;
         tileMap.GetComponent<TileMap>().GenerateMission(
-            roster, missionData);
+            roster, missionSchematic);
 
         // TODO: Start the mission.
     }
