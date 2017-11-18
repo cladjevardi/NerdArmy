@@ -6,7 +6,7 @@ public class TileMap : MonoBehaviour
 {
     /// <summary>In-memory data of each tile.</summary>
     [HideInInspector]
-    public List<List<Tile>> tiles = new List<List<Tile>>();
+    public List<Tile> tiles = new List<Tile>();
 
     /// <summary>The list of units in the mission.</summary>
     [HideInInspector]
@@ -25,68 +25,61 @@ public class TileMap : MonoBehaviour
     /// </summary>
     private Transform mapHolder;
 
-    private void InitializeMap(int rows, int columns)
+    /// <summary>
+    /// Initialize the map of tiles.
+    /// </summary>
+    /// <param name="missionTiles">Mission tile data.</param>
+    private void InitializeMap(List<MissionData.MissionTile> missionTiles)
     {
-        // Clear any previous map information.
-        tiles.Clear();
-
-        // Allocate the map
-        tiles = new List<List<Tile>>();
-        for (int i = -3; i < columns - 3; i++)
+        // Iterate through each tile from the mission loaded
+        // and create the map.
+        foreach (MissionData.MissionTile missionTile in missionTiles)
         {
-            List<Tile> row = new List<Tile>();
-            for (int j = -2; j < rows - 2; j++)
-            {
-                Vector2 position = new Vector2(i, j);
-                Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
-                tile.transform.parent = transform;
-                tile.position = position;
+            Tile tile = new GameObject("Tile_" + missionTile.position.x + "_" + missionTile.position.y).AddComponent<Tile>();
+            tile.transform.parent = transform;
+            tile.position = missionTile.position;
+            tile.movementCost = missionTile.movementCost;
+            tile.airCollision = missionTile.airCollision;
+            tile.groundCollision = missionTile.groundCollision;
 
-                // TODO: This should be based on the world tile pallete.
-                tile.SetFloorMaterial(0);
+            // TODO: This should be based on the world tile pallete.
+            if (missionTile.floorMaterialId != -1)
+                tile.SetFloorMaterial(missionTile.floorMaterialId);
+            if (missionTile.objectMaterialId != -1)
+                tile.SetObjectMaterial(missionTile.objectMaterialId);
+            if (missionTile.roofMaterialId != -1)
+                tile.SetRoofMaterial(missionTile.roofMaterialId);
 
-                // Add the tile to the map.
-                row.Add(tile);
-            }
-            tiles.Add(row);
+            tiles.Add(tile);
         }
     }
 
-    private Vector2[] GetSpawnLocations(Owner owner)
+    /// <summary>
+    /// Add loadout roster of actors to the map.
+    /// </summary>
+    /// <param name="roster">The list of player controlled units.</param>
+    /// <param name="validSpawnPositions">
+    /// The list of valid rost spawn locations.
+    /// </param>
+    private void AddRoster(List<Unit> roster, List<Vector2> validSpawnPositions)
     {
-        // TODO: This should be setup per owner faction
-        // in each mission.
-        switch (owner)
-        {
-        default:
-            return new Vector2[6] {
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(2, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
-                new Vector2(2, 1)
-            };
-        }
-    }
-
-    private void AddActors(List<Unit> roster)
-    {
-        actors.Clear();
         int spawnIndex = 0;
 
         // Iterate through each member of the roster and add units.
         foreach (Unit unit in roster)
         {
+            // We can only spawn as many actors as available spawns.
+            if (spawnIndex >= validSpawnPositions.Count)
+                break;
+
             // Create the new actor.
-            Vector2 position = GetSpawnLocations(Owner.PLAYER1)[spawnIndex];
-            string objectName = "Actor_" + Owner.PLAYER1 + "_" 
-                + spawnIndex + "_" + unit.type.ToString();
+            Vector2 position = validSpawnPositions[spawnIndex];
+            string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.transform.parent = transform;
             actor.position = position;
             actor.unit = unit;
-            actor.owner = Owner.PLAYER1; // Assign player to roster.
+            actor.owner = Owner.PLAYER1;
             actor.health = unit.baseMaxHealth;
             
             // Add the actor to the mission.
@@ -95,25 +88,48 @@ public class TileMap : MonoBehaviour
             // Increment the spawn location to prevent collision.
             spawnIndex++;
         }
-
-        // TODO: Based on mission add enemy actors
     }
 
     /// <summary>
-    /// Initialize the map with the tiles from level data.
+    /// Add enemy actors to the map.
     /// </summary>
-    /// <param name="world">The world or tile theme to use.</param>
-    /// <param name="level">The level within the world.</param>
-    public void GenerateMap(List<Unit> roster, int world, int level)
+    /// <param name="missionEnemies">The list of enemies.</param>
+    private void AddEnemies(List<MissionData.MissionEnemy> missionEnemies)
     {
-        // TODO: Lookup the world and level get the dimensions we need to create.
-        int rows = 4;
-        int columns = 6;
+        foreach (MissionData.MissionEnemy enemy in missionEnemies)
+        {
+            Unit unit = UnitFactory.Create(enemy.type);
+            string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.type.ToString();
+            Actor actor = new GameObject(objectName).AddComponent<Actor>();
+            actor.transform.parent = transform;
+            actor.position = enemy.position;
+            actor.unit = unit;
+            actor.owner = Owner.PLAYER2;
+            actor.health = unit.baseMaxHealth;
+
+            // Add the actor to the mission.
+            actors.Add(actor);
+        }
+    }
+
+    /// <summary>
+    /// Create mission from mission metadata.
+    /// </summary>
+    /// <param name="roster"></param>
+    /// <param name="missionData"></param>
+    public void GenerateMission(List<Unit> roster, MissionData missionData)
+    {
+        // Clear any previous map information.
+        tiles.Clear();
+        actors.Clear();
 
         // Allocate the tile map.
-        InitializeMap(rows, columns);
+        InitializeMap(missionData.tiles);
 
-        // Add the list of unit actor to the board.
-        AddActors(roster);
+        // Add the list of player controlled actors to the map.
+        AddRoster(roster, missionData.rosterSpawns);
+
+        // Add the list of enemy controlled actors to the map.
+        AddEnemies(missionData.enemies);
     }
 }

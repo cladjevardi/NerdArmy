@@ -9,6 +9,9 @@ public class WorldManager : MonoBehaviour
     /// <summary>The level of the current mission in that world.</summary>
     public int level = 0;
 
+    /// <summary>Mission database.</summary>
+    private MissionDatabase missionDatabase = new MissionDatabase();
+
     /// <summary>The players current roster.</summary>
     private List<Unit> roster = new List<Unit>();
 
@@ -17,17 +20,20 @@ public class WorldManager : MonoBehaviour
 
     private void LoadLevel()
     {
-        Debug.Log("Loading level \"" + world + "-" + level + "\"");
-
         // Tell TileMap to generate the level.
-        tileMap.GetComponent<TileMap>().GenerateMap(roster, world, level);
+        MissionData missionData = missionDatabase.GetMission(world, level);
+        Debug.Log("Loading " + missionData.name);
+        tileMap.name = missionData.name;
+        tileMap.GetComponent<TileMap>().GenerateMission(
+            roster, missionData);
+
+        // TODO: Start the mission.
     }
 
     private void Start()
     {
         // Give the player a main character to start the game.
         roster.Add(UnitFactory.Create(UnitType.MAINCHARACTER));
-        roster.Add(UnitFactory.Create(UnitType.CHARGER));
 
         // Start the game off at 1-1.
         world = 1;
