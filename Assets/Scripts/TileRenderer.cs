@@ -51,6 +51,9 @@ public class TileRenderer : MonoBehaviour
     /// <summary>The visual scale of the grid.</summary>
     private float gridScale = 3.75f;
 
+    /// <summary>The highlight layers default alpha.</summary>
+    private float defaultHighlightAlpha = 0.6f;
+
     /// <summary>The position of the tile.</summary>
     private Vector2 position;
     
@@ -122,7 +125,7 @@ public class TileRenderer : MonoBehaviour
     {
         // Highlight layer automatically receives an alpha channel.
         colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f,
-            (layer == TileLayer.LAYER_HIGHLIGHTS) ? 0.4f : 1.0f);
+            (layer == TileLayer.LAYER_HIGHLIGHTS) ? defaultHighlightAlpha : 1.0f);
     }
 
     /// <summary>

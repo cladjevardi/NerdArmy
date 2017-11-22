@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 827bdecd696985649b18a80c1d94bafc
-timeCreated: 1511201431
+timeCreated: 1511320156
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -130,9 +130,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 33
-        width: 16
-        height: 16
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,10 +143,10 @@ TextureImporter:
       name: movement_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 33
-        width: 16
-        height: 16
+        x: 15
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,10 +157,10 @@ TextureImporter:
       name: movement_2
       rect:
         serializedVersion: 2
-        x: 32
-        y: 33
-        width: 16
-        height: 16
+        x: 30
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: movement_3
       rect:
         serializedVersion: 2
-        x: 48
-        y: 33
-        width: 16
-        height: 16
+        x: 45
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,10 +185,10 @@ TextureImporter:
       name: movement_4
       rect:
         serializedVersion: 2
-        x: 64
-        y: 33
-        width: 16
-        height: 16
+        x: 60
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -199,10 +199,10 @@ TextureImporter:
       name: movement_5
       rect:
         serializedVersion: 2
-        x: 80
-        y: 33
-        width: 16
-        height: 16
+        x: 75
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: movement_6
       rect:
         serializedVersion: 2
-        x: 96
-        y: 33
-        width: 16
-        height: 16
+        x: 90
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -227,10 +227,10 @@ TextureImporter:
       name: movement_7
       rect:
         serializedVersion: 2
-        x: 112
-        y: 33
-        width: 16
-        height: 16
+        x: 105
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,10 +241,10 @@ TextureImporter:
       name: movement_8
       rect:
         serializedVersion: 2
-        x: 128
-        y: 33
-        width: 16
-        height: 16
+        x: 120
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: movement_9
       rect:
         serializedVersion: 2
-        x: 144
-        y: 33
-        width: 16
-        height: 16
+        x: 135
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -269,10 +269,10 @@ TextureImporter:
       name: movement_10
       rect:
         serializedVersion: 2
-        x: 160
-        y: 33
-        width: 16
-        height: 16
+        x: 150
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -283,10 +283,10 @@ TextureImporter:
       name: movement_11
       rect:
         serializedVersion: 2
-        x: 176
-        y: 33
-        width: 16
-        height: 16
+        x: 165
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +297,10 @@ TextureImporter:
       name: movement_12
       rect:
         serializedVersion: 2
-        x: 192
-        y: 33
-        width: 16
-        height: 16
+        x: 180
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -311,10 +311,10 @@ TextureImporter:
       name: movement_13
       rect:
         serializedVersion: 2
-        x: 208
-        y: 33
-        width: 16
-        height: 16
+        x: 195
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,10 +325,10 @@ TextureImporter:
       name: movement_14
       rect:
         serializedVersion: 2
-        x: 224
-        y: 33
-        width: 16
-        height: 16
+        x: 210
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: movement_15
       rect:
         serializedVersion: 2
-        x: 240
-        y: 33
-        width: 16
-        height: 16
+        x: 225
+        y: 30
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -354,9 +354,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 17
-        width: 16
-        height: 16
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,10 +367,10 @@ TextureImporter:
       name: movement_17
       rect:
         serializedVersion: 2
-        x: 16
-        y: 17
-        width: 16
-        height: 16
+        x: 15
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -381,10 +381,10 @@ TextureImporter:
       name: movement_18
       rect:
         serializedVersion: 2
-        x: 32
-        y: 17
-        width: 16
-        height: 16
+        x: 30
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -395,10 +395,10 @@ TextureImporter:
       name: movement_19
       rect:
         serializedVersion: 2
-        x: 48
-        y: 17
-        width: 16
-        height: 16
+        x: 45
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -409,10 +409,10 @@ TextureImporter:
       name: movement_20
       rect:
         serializedVersion: 2
-        x: 64
-        y: 17
-        width: 16
-        height: 16
+        x: 60
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -423,10 +423,10 @@ TextureImporter:
       name: movement_21
       rect:
         serializedVersion: 2
-        x: 80
-        y: 17
-        width: 16
-        height: 16
+        x: 75
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -437,10 +437,10 @@ TextureImporter:
       name: movement_22
       rect:
         serializedVersion: 2
-        x: 96
-        y: 17
-        width: 16
-        height: 16
+        x: 90
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -451,10 +451,10 @@ TextureImporter:
       name: movement_23
       rect:
         serializedVersion: 2
-        x: 112
-        y: 17
-        width: 16
-        height: 16
+        x: 105
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -465,10 +465,10 @@ TextureImporter:
       name: movement_24
       rect:
         serializedVersion: 2
-        x: 128
-        y: 17
-        width: 16
-        height: 16
+        x: 120
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -479,10 +479,10 @@ TextureImporter:
       name: movement_25
       rect:
         serializedVersion: 2
-        x: 144
-        y: 17
-        width: 16
-        height: 16
+        x: 135
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -493,10 +493,10 @@ TextureImporter:
       name: movement_26
       rect:
         serializedVersion: 2
-        x: 160
-        y: 17
-        width: 16
-        height: 16
+        x: 150
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -507,10 +507,10 @@ TextureImporter:
       name: movement_27
       rect:
         serializedVersion: 2
-        x: 176
-        y: 17
-        width: 16
-        height: 16
+        x: 165
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -521,10 +521,10 @@ TextureImporter:
       name: movement_28
       rect:
         serializedVersion: 2
-        x: 192
-        y: 17
-        width: 16
-        height: 16
+        x: 180
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -535,10 +535,10 @@ TextureImporter:
       name: movement_29
       rect:
         serializedVersion: 2
-        x: 208
-        y: 17
-        width: 16
-        height: 16
+        x: 195
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -549,10 +549,10 @@ TextureImporter:
       name: movement_30
       rect:
         serializedVersion: 2
-        x: 224
-        y: 17
-        width: 16
-        height: 16
+        x: 210
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -563,10 +563,10 @@ TextureImporter:
       name: movement_31
       rect:
         serializedVersion: 2
-        x: 240
-        y: 17
-        width: 16
-        height: 16
+        x: 225
+        y: 15
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -578,9 +578,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 16
-        height: 16
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -591,10 +591,10 @@ TextureImporter:
       name: movement_33
       rect:
         serializedVersion: 2
-        x: 16
-        y: 1
-        width: 16
-        height: 16
+        x: 15
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -605,10 +605,10 @@ TextureImporter:
       name: movement_34
       rect:
         serializedVersion: 2
-        x: 32
-        y: 1
-        width: 16
-        height: 16
+        x: 30
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -619,10 +619,10 @@ TextureImporter:
       name: movement_35
       rect:
         serializedVersion: 2
-        x: 48
-        y: 1
-        width: 16
-        height: 16
+        x: 45
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -633,10 +633,10 @@ TextureImporter:
       name: movement_36
       rect:
         serializedVersion: 2
-        x: 64
-        y: 1
-        width: 16
-        height: 16
+        x: 60
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -647,10 +647,10 @@ TextureImporter:
       name: movement_37
       rect:
         serializedVersion: 2
-        x: 80
-        y: 1
-        width: 16
-        height: 16
+        x: 75
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -661,10 +661,10 @@ TextureImporter:
       name: movement_38
       rect:
         serializedVersion: 2
-        x: 96
-        y: 1
-        width: 16
-        height: 16
+        x: 90
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -675,10 +675,10 @@ TextureImporter:
       name: movement_39
       rect:
         serializedVersion: 2
-        x: 112
-        y: 1
-        width: 16
-        height: 16
+        x: 105
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -689,10 +689,10 @@ TextureImporter:
       name: movement_40
       rect:
         serializedVersion: 2
-        x: 128
-        y: 1
-        width: 16
-        height: 16
+        x: 120
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -703,10 +703,10 @@ TextureImporter:
       name: movement_41
       rect:
         serializedVersion: 2
-        x: 144
-        y: 1
-        width: 16
-        height: 16
+        x: 135
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -717,10 +717,10 @@ TextureImporter:
       name: movement_42
       rect:
         serializedVersion: 2
-        x: 160
-        y: 1
-        width: 16
-        height: 16
+        x: 150
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -731,10 +731,10 @@ TextureImporter:
       name: movement_43
       rect:
         serializedVersion: 2
-        x: 176
-        y: 1
-        width: 16
-        height: 16
+        x: 165
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -745,10 +745,10 @@ TextureImporter:
       name: movement_44
       rect:
         serializedVersion: 2
-        x: 192
-        y: 1
-        width: 16
-        height: 16
+        x: 180
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -759,10 +759,10 @@ TextureImporter:
       name: movement_45
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1
-        width: 16
-        height: 16
+        x: 195
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -773,10 +773,10 @@ TextureImporter:
       name: movement_46
       rect:
         serializedVersion: 2
-        x: 224
-        y: 1
-        width: 16
-        height: 16
+        x: 210
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -787,10 +787,10 @@ TextureImporter:
       name: movement_47
       rect:
         serializedVersion: 2
-        x: 240
-        y: 1
-        width: 16
-        height: 16
+        x: 225
+        y: 0
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

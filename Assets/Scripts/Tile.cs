@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
@@ -115,9 +116,22 @@ public class Tile : MonoBehaviour
         {
             if (value)
             {
-                // Display a highlight effect over this tile.
+                // Assign the unit and setup unit animation.
+                MaterialId materialId = new MaterialId(2, MaterialType.EFFECT);
+                materialId.cellWidth = 15;
+                materialId.cellHeight = 15;
+                materialId.animationManager.AddAnimation("highlight_blue",
+                    new List<int>() { 32, 33, 34, 35, 36, 37, 38, 39,
+                        40, 41, 42, 43, 44, 45, 46, 47 }, 0.1f);
+                materialId.animationManager.AddAnimation("highlight_red",
+                    new List<int>() { 16, 17, 18, 19, 20, 21, 22, 23,
+                        24, 25, 26, 27, 28, 29, 30, 31 }, 0.1f);
+                materialId.animationManager.SetCurrentAnimation("highlight_red");
+                materialId.animationManager.PlayAnimation();
+
+                // Assign the material to the unit.
                 tileRenderer.GetComponent<TileRenderer>()
-                    .SetEffectMaterial(TileRenderer.TileLayer.LAYER_HIGHLIGHTS, 0);
+                    .SetMaterial(TileRenderer.TileLayer.LAYER_HIGHLIGHTS, materialId);
             }
             _moveHighlight = value;
         }
