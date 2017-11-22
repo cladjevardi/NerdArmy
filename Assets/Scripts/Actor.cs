@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,6 +12,22 @@ public class Actor : MonoBehaviour
     /// The renderer for the tile.
     /// </summary>
     private GameObject tileRenderer = null;
+
+    /// <summary>The list of unit animations.</summary>
+    public enum AnimationType
+    {
+        IDLE,
+        ATTACKING,
+        DAMAGED,
+        WALKING_NORTH,
+        WALKING_EAST,
+        WALKING_SOUTH,
+        WALKING_WEST,
+
+        // TODO:
+        DEATH,
+        CELEBRATE,
+    }
 
     /// <summary>
     /// Set the material of the the unit.
@@ -27,8 +44,74 @@ public class Actor : MonoBehaviour
         else if (_flying)
             layer = TileRenderer.TileLayer.LAYER_FLYINGUNITS;
 
-        // Assign the unit.
-        tileRenderer.GetComponent<TileRenderer>().SetUnitMaterial(layer, tileId);
+        // Assign the unit and setup unit animation.
+        MaterialId materialId = new MaterialId(tileId, MaterialType.UNIT);
+
+        // All unit sprite maps are setup with the same dimensions to avoid
+        // special code for each of their animations.
+        materialId.cellWidth = 33;
+        materialId.cellHeight = 32;
+
+        // Inform this actor about animation messages we care about.
+        materialId.animationManager.messageReceiver = gameObject;
+
+        // Setup each unit animation.
+        // TODO: Fill in all missing animations.
+        materialId.animationManager.AddAnimation("idle",
+            new List<int>() { 9, 14 }, 1.0f);
+        materialId.animationManager.AddAnimation("attack",
+            new List<int>() { 14, 9, 4, 4, 4, 4, 14, 9 }, 0.10f, false);
+        materialId.animationManager.AddAnimation("damaged",
+            new List<int>() { 0, 0 }, 1.0f, false);
+        materialId.animationManager.AddAnimation("walking_west",
+            new List<int>() { 1, 6, 11, 16 }, 0.2f);
+        materialId.animationManager.AddAnimation("walking_south",
+            new List<int>() { 2, 7, 12, 17 }, 0.2f);
+        materialId.animationManager.AddAnimation("walking_north",
+            new List<int>() { 3, 8, 13, 18 }, 0.2f);
+        materialId.animationManager.SetCurrentAnimation("attack");
+        materialId.animationManager.PlayAnimation();
+
+        // Assign the material to the unit.
+        tileRenderer.GetComponent<TileRenderer>().SetMaterial(layer, materialId);
+    }
+
+    /// <summary>Set the actor animation.</summary>
+    /// <param name="animationType">The animation to play.</param>
+    public void SetAnimation(AnimationType animationType)
+    {
+        // Get the string animation name.
+        string animationName = "";
+        switch (animationType)
+        {
+            case AnimationType.IDLE:
+                animationName = "idle";
+                break;
+            case AnimationType.ATTACKING:
+                animationName = "attacking";
+                break;
+            case AnimationType.DAMAGED:
+                animationName = "damaged";
+                break;
+            case AnimationType.WALKING_NORTH:
+                animationName = "walking_north";
+                break;
+            case AnimationType.WALKING_EAST:
+                animationName = "walking_east";
+                break;
+            case AnimationType.WALKING_SOUTH:
+                animationName = "walking_south";
+                break;
+            case AnimationType.WALKING_WEST:
+                animationName = "walking_west";
+                break;
+
+            // Not implemente
+            default:
+                throw new ArgumentException("Invalid actor animation specified", "animationType");
+        }
+
+        SetAnimation(animationName);
     }
 
     /// <summary>
@@ -123,13 +206,25 @@ public class Actor : MonoBehaviour
         }
     }
 
+    private TileRenderer.TileLayer GetCurrentLayer()
+    {
+        TileRenderer.TileLayer layer = TileRenderer.TileLayer.LAYER_UNITS;
+        if (_invisible)
+            layer = TileRenderer.TileLayer.LAYER_INVISIBLE;
+        else if (_burrowed)
+            layer = TileRenderer.TileLayer.LAYER_BURROWED;
+        else if (_flying)
+            layer = TileRenderer.TileLayer.LAYER_FLYINGUNITS;
+        return layer;
+    }
+
     private int GetUnitMaterialId(UnitType unitType)
     {
         switch (unitType)
         {
             // Hero units.
             case UnitType.MAINCHARACTER:
-                return 0;
+                return 15; // TODO: Fix me.
             case UnitType.CHARGER:
                 return 1;
             case UnitType.MAGICIAN:
@@ -141,7 +236,7 @@ public class Actor : MonoBehaviour
 
             // Enemy units.
             case UnitType.GUMBALL:
-                return 5;
+                return 16; // TODO: Fix me.
             case UnitType.EAGLE:
                 return 6;
             case UnitType.RUNNINGMAN:
@@ -165,6 +260,37 @@ public class Actor : MonoBehaviour
             default:
                 throw new ArgumentException("Invalid unit type", "type");
         }
+    }
+
+    /// <summary>
+    /// Called via SendMessage from MaterialAnimation when an animation is complete.
+    /// Should not be invoked from anywhere else.
+    /// </summary>
+    /// <param name="name">The name of the animation that completed.</param>
+    private void OnAnimationComplete(object name)
+    {
+        // The object passed into the method is type string.
+        string animationName = name as String;
+
+        // On completion of an attack set the animation back to idle.
+        if (animationName == "attack"
+            || animationName == "damaged"
+            || animationName == "celebrate")
+            SetAnimation("idle");
+    }
+
+    /// <summary>
+    /// Internal version of setting the animation.
+    /// </summary>
+    /// <param name="name">The string name of the animation.</param>
+    private void SetAnimation(string name)
+    {
+        // Set the animation of the current material at the units layer.
+        TileRenderer _renderer = tileRenderer.GetComponent<TileRenderer>();
+        MaterialId materialId = _renderer.GetMaterial(GetCurrentLayer());
+        materialId.animationManager.SetCurrentAnimation(name);
+        materialId.animationManager.PlayAnimation();
+        _renderer.SetMaterial(GetCurrentLayer(), materialId);
     }
 
     /// <summary>Call at creation of object.</summary>

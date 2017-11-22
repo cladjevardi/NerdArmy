@@ -49,7 +49,7 @@ public class TileRenderer : MonoBehaviour
     }
 
     /// <summary>The visual scale of the grid.</summary>
-    private float gridScale = 2.5f;
+    private float gridScale = 3.75f;
 
     /// <summary>The position of the tile.</summary>
     private Vector2 position;
@@ -284,31 +284,21 @@ public class TileRenderer : MonoBehaviour
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(
-            x * gridScale, 
-            y * gridScale,
-            z * gridScale);
-        verts[1] = new Vector3(
-            x * gridScale + 1 * gridScale,
-            y * gridScale,
-            z * gridScale);
-        verts[2] = new Vector3(
-            x * gridScale,
-            y * gridScale + 1 * gridScale,
-            z * gridScale);
-        verts[3] = new Vector3(
-            x * gridScale + 1 * gridScale,
-            y * gridScale + 1 * gridScale,
-            z * gridScale);
+        verts[0] = new Vector3(x, y, z) * gridScale;
+        verts[1] = new Vector3(x + 1, y, z) * gridScale;
+        verts[2] = new Vector3(x, y + 1, z) * gridScale;
+        verts[3] = new Vector3(x + 1, y + 1, z) * gridScale;
 
-        // Create the list of uvmap coordinates pull from the texture. Currently set
-        // to use the entire material image.
-        // TODO: We should be using a tile spritemap and searching for each texture.
-        Vector2[] uv = new Vector2[4];
-        uv[0] = new Vector2(x    , y    );
-        uv[1] = new Vector2(x + 1, y    );
-        uv[2] = new Vector2(x    , y + 1);
-        uv[3] = new Vector2(x + 1, y + 1);
+        // Create the list of uvmap coordinates pull from the texture.
+        Vector2[] uv = materials[(int)layer].uv();
+
+        // For bumpy normal maps, create the list of tangents.
+        // All tangents point to the right.
+        Vector4[] tangents = new Vector4[4];
+        tangents[0] = new Vector4(1f, 0f, 0f, -1f);
+        tangents[1] = new Vector4(1f, 0f, 0f, -1f);
+        tangents[2] = new Vector4(1f, 0f, 0f, -1f);
+        tangents[3] = new Vector4(1f, 0f, 0f, -1f);
 
         // Create the list of triangles to display.
         int[] triangles = new int[6];
@@ -323,7 +313,20 @@ public class TileRenderer : MonoBehaviour
         filter.mesh.vertices = verts;
         filter.mesh.triangles = triangles;
         filter.mesh.uv = uv;
+        filter.mesh.tangents = tangents;
         filter.mesh.RecalculateNormals();
+    }
+
+    /// <summary>
+    /// Update the mesh for any animation changes.
+    /// </summary>
+    /// <param name="layer">The layer to update.</param>
+    private void UpdateMesh(TileLayer layer)
+    {
+        // The mesh may receive animation updates. Update the material uv map
+        // accordingly.
+        MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
+        filter.mesh.uv = materials[(int)layer].uv();
     }
 
     /// <summary>
@@ -357,6 +360,25 @@ public class TileRenderer : MonoBehaviour
                 return -0.05f;
             default:
                 return 0f;
+        }
+    }
+
+    /// <summary>
+    /// Called every game frame. Update all tiles with animation.
+    /// </summary>
+    private void Update()
+    {
+        // Every frame, update each material with animations.
+        for (int index = 0; index < (int)TileLayer.LAYER_COUNT; ++index)
+        {
+            if (materials[index] != null)
+            {
+                // Update the animation.
+                materials[index].animationManager.Update();
+
+                // Update the mesh for any animation changes.
+                UpdateMesh((TileLayer)index);
+            }
         }
     }
 }
