@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileMaterials:
   - {fileID: 2100000, guid: 67d2284f28d7c8e44a6d65baaf169285, type: 2}
+  - {fileID: 2100000, guid: d98f33be75a55124ba0f6f078753af5b, type: 2}
   effectMaterials:
   - {fileID: 2100000, guid: d67b90451e9030547ad079360cccca0b, type: 2}
   - {fileID: 2100000, guid: 5a5597d5cbd11a74e9f323ab884d29e9, type: 2}

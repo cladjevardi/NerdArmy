@@ -21,12 +21,26 @@ public class MissionDatabase
                 // World 1-1
                 new MissionSchematic("World 1-1",
                     new List<MissionTile>() {
-                        new MissionTile(new Vector2(-2, 0), 0, -1, -1, 1, false, false),
-                        new MissionTile(new Vector2(-1, 0), 0, -1, -1, 1, false, false),
-                        new MissionTile(new Vector2(-0, 0), 0, -1, -1, 1, false, false),
-                        new MissionTile(new Vector2(1, 0), 0, -1, -1, 1, false, false),
-                        new MissionTile(new Vector2(2, 0), 0, -1, -1, 1, false, false),
-                        new MissionTile(new Vector2(3, 0), 0, -1, -1, 1, false, false),
+                        new MissionTile(new Vector2(-2, 0), 1, -1, -1, 24, 1, false, false),
+                        new MissionTile(new Vector2(-1, 0), 1, -1, -1, 26, 1, false, false),
+                        new MissionTile(new Vector2(-0, 0), 1, -1, -1, 25, 1, false, false),
+                        new MissionTile(new Vector2(1, 0), 1, -1, -1, 29, 1, false, false),
+                        new MissionTile(new Vector2(2, 0), 1, -1, -1, 29, 1, false, false),
+                        new MissionTile(new Vector2(3, 0), 1, -1, -1, 27, 1, false, false),
+
+                        new MissionTile(new Vector2(-2, 1), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(-1, 1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(-0, 1), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(1, 1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(2, 1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(3, 1), 1, -1, -1, 23, 1, true, true),
+
+                        new MissionTile(new Vector2(-2, -1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(-1, -1), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(-0, -1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(1, -1), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(2, -1), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(3, -1), 1, -1, -1, 15, 1, true, true),
                     },
                     new List<MissionEnemy>() {
                         new MissionEnemy(new Vector2(3, 0), UnitType.GUMBALL)
@@ -141,6 +155,9 @@ public class MissionTile
     /// <summary>The roof tile material id. Found in GameManager.</summary>
     public int roofMaterialId;
 
+    /// <summary>The frame id from the tile material to use.</summary>
+    public int frameId;
+
     /// <summary>The movement cost moving onto this tile.</summary>
     public int movementCost;
 
@@ -161,13 +178,15 @@ public class MissionTile
     /// <param name="groundCollision">Disallow ground unit movement.</param>
     /// <param name="airCollision">Disallow air unit movement.</param>
     public MissionTile(Vector2 position, int floorMaterialId, int objectMaterialId,
-        int roofMaterialId, int movementCost, bool groundCollision, bool airCollision)
+        int roofMaterialId, int frameId, int movementCost, bool groundCollision,
+        bool airCollision)
     {
         // Set tile information.
         this.position = position;
         this.floorMaterialId = floorMaterialId;
         this.objectMaterialId = objectMaterialId;
         this.roofMaterialId = roofMaterialId;
+        this.frameId = frameId;
         this.movementCost = movementCost;
         this.groundCollision = groundCollision;
         this.airCollision = airCollision;

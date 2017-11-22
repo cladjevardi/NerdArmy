@@ -12,10 +12,18 @@ public class Tile : MonoBehaviour
     /// Set the material of the the floor tile that renders below all other tiles.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
-    public void SetFloorMaterial(int tileId)
+    public void SetFloorMaterial(int tileId, int frameId = 0)
     {
-        tileRenderer.GetComponent<TileRenderer>()
-            .SetTileMaterial(TileRenderer.TileLayer.LAYER_FLOOR, tileId);
+        MaterialId materialId = new MaterialId(tileId, MaterialType.TILE);
+
+        // Split the tile up into multiple pieces.
+        materialId.cellWidth = 16;
+        materialId.cellHeight = 16;
+
+        // Use the specific frame from the tile sprite.
+        materialId.frameId = frameId;
+        tileRenderer.GetComponent<TileRenderer>().SetMaterial(
+            TileRenderer.TileLayer.LAYER_FLOOR, materialId);
     }
 
     /// <summary>
@@ -126,7 +134,7 @@ public class Tile : MonoBehaviour
                 materialId.animationManager.AddAnimation("highlight_red",
                     new List<int>() { 16, 17, 18, 19, 20, 21, 22, 23,
                         24, 25, 26, 27, 28, 29, 30, 31 }, 0.1f);
-                materialId.animationManager.SetCurrentAnimation("highlight_red");
+                materialId.animationManager.SetCurrentAnimation("highlight_blue");
                 materialId.animationManager.PlayAnimation();
 
                 // Assign the material to the unit.

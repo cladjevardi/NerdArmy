@@ -334,6 +334,16 @@ public class MaterialId
     }
 
     /// <summary>
+    /// The frame id to use for the texture.
+    /// </summary>
+    private int _frameId = 0;
+    public int frameId
+    {
+        get { return _frameId; }
+        set { _frameId = value; }
+    }
+
+    /// <summary>
     /// The animation manager that handles a given sequence of material
     /// frames by animation names.
     /// </summary>
@@ -353,9 +363,8 @@ public class MaterialId
     /// <returns></returns>
     public Vector2[] uv()
     {
-        // If animations have not been setup. Always use frame 0.
-        int frameId = _animationManager.IsValid()
-            ? _animationManager.GetCurrentFrame() : 0;
+        int frameIdentifier = _animationManager.IsValid() ?
+            _animationManager.GetCurrentFrame() : _frameId;
 
         // Get the material of the current id/type.
         Material material = GetMaterial();
@@ -370,8 +379,8 @@ public class MaterialId
         int frameHeightCount = height / (cellHeight == -1 ? height : cellHeight);
 
         // Which frame in the sprite map are we.
-        int frameX = frameId % frameWidthCount;
-        int frameY = frameId / frameWidthCount;
+        int frameX = frameIdentifier % frameWidthCount;
+        int frameY = frameIdentifier / frameWidthCount;
 
         // Calculate the UV ratio per frame.
         float xStride = 1.0f / frameWidthCount;
