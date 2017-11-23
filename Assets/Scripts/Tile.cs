@@ -17,13 +17,17 @@ public class Tile : MonoBehaviour
         MaterialId materialId = new MaterialId(tileId, MaterialType.TILE);
 
         // Split the tile up into multiple pieces.
-        materialId.cellWidth = 16;
-        materialId.cellHeight = 16;
+        materialId.cellWidth = 32;
+        materialId.cellHeight = 32;
 
         // Use the specific frame from the tile sprite.
         materialId.frameId = frameId;
         tileRenderer.GetComponent<TileRenderer>().SetMaterial(
             TileRenderer.TileLayer.LAYER_FLOOR, materialId);
+
+        // Draw grid over tile.
+        //tileRenderer.GetComponent<TileRenderer>().SetTileMaterial(
+        //    TileRenderer.TileLayer.LAYER_GRID, 0);
     }
 
     /// <summary>

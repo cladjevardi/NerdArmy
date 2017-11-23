@@ -44,6 +44,11 @@ public class TileRenderer : MonoBehaviour
         /// <summary>The layer for tile highlighted effects.</summary>
         LAYER_HIGHLIGHTS,
 
+        /// <summary>
+        /// The layer of the grid. Or special effects.
+        /// </summary>
+        LAYER_GRID,
+
         /// <summary>Total count of layers.</summary>
         LAYER_COUNT,
     }
@@ -53,6 +58,9 @@ public class TileRenderer : MonoBehaviour
 
     /// <summary>The highlight layers default alpha.</summary>
     private float defaultHighlightAlpha = 0.6f;
+
+    /// <summary>The highlight layers default alpha.</summary>
+    private float defaultGridAlpha = 0.20f;
 
     /// <summary>The position of the tile.</summary>
     private Vector2 position;
@@ -123,9 +131,14 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The layer to reset.</param>
     public void ResetColor(TileLayer layer)
     {
+        float alpha = 1.0f;
+        if (layer == TileLayer.LAYER_HIGHLIGHTS)
+            alpha = defaultHighlightAlpha;
+        if (layer == TileLayer.LAYER_GRID)
+            alpha = defaultGridAlpha;
+
         // Highlight layer automatically receives an alpha channel.
-        colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f,
-            (layer == TileLayer.LAYER_HIGHLIGHTS) ? defaultHighlightAlpha : 1.0f);
+        colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f, alpha);
     }
 
     /// <summary>
@@ -361,6 +374,8 @@ public class TileRenderer : MonoBehaviour
                 return -0.04f;
             case TileLayer.LAYER_HIGHLIGHTS:
                 return -0.05f;
+            case TileLayer.LAYER_GRID:
+                return -0.06f;
             default:
                 return 0f;
         }
