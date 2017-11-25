@@ -156,18 +156,18 @@ public class Astar
     {
         int x = (int)position.x;
         int y = (int)position.y;
-        int N = y - 1;
-        int S = y + 1;
+        int N = y + 1;
+        int S = y - 1;
         int E = x + 1;
         int W = x - 1;
 
         int i = 0;
         AStarTile[] result = new AStarTile[4];
-        if (N > -1 && (canFly ? !tileMap.tiles[x][N].airCollision : !tileMap.tiles[x][N].groundCollision))
+        if (N < tileMap.height && (canFly ? !tileMap.tiles[x][N].airCollision : !tileMap.tiles[x][N].groundCollision))
             result[i++] = new AStarTile(new Vector2(x, N));
         if (E < tileMap.width && (canFly ? !tileMap.tiles[E][y].airCollision : !tileMap.tiles[E][y].groundCollision))
             result[i++] = new AStarTile(new Vector2(E, y));
-        if (S < tileMap.height && (canFly ? !tileMap.tiles[x][S].airCollision : !tileMap.tiles[x][S].groundCollision))
+        if (S > -1  && (canFly ? !tileMap.tiles[x][S].airCollision : !tileMap.tiles[x][S].groundCollision))
             result[i++] = new AStarTile(new Vector2(x, S));
         if (W > -1 && (canFly ? !tileMap.tiles[W][y].airCollision : !tileMap.tiles[W][y].groundCollision))
             result[i++] = new AStarTile(new Vector2(W, y));
@@ -227,8 +227,8 @@ public class Astar
     /// <returns>Returns the direction 2 adjacent vectors.</returns>
     private AStarDirection GetDirection(Vector2 from, Vector2 to)
     {
-        Vector2 N = new Vector2(from.x, from.y - 1);
-        Vector2 S = new Vector2(from.x, from.y + 1);
+        Vector2 N = new Vector2(from.x, from.y + 1);
+        Vector2 S = new Vector2(from.x, from.y - 1);
         Vector2 E = new Vector2(from.x + 1, from.y);
         Vector2 W = new Vector2(from.x - 1, from.y);
 

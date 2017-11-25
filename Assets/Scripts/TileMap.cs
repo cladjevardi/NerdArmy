@@ -203,6 +203,10 @@ public class TileMap : MonoBehaviour
     /// </returns>
     private bool ShouldAdd(Vector2 coord, List<Vector2> visited, bool canFly)
     {
+        // Are we within bounds of the map.
+        if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
+            return false;
+
         Tile tile = tiles[(int)coord.x][(int)coord.y];
 
         // If the coord is valid, not already visited previously, or has collision
