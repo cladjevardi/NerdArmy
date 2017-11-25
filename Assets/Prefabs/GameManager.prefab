@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: d67b90451e9030547ad079360cccca0b, type: 2}
   - {fileID: 2100000, guid: 5a5597d5cbd11a74e9f323ab884d29e9, type: 2}
   - {fileID: 2100000, guid: e8960fc2e6c94d74b861cf51261fa8f8, type: 2}
+  - {fileID: 2100000, guid: 700241e4f87ca274a96baf0fb4469467, type: 2}
   unitMaterials:
   - {fileID: 2100000, guid: d63892b42b76ee94d905e48406e8fa4a, type: 2}
   - {fileID: 2100000, guid: 85086739737c6eb43bdfcb9bdba7258b, type: 2}

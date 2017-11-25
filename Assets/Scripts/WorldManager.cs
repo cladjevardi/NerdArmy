@@ -27,6 +27,9 @@ public class WorldManager : MonoBehaviour
         tileMap.GetComponent<TileMap>().GenerateMission(
             roster, missionSchematic);
 
+        tileMap.GetComponent<TileMap>().HighlightCenter(new Vector2(1, 1), 3, false);
+        tileMap.GetComponent<TileMap>().ShowPath(new Vector2(1, 1), new Vector2(4, 1), false);
+
         // TODO: Start the mission.
     }
 

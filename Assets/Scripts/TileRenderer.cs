@@ -60,7 +60,7 @@ public class TileRenderer : MonoBehaviour
     private float defaultHighlightAlpha = 0.6f;
 
     /// <summary>The highlight layers default alpha.</summary>
-    private float defaultGridAlpha = 0.20f;
+    private float defaultGridAlpha = 1.00f;
 
     /// <summary>The position of the tile.</summary>
     private Vector2 position;

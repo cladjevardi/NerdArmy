@@ -6,11 +6,27 @@ public class TileMap : MonoBehaviour
 {
     /// <summary>In-memory data of each tile.</summary>
     [HideInInspector]
-    public List<Tile> tiles = new List<Tile>();
+    public List<List<Tile>> tiles = new List<List<Tile>>();
 
     /// <summary>The list of units in the mission.</summary>
     [HideInInspector]
     public List<Actor> actors = new List<Actor>();
+
+    /// <summary>The height of the tilemap.</summary>
+    private int _height;
+    public int height
+    {
+        get { return _height; }
+        internal set { _height = value; }
+    }
+
+    /// <summary>The width of the tilemap.</summary>
+    private int _width;
+    public int width
+    {
+        get { return _width; }
+        internal set { _width = value; }
+    }
 
     /// <summary>The different unit control groups.</summary>
     public enum PlayerType { HUMAN, COMPUTER };
@@ -25,33 +41,72 @@ public class TileMap : MonoBehaviour
     /// </summary>
     private Transform mapHolder;
 
-    /// <summary>
-    /// Initialize the map of tiles.
-    /// </summary>
-    /// <param name="missionTiles">Mission tile data.</param>
-    private void InitializeMap(List<MissionTile> missionTiles)
+    private void InitializeMap(List<Unit> roster, MissionSchematic missionSchematic)
     {
-        // Iterate through each tile from the mission loaded
-        // and create the map.
-        foreach (MissionTile missionTile in missionTiles)
+        // Set the base tilemap information.
+        width = missionSchematic.tileWidth;
+        height = missionSchematic.tileHeight;
+
+        // Clear any previous map information.
+        tiles.Clear();
+
+        // Allocate the map
+        tiles = new List<List<Tile>>();
+        for (int i = 0; i < missionSchematic.tileWidth; i++)
         {
-            Tile tile = new GameObject("Tile_" + missionTile.position.x + "_" + missionTile.position.y).AddComponent<Tile>();
-            tile.transform.parent = transform;
-            tile.position = missionTile.position;
-            tile.movementCost = missionTile.movementCost;
-            tile.airCollision = missionTile.airCollision;
-            tile.groundCollision = missionTile.groundCollision;
+            List<Tile> row = new List<Tile>();
+            for (int j = 0; j < missionSchematic.tileHeight; j++)
+            {
+                // Find the mission tile that represents this tile.
+                MissionTile missionTile = null;
+                foreach (MissionTile mTile in missionSchematic.tiles)
+                {
+                    if (mTile.position.x == i && mTile.position.y == j)
+                    {
+                        missionTile = mTile;
+                        break;
+                    }
+                }
 
-            // TODO: This should be based on the world tile pallete.
-            if (missionTile.floorMaterialId != -1)
-                tile.SetFloorMaterial(missionTile.floorMaterialId, missionTile.frameId);
-            if (missionTile.objectMaterialId != -1)
-                tile.SetObjectMaterial(missionTile.objectMaterialId);
-            if (missionTile.roofMaterialId != -1)
-                tile.SetRoofMaterial(missionTile.roofMaterialId);
+                // Basic tile information.
+                Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
+                tile.transform.parent = transform;
+                tile.position = new Vector2(i, j);
 
-            tiles.Add(tile);
+                // Tile found in mission tile list. Construct it.
+                if (missionTile != null)
+                {
+                    tile.movementCost = missionTile.movementCost;
+                    tile.airCollision = missionTile.airCollision;
+                    tile.groundCollision = missionTile.groundCollision;
+                    if (missionTile.floorMaterialId != -1)
+                        tile.SetFloorMaterial(missionTile.floorMaterialId, missionTile.frameId);
+                    if (missionTile.objectMaterialId != -1)
+                        tile.SetObjectMaterial(missionTile.objectMaterialId);
+                    if (missionTile.roofMaterialId != -1)
+                        tile.SetRoofMaterial(missionTile.roofMaterialId);
+                }
+                else
+                {
+                    // Basic floor tile without mission information.
+                    tile.groundCollision = true;
+                    tile.airCollision = true;
+                    tile.SetFloorMaterial(0);
+                }
+
+                // Add the tile to the map.
+                row.Add(tile);
+            }
+
+            // Add the row to the entire map.
+            tiles.Add(row);
         }
+
+        // Add the list of player controlled actors to the map.
+        AddRoster(roster, missionSchematic.rosterSpawns);
+
+        // Add the list of enemy controlled actors to the map.
+        AddEnemies(missionSchematic.enemies);
     }
 
     /// <summary>
@@ -81,9 +136,6 @@ public class TileMap : MonoBehaviour
             actor.unit = unit;
             actor.owner = Owner.PLAYER1;
             actor.health = unit.baseMaxHealth;
-
-            // Highlight the area that the player can move.
-            HighlightCenter(position, actor.unit.baseMovement, actor.flying);
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -115,24 +167,6 @@ public class TileMap : MonoBehaviour
             // Add the actor to the mission.
             actors.Add(actor);
         }
-    }
-
-    /// <summary>
-    /// Find the tile of the coordinate.
-    /// </summary>
-    /// <param name="entry">The coordinate of the tile to look for.</param>
-    /// <returns>Returns the Tile reference if found. Null if not.</returns>
-    private Tile FindTile(Vector2 entry)
-    {
-        // Iterate through each mission tile and compare its coordinate.
-        foreach (Tile item in tiles)
-        {
-            if (entry.x == item.position.x && entry.y == item.position.y)
-                return item;
-        }
-
-        // No tile was found matching this coordinate.
-        return null;
     }
 
     /// <summary>
@@ -169,7 +203,7 @@ public class TileMap : MonoBehaviour
     /// </returns>
     private bool ShouldAdd(Vector2 coord, List<Vector2> visited, bool canFly)
     {
-        Tile tile = FindTile(coord);
+        Tile tile = tiles[(int)coord.x][(int)coord.y];
 
         // If the coord is valid, not already visited previously, or has collision
         // add it to the list of visited
@@ -236,8 +270,57 @@ public class TileMap : MonoBehaviour
         // Apply the highlight to the valid tiles to move to
         foreach (Vector2 coord in visited)
         {
-            Tile tile = FindTile(coord);
+            Tile tile = tiles[(int)coord.x][(int)coord.y];
             tile.moveHighlight = true;
+        }
+    }
+
+    public void ShowPath(Vector2 fromPosition, Vector2 toPosition, bool canFly = false)
+    {
+        Astar pathing = new Astar(this, fromPosition, toPosition, canFly);
+        bool startPos = false;
+        foreach (AStarVector vector in pathing.result)
+        {
+            Tile tile = tiles[(int)vector.position.x][(int)vector.position.y];
+            string mask = BitConverter.ToString(vector.mask, 0);
+
+            Debug.Log("ShowPath mask: " + mask);
+
+            if (!startPos)
+            {
+                if (mask == "01-00-00-00")
+                    tile.SetGridMaterial(3, 7);
+                if (mask == "00-01-00-00")
+                    tile.SetGridMaterial(3, 1);
+                if (mask == "00-00-01-00")
+                    tile.SetGridMaterial(3, 0);
+                if (mask == "00-00-00-01")
+                    tile.SetGridMaterial(3, 8);
+                startPos = true;
+            }
+            else
+            {
+                if (mask == "01-00-00-00")
+                    tile.SetGridMaterial(3, 6);
+                if (mask == "00-01-00-00")
+                    tile.SetGridMaterial(3, 13);
+                if (mask == "00-00-01-00")
+                    tile.SetGridMaterial(3, 12);
+                if (mask == "00-00-00-01")
+                    tile.SetGridMaterial(3, 5);
+                if (mask == "01-01-00-00")
+                    tile.SetGridMaterial(3, 10);
+                if (mask == "01-00-01-00")
+                    tile.SetGridMaterial(3, 2);
+                if (mask == "01-00-00-01")
+                    tile.SetGridMaterial(3, 11);
+                if (mask == "00-01-01-00")
+                    tile.SetGridMaterial(3, 4);
+                if (mask == "00-01-00-01")
+                    tile.SetGridMaterial(3, 9);
+                if (mask == "00-00-01-01")
+                    tile.SetGridMaterial(3, 3);
+            }
         }
     }
 
@@ -253,12 +336,6 @@ public class TileMap : MonoBehaviour
         actors.Clear();
 
         // Allocate the tile map.
-        InitializeMap(missionSchematic.tiles);
-
-        // Add the list of player controlled actors to the map.
-        AddRoster(roster, missionSchematic.rosterSpawns);
-
-        // Add the list of enemy controlled actors to the map.
-        AddEnemies(missionSchematic.enemies);
+        InitializeMap(roster, missionSchematic);
     }
 }

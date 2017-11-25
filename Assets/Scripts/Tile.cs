@@ -59,6 +59,25 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
+    /// Set the material for the grid effect.
+    /// </summary>
+    /// <param name="tileId">The effect tile id to use.</param>
+    /// <param name="frameId">The frame id inside the effect tile to use.</param>
+    public void SetGridMaterial(int tileId, int frameId = 0)
+    {
+        MaterialId materialId = new MaterialId(tileId, MaterialType.EFFECT);
+
+        // Split the tile up into multiple pieces.
+        materialId.cellWidth = 32;
+        materialId.cellHeight = 32;
+
+        // Use the specific frame from the tile sprite.
+        materialId.frameId = frameId;
+        tileRenderer.GetComponent<TileRenderer>().SetMaterial(
+            TileRenderer.TileLayer.LAYER_GRID, materialId);
+    }
+
+    /// <summary>
     /// Tile positional information.
     /// </summary>
     private Vector2 _position = Vector2.zero;

@@ -19,61 +19,65 @@ public class MissionDatabase
             new List<MissionSchematic>() {
 
                 // World 1-1
-                new MissionSchematic("World 1-1",
+                new MissionSchematic("World 1-1", 8, 3,
                     new List<MissionTile>() {
-                        new MissionTile(new Vector2(-2, 0), 1, -1, -1, 24, 1, false, false),
-                        new MissionTile(new Vector2(-1, 0), 1, -1, -1, 26, 1, false, false),
-                        new MissionTile(new Vector2(-0, 0), 1, -1, -1, 25, 1, false, false),
-                        new MissionTile(new Vector2(1, 0), 1, -1, -1, 29, 1, false, false),
-                        new MissionTile(new Vector2(2, 0), 1, -1, -1, 29, 1, false, false),
-                        new MissionTile(new Vector2(3, 0), 1, -1, -1, 27, 1, false, false),
-
-                        new MissionTile(new Vector2(-2, 1), 1, -1, -1, 23, 1, true, true),
-                        new MissionTile(new Vector2(-1, 1), 1, -1, -1, 15, 1, true, true),
-                        new MissionTile(new Vector2(-0, 1), 1, -1, -1, 23, 1, true, true),
-                        new MissionTile(new Vector2(1, 1), 1, -1, -1, 15, 1, true, true),
-                        new MissionTile(new Vector2(2, 1), 1, -1, -1, 15, 1, true, true),
-                        new MissionTile(new Vector2(3, 1), 1, -1, -1, 23, 1, true, true),
-
-                        new MissionTile(new Vector2(-2, -1), 1, -1, -1, 15, 1, true, true),
-                        new MissionTile(new Vector2(-1, -1), 1, -1, -1, 23, 1, true, true),
-                        new MissionTile(new Vector2(-0, -1), 1, -1, -1, 15, 1, true, true),
-                        new MissionTile(new Vector2(1, -1), 1, -1, -1, 23, 1, true, true),
-                        new MissionTile(new Vector2(2, -1), 1, -1, -1, 23, 1, true, true),
-                        new MissionTile(new Vector2(3, -1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(0, 0), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(1, 0), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(2, 0), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(3, 0), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(4, 0), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(5, 0), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(6, 0), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(7, 0), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(0, 1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(1, 1), 1, -1, -1, 24, 1, false, false),
+                        new MissionTile(new Vector2(2, 1), 1, -1, -1, 26, 1, false, false),
+                        new MissionTile(new Vector2(3, 1), 1, -1, -1, 25, 1, false, false),
+                        new MissionTile(new Vector2(4, 1), 1, -1, -1, 29, 1, false, false),
+                        new MissionTile(new Vector2(5, 1), 1, -1, -1, 29, 1, false, false),
+                        new MissionTile(new Vector2(6, 1), 1, -1, -1, 27, 1, false, false),
+                        new MissionTile(new Vector2(7, 1), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(0, 2), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(1, 2), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(2, 2), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(3, 2), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(4, 2), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(5, 2), 1, -1, -1, 15, 1, true, true),
+                        new MissionTile(new Vector2(6, 2), 1, -1, -1, 23, 1, true, true),
+                        new MissionTile(new Vector2(7, 2), 1, -1, -1, 15, 1, true, true),
                     },
                     new List<MissionEnemy>() {
-                        new MissionEnemy(new Vector2(3, 0), UnitType.GUMBALL)
+                        new MissionEnemy(new Vector2(6, 1), UnitType.GUMBALL)
                     },
                     new List<Vector2>() {
-                        new Vector2(-2, 0),
-                        new Vector2(-1, 0),
+                        new Vector2(1, 1),
+                        new Vector2(2, 1),
                     }
                 ),
 
                 // World 1-2
-                new MissionSchematic("World 1-2",
+                new MissionSchematic("World 1-2", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-3
-                new MissionSchematic("World 1-3",
+                new MissionSchematic("World 1-3", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-4
-                new MissionSchematic("World 1-4",
+                new MissionSchematic("World 1-4", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 1-5
-                new MissionSchematic("World 1-5",
+                new MissionSchematic("World 1-5", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
@@ -84,35 +88,35 @@ public class MissionDatabase
             new List<MissionSchematic>() {
 
                 // World 2-1
-                new MissionSchematic("World 2-1",
+                new MissionSchematic("World 2-1", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-2
-                new MissionSchematic("World 2-2",
+                new MissionSchematic("World 2-2", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-3
-                new MissionSchematic("World 2-3",
+                new MissionSchematic("World 2-3", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-4
-                new MissionSchematic("World 2-4",
+                new MissionSchematic("World 2-4", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
                 ),
 
                 // World 2-5
-                new MissionSchematic("World 2-5",
+                new MissionSchematic("World 2-5", 1, 1,
                     new List<MissionTile>(),
                     new List<MissionEnemy>(),
                     new List<Vector2>()
@@ -227,6 +231,12 @@ public class MissionSchematic
     /// <summary>The name of the mission.</summary>
     public string name;
 
+    /// <summary>The width of the map in tiles.</summary>
+    public int tileWidth = 0;
+
+    /// <summary>The height of the map in tiles.</summary>
+    public int tileHeight = 0;
+
     /// <summary>
     /// Tile metadata that makes up how a mission is layed out.
     /// </summary>
@@ -251,11 +261,14 @@ public class MissionSchematic
     /// <param name="tiles">The tile mission data.</param>
     /// <param name="enemies">The list of enemies.</param>
     /// <param name="rosterSpawns">The list of friendly spawning positions.</param>
-    public MissionSchematic(string name, List<MissionTile> tiles,
-        List<MissionEnemy> enemies, List<Vector2> rosterSpawns)
+    public MissionSchematic(string name, int tileWidth, int tileHeight,
+        List<MissionTile> tiles, List<MissionEnemy> enemies,
+        List<Vector2> rosterSpawns)
     {
         // Set complete mission data.
         this.name = name;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.tiles = tiles;
         this.enemies = enemies;
         this.rosterSpawns = rosterSpawns;
