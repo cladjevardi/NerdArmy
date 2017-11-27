@@ -1,33 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+/// <summary>The list of highlight animations.</summary>
+public enum TileHighlightColor
 {
-    /// <summary>
-    /// The renderer for the tile.
-    /// </summary>
-    private GameObject tileRenderer = null;
+    HIGHLIGHT_NONE,
+    HIGHLIGHT_BLUE,
+    HIGHLIGHT_RED,
+    HIGHLIGHT_GREEN,
+}
 
+public class Tile : Mesh2D
+{
     /// <summary>
     /// Set the material of the the floor tile that renders below all other tiles.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
+    /// <param name="frameId">The sprite index to display inside the material.</param>
     public void SetFloorMaterial(int tileId, int frameId = 0)
     {
-        MaterialId materialId = new MaterialId(tileId, MaterialType.TILE);
-
-        // Split the tile up into multiple pieces.
-        materialId.cellWidth = 32;
-        materialId.cellHeight = 32;
-
-        // Use the specific frame from the tile sprite.
-        materialId.frameId = frameId;
-        tileRenderer.GetComponent<TileRenderer>().SetMaterial(
-            TileRenderer.TileLayer.LAYER_FLOOR, materialId);
-
-        // Draw grid over tile.
-        //tileRenderer.GetComponent<TileRenderer>().SetTileMaterial(
-        //    TileRenderer.TileLayer.LAYER_GRID, 0);
+        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 32, 32, frameId);
     }
 
     /// <summary>
@@ -36,10 +29,10 @@ public class Tile : MonoBehaviour
     /// that don't really fit the behaviour of an Actor.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
-    public void SetObjectMaterial(int tileId)
+    /// <param name="frameId">The sprite index to display inside the material.</param>
+    public void SetObjectMaterial(int tileId, int frameId = 0)
     {
-        tileRenderer.GetComponent<TileRenderer>()
-            .SetTileMaterial(TileRenderer.TileLayer.LAYER_OBJECT, tileId);
+        SetMaterial(Mesh2DLayer.LAYER_OBJECT, tileId, MaterialType.TILE, 32, 32, frameId);
     }
 
     /// <summary>
@@ -48,14 +41,37 @@ public class Tile : MonoBehaviour
     /// units are the only exception and render above the roof layer.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
-    public void SetRoofMaterial(int tileId)
+    /// <param name="frameId">The sprite index to display inside the material.</param>
+    public void SetRoofMaterial(int tileId, int frameId = 0)
     {
         // If the acting faction can see under this roof tile.
-        tileRenderer.GetComponent<TileRenderer>().SetColor(
-            TileRenderer.TileLayer.LAYER_ROOF,
+        mesh.SetColor(Mesh2DLayer.LAYER_ROOF, 
             new Color(1.0f, 1.0f, 1.0f, _canSeeUnder ? 0.2f : 1.0f));
-        tileRenderer.GetComponent<TileRenderer>()
-            .SetTileMaterial(TileRenderer.TileLayer.LAYER_ROOF, tileId);
+        SetMaterial(Mesh2DLayer.LAYER_ROOF, tileId, MaterialType.TILE, 32, 32, frameId);
+    }
+
+    /// <summary>
+    /// Set the highlight material.
+    /// </summary>
+    /// <param name="tileId">The GameManager tile identifier of the material.</param>
+    /// <param name="frameId">The sprite index to display inside the material.</param>
+    public void SetHighlightMaterial(int tileId, int frameId = 0)
+    {
+        // Assign the unit and setup unit animation.
+        List<Mesh2DAnimation> animations = new List<Mesh2DAnimation>() {
+            new Mesh2DAnimation("highlight_green",
+                new List<int>() { 48, 49, 50, 51, 52, 53, 54, 55,
+                    56, 57, 58, 59, 60, 61, 62, 63 }, 0.1f),
+            new Mesh2DAnimation("highlight_blue",
+                new List<int>() { 32, 33, 34, 35, 36, 37, 38, 39,
+                    40, 41, 42, 43, 44, 45, 46, 47 }, 0.1f),
+            new Mesh2DAnimation("highlight_red",
+                new List<int>() { 16, 17, 18, 19, 20, 21, 22, 23,
+                    24, 25, 26, 27, 28, 29, 30, 31 }, 0.1f),
+        };
+
+        SetMaterial(Mesh2DLayer.LAYER_HIGHLIGHTS, tileId, MaterialType.EFFECT,
+            15, 15, frameId, animations, "highlight_blue", true);
     }
 
     /// <summary>
@@ -65,26 +81,55 @@ public class Tile : MonoBehaviour
     /// <param name="frameId">The frame id inside the effect tile to use.</param>
     public void SetGridMaterial(int tileId, int frameId = 0)
     {
-        MaterialId materialId = new MaterialId(tileId, MaterialType.EFFECT);
-
-        // Split the tile up into multiple pieces.
-        materialId.cellWidth = 32;
-        materialId.cellHeight = 32;
-
-        // Use the specific frame from the tile sprite.
-        materialId.frameId = frameId;
-        tileRenderer.GetComponent<TileRenderer>().SetMaterial(
-            TileRenderer.TileLayer.LAYER_GRID, materialId);
+        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 32, 32, frameId);
     }
 
     /// <summary>
-    /// Tile positional information.
+    /// Take a directional mask string and convert it to an arrow GridMaterial.
     /// </summary>
-    private Vector2 _position = Vector2.zero;
-    public Vector2 position
+    /// <param name="start">
+    /// Whether to draw the beginning of the path or the end of the path image.
+    /// </param>
+    /// <param name="mask">The arrow image mask to convert to a frame id.</param>
+    public void SetGridArrowMask(bool start, string mask)
     {
-        get { return tileRenderer.GetComponent<TileRenderer>().GetPosition(); }
-        set { tileRenderer.GetComponent<TileRenderer>().SetPosition(value); }
+        if (start)
+        {
+            // Use the arrow begin frame over the arrow point.
+            if (mask == "01-00-00-00")
+                SetGridMaterial(3, 7);
+            if (mask == "00-01-00-00")
+                SetGridMaterial(3, 1);
+            if (mask == "00-00-01-00")
+                SetGridMaterial(3, 0);
+            if (mask == "00-00-00-01")
+                SetGridMaterial(3, 8);
+        }
+        else
+        {
+            // Draw the direction based arrow sprites.
+            if (mask == "01-00-00-00")
+                SetGridMaterial(3, 6);
+            if (mask == "00-01-00-00")
+                SetGridMaterial(3, 13);
+            if (mask == "00-00-01-00")
+                SetGridMaterial(3, 12);
+            if (mask == "00-00-00-01")
+                SetGridMaterial(3, 5);
+        }
+                
+        if (mask == "01-01-00-00")
+            SetGridMaterial(3, 10);
+        if (mask == "01-00-01-00")
+            SetGridMaterial(3, 2);
+        if (mask == "01-00-00-01")
+            SetGridMaterial(3, 11);
+        if (mask == "00-01-01-00")
+            SetGridMaterial(3, 4);
+        if (mask == "00-01-00-01")
+            SetGridMaterial(3, 9);
+        if (mask == "00-00-01-01")
+            SetGridMaterial(3, 3);
     }
 
     /// <summary>
@@ -139,40 +184,49 @@ public class Tile : MonoBehaviour
     /// Whether there is a movement highlight effect
     /// being displayed on this tile.
     /// </summary>
-    private bool _moveHighlight = false;
-    public bool moveHighlight
+    private bool _highlight = false;
+    public bool highlight
     {
-        get { return _moveHighlight; }
+        get { return _highlight; }
         set
         {
-            if (value)
-            {
-                // Assign the unit and setup unit animation.
-                MaterialId materialId = new MaterialId(2, MaterialType.EFFECT);
-                materialId.cellWidth = 15;
-                materialId.cellHeight = 15;
-                materialId.animationManager.AddAnimation("highlight_blue",
-                    new List<int>() { 32, 33, 34, 35, 36, 37, 38, 39,
-                        40, 41, 42, 43, 44, 45, 46, 47 }, 0.1f);
-                materialId.animationManager.AddAnimation("highlight_red",
-                    new List<int>() { 16, 17, 18, 19, 20, 21, 22, 23,
-                        24, 25, 26, 27, 28, 29, 30, 31 }, 0.1f);
-                materialId.animationManager.SetCurrentAnimation("highlight_blue");
-                materialId.animationManager.PlayAnimation();
-
-                // Assign the material to the unit.
-                tileRenderer.GetComponent<TileRenderer>()
-                    .SetMaterial(TileRenderer.TileLayer.LAYER_HIGHLIGHTS, materialId);
-            }
-            _moveHighlight = value;
+            SetHighlightMaterial(2, 0);
+            _highlight = value;
         }
     }
 
-    /// <summary>Call at creation of object.</summary>
-    private void Awake()
+    /// <summary>
+    /// The highlight animation color. Must be enabled first.
+    /// </summary>
+    private TileHighlightColor _highlightColor = TileHighlightColor.HIGHLIGHT_BLUE;
+    public TileHighlightColor highlightColor
     {
-        tileRenderer = new GameObject("TileRenderer");
-        tileRenderer.transform.parent = transform;
-        tileRenderer.AddComponent<TileRenderer>();
+        get { return _highlightColor; }
+        set
+        {
+            switch(value)
+            {
+                case TileHighlightColor.HIGHLIGHT_BLUE:
+                    SetAnimation(Mesh2DLayer.LAYER_HIGHLIGHTS, "highlight_blue");
+                    break;
+                case TileHighlightColor.HIGHLIGHT_RED:
+                    SetAnimation(Mesh2DLayer.LAYER_HIGHLIGHTS, "highlight_red");
+                    break;
+                case TileHighlightColor.HIGHLIGHT_GREEN:
+                    SetAnimation(Mesh2DLayer.LAYER_HIGHLIGHTS, "highlight_green");
+                    break;
+            }
+            _highlightColor = value;
+        }
+    }
+
+    /// <summary>
+    /// Called via SendMessage from Mesh2DAnimation when an animation is complete.
+    /// Should not be invoked from anywhere else.
+    /// </summary>
+    /// <param name="name">The name of the animation that completed.</param>
+    protected override void OnAnimationComplete(object name)
+    {
+        // No tile animations need monitoring at this time.
     }
 }

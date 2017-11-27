@@ -1,16 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>The lookup table for the material</summary>
-public enum MaterialType
-{
-    NONE = -1,
-    TILE,
-    UNIT,
-    EFFECT,
-}
-
-public class MaterialAnimation
+/// <summary>
+/// A 2d mesh animation that is organized by an animator.
+/// </summary>
+public class Mesh2DAnimation
 {
     /// <summary>The index of the frame sequence.</summary>
     private int currentFrameSequenceIndex = 0;
@@ -70,11 +64,11 @@ public class MaterialAnimation
     }
 
     /// <summary>Set the game object for receiving messages.</summary>
-    private GameObject _messageReceiver = null;
-    public GameObject messageReceiver
+    private GameObject _listener = null;
+    public GameObject listener
     {
-        get { return _messageReceiver; }
-        set { _messageReceiver = value; }
+        get { return _listener; }
+        set { _listener = value; }
     }
 
     /// <summary>
@@ -108,8 +102,8 @@ public class MaterialAnimation
                     _isPaused = true;
 
                     // Notification for when an animation completes.
-                    if (_messageReceiver != null)
-                        _messageReceiver.SendMessage("OnAnimationComplete", name);
+                    if (_listener != null)
+                        _listener.SendMessage("OnAnimationComplete", name);
                 }
                 else
                     currentFrameSequenceIndex = 0;
@@ -151,31 +145,64 @@ public class MaterialAnimation
         // We determine the validity of the animation by it's lack of name.
         return (name.Length > 0);
     }
+
+    /// <summary>
+    /// The default constructor for an animation.
+    /// </summary>
+    public Mesh2DAnimation()
+    {}
+
+    /// <summary>
+    /// The constructor for an animation.
+    /// </summary>
+    /// <param name="name">The lookup name for the animation.</param>
+    /// <param name="frameSeqence">The frame id's that make up this animation.</param>
+    /// <param name="frameRate">The speed of the animation.</param>
+    /// <param name="shouldLoop">
+    /// Whether the animation should loop. If
+    /// ShouldLoop is not set to true, OnAnimationComplete(string name)
+    /// will be invoked from the messageReciever if set.
+    /// </param>
+    /// <param name="messageReceiver">The receiver object to call when
+    /// the animation needs to send messages back to the listener.</param>
+    public Mesh2DAnimation(string name, List<int> frameSequence,
+        float frameRate = 0.25f, bool shouldLoop = true,
+        GameObject listener = null)
+    {
+        this.name = name;
+        this.frameRate = frameRate;
+        this.frameSequence = frameSequence;
+        this.shouldLoop = shouldLoop;
+        this.listener = listener;
+    }
 }
 
-public class AnimationManager
+/// <summary>
+/// A manager for mesh 2d animations.
+/// </summary>
+public class Mesh2DAnimator
 {
     /// <summary>
     /// The list of animations available to this meterial id.
     /// </summary>
-    private List<MaterialAnimation> animations = new List<MaterialAnimation>();
+    private List<Mesh2DAnimation> animations = new List<Mesh2DAnimation>();
 
     /// <summary>The index of the current animation.</summary>
-    private MaterialAnimation currentAnimation = new MaterialAnimation();
+    private Mesh2DAnimation currentAnimation = new Mesh2DAnimation();
 
-    /// <summary>Set the game object for receiving messages.</summary>
-    private GameObject _messageReceiver = null;
-    public GameObject messageReceiver
+    /// <summary>The default listener for animation messages.</summary>
+    private GameObject _listener = null;
+    public GameObject listener
     {
-        get { return _messageReceiver; }
+        get { return _listener; }
         set
         {
             // Update the game object for all curreny animations.
-            _messageReceiver = value;
-            foreach (MaterialAnimation animation in animations)
+            _listener = value;
+            foreach (Mesh2DAnimation animation in animations)
             {
                 if (animation.IsValid())
-                    animation.messageReceiver = value;
+                    animation.listener = value;
             }
         }
     }
@@ -201,15 +228,29 @@ public class AnimationManager
     public void AddAnimation(string name, List<int> frameIndices, float frameRate = 0.25f, bool shouldLoop = true)
     {
         // Construct an animation for a material.
-        MaterialAnimation animation = new MaterialAnimation();
+        Mesh2DAnimation animation = new Mesh2DAnimation();
         animation.name = name;
         animation.frameRate = frameRate;
         animation.isPaused = true;
         animation.shouldLoop = shouldLoop;
         animation.frameSequence = frameIndices;
 
-        // Assign the default message receiver assigned to the animation manager.
-        animation.messageReceiver = _messageReceiver;
+        AddAnimation(animation);
+    }
+
+    /// <summary>
+    /// Add an animation to the animator.
+    /// </summary>
+    /// <param name="animation">
+    /// The animation to add to the animator to keep track of. If
+    /// this is the first animation added, the current animation
+    /// will be set immediately.
+    /// </param>
+    public void AddAnimation(Mesh2DAnimation animation)
+    {
+        // Assign the default message receiver assigned to the animator.
+        if (animation.listener == null)
+            animation.listener = _listener;
 
         // Add the animation to the list of animations.
         animations.Add(animation);
@@ -224,7 +265,7 @@ public class AnimationManager
     public void SetCurrentAnimation(string name)
     {
         // Find the animation in the current list of animations.
-        foreach (MaterialAnimation animation in animations)
+        foreach (Mesh2DAnimation animation in animations)
         {
             // Set the current animation to the referenced name.
             if (animation.name == name)
@@ -289,180 +330,5 @@ public class AnimationManager
     public bool IsValid()
     {
         return currentAnimation.IsValid();
-    }
-}
-
-/// <summary>A class that identifies a given material from GameManager.</summary>
-public class MaterialId
-{
-    /// <summary>The materoal lookup table type.</summary>
-    private MaterialType _type = MaterialType.NONE;
-    public MaterialType type
-    {
-        get { return _type; }
-        set { _type = value; }
-    }
-
-    /// <summary>The identifier of the material. Specified in GameManager.</summary>
-    private int _id = 0;
-    public int id
-    {
-        get { return _id; }
-        set { _id = value; }
-    }
-
-    /// <summary>
-    /// The width of each cell in a sprite map. Cell width of -1
-    /// uses the entire width of the material.
-    /// </summary>
-    private int _cellWidth = -1;
-    public int cellWidth
-    {
-        get { return _cellWidth; }
-        set { _cellWidth = value; }
-    }
-
-    /// <summary>
-    /// The height of each cell in a sprite map. Cell height of -1
-    /// uses the entire width of the material.
-    /// </summary>
-    private int _cellHeight = -1;
-    public int cellHeight
-    {
-        get { return _cellHeight; }
-        set { _cellHeight = value; }
-    }
-
-    /// <summary>
-    /// The frame id to use for the texture.
-    /// </summary>
-    private int _frameId = 0;
-    public int frameId
-    {
-        get { return _frameId; }
-        set { _frameId = value; }
-    }
-
-    /// <summary>
-    /// The animation manager that handles a given sequence of material
-    /// frames by animation names.
-    /// </summary>
-    private AnimationManager _animationManager = new AnimationManager();
-    public AnimationManager animationManager
-    {
-        get { return _animationManager; }
-        set { _animationManager = value; }
-    }
-
-    /// <summary>
-    /// Get the uv map to apply to a mesh to get the exact coordinates
-    /// of a frame id in an animation or sprite map.
-    /// </summary>
-    /// <param name="frameId">
-    /// The frame sequence id of the sprite in a sprite map.</param>
-    /// <returns></returns>
-    public Vector2[] uv()
-    {
-        int frameIdentifier = _animationManager.IsValid() ?
-            _animationManager.GetCurrentFrame() : _frameId;
-
-        // Get the material of the current id/type.
-        Material material = GetMaterial();
-
-        // Find the location of the sprite within the material.
-        int width = material.mainTexture.width;
-        int height = material.mainTexture.height;
-
-        // How many frames from left to right is the image.
-        // Convert -1 to the maximum width and height of the material.
-        int frameWidthCount = width / (cellWidth == -1 ? width : cellWidth);
-        int frameHeightCount = height / (cellHeight == -1 ? height : cellHeight);
-
-        // Which frame in the sprite map are we.
-        int frameX = frameIdentifier % frameWidthCount;
-        int frameY = frameIdentifier / frameWidthCount;
-
-        // Calculate the UV ratio per frame.
-        float xStride = 1.0f / frameWidthCount;
-        float yStride = 1.0f / frameHeightCount;
-
-        // We can now generate our list of uv vectors.
-        Vector2[] uv = new Vector2[4];
-        uv[0] = new Vector2(frameX * xStride, frameY * yStride); // (0.0f, 0.0f)
-        uv[1] = new Vector2((frameX + 1) * xStride, frameY * yStride); // (1.0f, 0.0f)
-        uv[2] = new Vector2(frameX * xStride, (frameY + 1) * yStride); // (0.0f, 1.0f)
-        uv[3] = new Vector2((frameX + 1) * xStride, (frameY + 1) * yStride); // (1.0f, 1.0f)
-        return uv;
-    }
-
-    /// <summary>
-    /// Get the material from the global material table in GameManager.
-    /// </summary>
-    public Material GetMaterial()
-    {
-        // First verify if the information associated with this MaterialId
-        // will actually give a proper Material.
-        if (!IsValid())
-        {
-            // The material failed to load.
-            Debug.LogError("Invalid MaterialId (type=" + type.ToString() + " id=" + id + ")");
-            return null;
-        }
-
-        // Loopup the material from the global material table.
-        switch (type)
-        {
-            case MaterialType.TILE:
-                return GameManager.instance.tileMaterials[id];
-            case MaterialType.UNIT:
-                return GameManager.instance.unitMaterials[id];
-            case MaterialType.EFFECT:
-                return GameManager.instance.effectMaterials[id];
-
-            // We should never reach here is IsValid is doing its
-            // job properly.
-            default:
-                return null;
-        }
-    }
-
-    /// <summary>
-    /// Constructor for a MaterialId
-    /// </summary>
-    /// <param name="id">The identifier of the material.</param>
-    /// <param name="type">The material lookup table type.</param>
-    public MaterialId(int id, MaterialType type = MaterialType.TILE)
-    {
-        this.id = id;
-        this.type = type;
-    }
-
-    /// <summary>Clear any references to older material information</summary>
-    public void Clear()
-    {
-        // Reset any values to their defaults.
-        id = 0;
-        type = MaterialType.NONE;
-    }
-
-    /// <summary>
-    /// Whether the material will be found within the game manager appropriately.
-    /// </summary>
-    /// <returns>Returns whether the material will be loaded properly.</returns>
-    public bool IsValid()
-    {
-        // Get the global tile map array sizes before lookup.
-        int arrayLength = 0;
-        if (type == MaterialType.TILE)
-            arrayLength = GameManager.instance.tileMaterials.Length;
-        if (type == MaterialType.UNIT)
-            arrayLength = GameManager.instance.unitMaterials.Length;
-        if (type == MaterialType.EFFECT)
-            arrayLength = GameManager.instance.effectMaterials.Length;
-
-        // The id cannot exceed the bounds of the array nor be assigned to none.
-        return id < arrayLength
-            && id >= -1
-            && type != MaterialType.NONE;
     }
 }

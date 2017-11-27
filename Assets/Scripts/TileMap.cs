@@ -4,6 +4,22 @@ using System.Collections.Generic;
 
 public class TileMap : MonoBehaviour
 {
+    /// <summary>Internal data structure for highlights.</summary>
+    private class Visited
+    {
+        public Vector2 position;
+        public TileHighlightColor color;
+
+        /// <summary>Constructor for Visited.</summary>
+        /// <param name="position">Tile position information.</param>
+        /// <param name="color">Tile highlight color.</param>
+        public Visited(Vector2 position, TileHighlightColor color)
+        {
+            this.position = position;
+            this.color = color;
+        }
+    };
+
     /// <summary>In-memory data of each tile.</summary>
     [HideInInspector]
     public List<List<Tile>> tiles = new List<List<Tile>>();
@@ -27,19 +43,6 @@ public class TileMap : MonoBehaviour
         get { return _width; }
         internal set { _width = value; }
     }
-
-    /// <summary>The different unit control groups.</summary>
-    public enum PlayerType { HUMAN, COMPUTER };
-
-    /// <summary>The factions that make up players and opposition.</summary>
-    // TODO: Make this mission specific.
-    public PlayerType player1 = PlayerType.HUMAN;
-    public PlayerType player2 = PlayerType.COMPUTER;
-
-    /// <summary>
-    /// A variable to store a reference to the transform of our entire map.
-    /// </summary>
-    private Transform mapHolder;
 
     private void InitializeMap(List<Unit> roster, MissionSchematic missionSchematic)
     {
@@ -178,13 +181,13 @@ public class TileMap : MonoBehaviour
     /// <returns>
     /// Returns whether or not the cooridnate exists in the list.
     /// </returns>
-    private bool IsVector2InVector2List(Vector2 entry, List<Vector2> list)
+    private bool IsVector2InVector2List(Vector2 entry, List<Visited> list)
     {
         // Look for the given coordinate in the list of coordinates.
         bool contains = false;
-        foreach (Vector2 item in list)
+        foreach (Visited item in list)
         {
-            if (entry.x == item.x && entry.y == item.y)
+            if (entry.x == item.position.x && entry.y == item.position.y)
                 contains = true;
         }
 
@@ -201,7 +204,7 @@ public class TileMap : MonoBehaviour
     /// <returns>
     /// Returns whether or not the coordinate should be checked next pass.
     /// </returns>
-    private bool ShouldAdd(Vector2 coord, List<Vector2> visited, bool canFly)
+    private bool ShouldAdd(Vector2 coord, List<Visited> visited, bool canFly)
     {
         // Are we within bounds of the map.
         if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
@@ -217,26 +220,23 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
-    /// Highlight a set of tiles for a given a center based on movement
-    /// distance.
+    /// Show movement and attack highlights.
     /// </summary>
-    /// <param name="x">The x position of the unit.</param>
-    /// <param name="y">The y position of the unit.</param>
-    /// <param name="distance">How far the unit can move.</param>
-    /// <param name="canFly">
-    /// Whether the unit checks against air or ground collision.
-    /// </param>
-    public void HighlightCenter(Vector2 originalPosition, int distance,
-        bool canFly)
+    /// <param name="actor">The actor to display.</param>
+    public void ShowActorHighlights(Actor actor)
     {
-        List<Vector2> visited = new List<Vector2>();
+        int movement = actor.unit.baseMovement;
+        int minRange = actor.unit.baseMinRange;
+        int maxRange = actor.unit.baseMaxRange;
+
+        List<Visited> visited = new List<Visited>();
         List<Vector2> toCheck = new List<Vector2>();
 
         // Start off with what we know for sure we should check
-        toCheck.Add(originalPosition);
-        int distanceLeft = distance;
+        toCheck.Add(actor.position);
 
-        while (distanceLeft >= 0)
+        bool shouldIgnoreGround = actor.flying;
+        while (movement + minRange + maxRange > 0)
         {
             // The next group of tiles to check
             List<Vector2> newToCheck = new List<Vector2>();
@@ -246,7 +246,20 @@ public class TileMap : MonoBehaviour
             {
                 // Add ourself to visited
                 if (!IsVector2InVector2List(coord, visited))
-                    visited.Add(new Vector2(coord.x, coord.y));
+                {
+                    if (movement > 0)
+                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_BLUE));
+                    else if (minRange > 0)
+                    {
+                        shouldIgnoreGround = true;
+                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_NONE));
+                    }
+                    else
+                    {
+                        shouldIgnoreGround = true;
+                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_RED));
+                    }
+                }
 
                 Vector2 north = new Vector2(coord.x, coord.y - 1);
                 Vector2 east = new Vector2(coord.x + 1, coord.y);
@@ -255,76 +268,58 @@ public class TileMap : MonoBehaviour
 
                 // Check if we should add any given direction to the next
                 // potential list of tiles.
-                if (ShouldAdd(north, visited, canFly))
+                if (ShouldAdd(north, visited, shouldIgnoreGround))
                     newToCheck.Add(north);
-                if (ShouldAdd(east, visited, canFly))
+                if (ShouldAdd(east, visited, shouldIgnoreGround))
                     newToCheck.Add(east);
-                if (ShouldAdd(south, visited, canFly))
+                if (ShouldAdd(south, visited, shouldIgnoreGround))
                     newToCheck.Add(south);
-                if (ShouldAdd(west, visited, canFly))
+                if (ShouldAdd(west, visited, shouldIgnoreGround))
                     newToCheck.Add(west);
             }
 
             // Replace list with new list
             toCheck.Clear();
             toCheck = newToCheck;
-            distanceLeft--;
+
+            // Subtract movement spaces in order of highlighted.
+            if (movement > 0)
+                movement--;
+            else if (minRange > 0)
+                minRange--;
+            else if (maxRange > 0)
+                maxRange--;
         }
 
         // Apply the highlight to the valid tiles to move to
-        foreach (Vector2 coord in visited)
+        foreach (Visited visit in visited)
         {
-            Tile tile = tiles[(int)coord.x][(int)coord.y];
-            tile.moveHighlight = true;
+            Tile tile = tiles[(int)visit.position.x][(int)visit.position.y];
+            tile.highlight = true;
+            tile.highlightColor = visit.color;
         }
     }
-
-    public void ShowPath(Vector2 fromPosition, Vector2 toPosition, bool canFly = false)
+    
+    /// <summary>
+    /// Draw an arrow from point a to point b keeping collision in mind.
+    /// </summary>
+    /// <param name="fromPosition">Where the arrow begins.</param>
+    /// <param name="toPosition">Where the arrow ends.</param>
+    /// <param name="canFly">Whether pathing ignores ground collision.</param>
+    public void ShowPath(Vector2 fromPosition, Vector2 toPosition,
+        bool canFly = false)
     {
         Astar pathing = new Astar(this, fromPosition, toPosition, canFly);
-        bool startPos = false;
+
+        bool start = true;
         foreach (AStarVector vector in pathing.result)
         {
             Tile tile = tiles[(int)vector.position.x][(int)vector.position.y];
             string mask = BitConverter.ToString(vector.mask, 0);
-
             Debug.Log("ShowPath mask: " + mask);
 
-            if (!startPos)
-            {
-                if (mask == "01-00-00-00")
-                    tile.SetGridMaterial(3, 7);
-                if (mask == "00-01-00-00")
-                    tile.SetGridMaterial(3, 1);
-                if (mask == "00-00-01-00")
-                    tile.SetGridMaterial(3, 0);
-                if (mask == "00-00-00-01")
-                    tile.SetGridMaterial(3, 8);
-                startPos = true;
-            }
-            else
-            {
-                if (mask == "01-00-00-00")
-                    tile.SetGridMaterial(3, 6);
-                if (mask == "00-01-00-00")
-                    tile.SetGridMaterial(3, 13);
-                if (mask == "00-00-01-00")
-                    tile.SetGridMaterial(3, 12);
-                if (mask == "00-00-00-01")
-                    tile.SetGridMaterial(3, 5);
-                if (mask == "01-01-00-00")
-                    tile.SetGridMaterial(3, 10);
-                if (mask == "01-00-01-00")
-                    tile.SetGridMaterial(3, 2);
-                if (mask == "01-00-00-01")
-                    tile.SetGridMaterial(3, 11);
-                if (mask == "00-01-01-00")
-                    tile.SetGridMaterial(3, 4);
-                if (mask == "00-01-00-01")
-                    tile.SetGridMaterial(3, 9);
-                if (mask == "00-00-01-01")
-                    tile.SetGridMaterial(3, 3);
-            }
+            tile.SetGridArrowMask(start, mask);
+            start = false;
         }
     }
 

@@ -1,58 +1,10 @@
 ﻿using UnityEngine;
 
-public class TileRenderer : MonoBehaviour
+/// <summary>
+/// A class that represents layered 2d mesh grid rending.
+/// </summary>
+public class Mesh2DRenderer : MonoBehaviour
 {
-    /// <summary>
-    /// The layer of the tile mesh. This adjusts the z to draw the tile.
-    /// Above or below other tiles.
-    /// </summary>
-    public enum TileLayer
-    {
-        /// <summary>This unit is invisible and should not be drawn.</summary>
-        LAYER_INVISIBLE = 0,
-
-        /// <summary>
-        /// The layer for all units hidden below the
-        /// floor.
-        /// </summary>
-        LAYER_BURROWED,
-
-        /// <summary>The layer for all floor tiles.</summary>
-        LAYER_FLOOR,
-
-        /// <summary>
-        /// The layer for objects, items, or floor tiles with
-        /// transparency.
-        /// </summary>
-        LAYER_OBJECT,
-
-        /// <summary>The layer for all units.</summary>
-        LAYER_UNITS,
-
-        /// <summary>
-        /// The layer that can hide ground units. Has transparency and
-        /// adjustable alpha when gaining vision underneath.
-        /// </summary>
-        LAYER_ROOF,
-
-        /// <summary>
-        /// The layer that flying units are on. These units appear above
-        /// trees and roofs.
-        /// </summary>
-        LAYER_FLYINGUNITS,
-
-        /// <summary>The layer for tile highlighted effects.</summary>
-        LAYER_HIGHLIGHTS,
-
-        /// <summary>
-        /// The layer of the grid. Or special effects.
-        /// </summary>
-        LAYER_GRID,
-
-        /// <summary>Total count of layers.</summary>
-        LAYER_COUNT,
-    }
-
     /// <summary>The visual scale of the grid.</summary>
     private float gridScale = 3.75f;
 
@@ -66,19 +18,19 @@ public class TileRenderer : MonoBehaviour
     private Vector2 position;
     
     /// <summary>Tile materials at every layer.</summary>
-    private MaterialId[] materials = new MaterialId[(int)TileLayer.LAYER_COUNT];
+    private Mesh2DMaterial[] materials = new Mesh2DMaterial[(int)Mesh2DLayer.LAYER_COUNT];
 
     /// <summary>Tile meshes at every layer.</summary>
-    private GameObject[] gameObjects = new GameObject[(int)TileLayer.LAYER_COUNT];
+    private GameObject[] gameObjects = new GameObject[(int)Mesh2DLayer.LAYER_COUNT];
 
     /// <summary>
     /// The color to apply over the material. This can be used for
     /// alpha highlights. Or highlighting an enemy/item to the payer.
     /// </summary>
-    private Color[] colors = new Color[(int)TileLayer.LAYER_COUNT];
+    private Color[] colors = new Color[(int)Mesh2DLayer.LAYER_COUNT];
 
     /// <summary>
-    /// Reset the coordinate of the TileRenderer. This moves all layers to the
+    /// Reset the coordinate of the MeshRenderer. This moves all layers to the
     /// new coordinate by destroying all meshes and regenerating them.
     /// </summary>
     /// <param name="position">The new position.</param>
@@ -107,7 +59,7 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The tile layer to apply the color highlight to.</param>
     /// <param name="color">The new color to assign the tile.</param>
     /// <returns>The previously assigned color.</returns>
-    public Color SetColor(TileLayer layer, Color color)
+    public Color SetColor(Mesh2DLayer layer, Color color)
     {
         // Store the color that was currently set.
         Color oldColor = colors[(int)layer];
@@ -122,19 +74,19 @@ public class TileRenderer : MonoBehaviour
     /// <summary>Get the color of a specific tile layer.</summary>
     /// <param name="layer">The tile layer to get the color from.</param>
     /// <returns>The currently set color for a tile layer.</returns>
-    public Color GetColor(TileLayer layer)
+    public Color GetColor(Mesh2DLayer layer)
     {
         return colors[(int)layer];
     }
 
     /// <summary>Resets a layers color overlay.</summary>
     /// <param name="layer">The layer to reset.</param>
-    public void ResetColor(TileLayer layer)
+    public void ResetColor(Mesh2DLayer layer)
     {
         float alpha = 1.0f;
-        if (layer == TileLayer.LAYER_HIGHLIGHTS)
+        if (layer == Mesh2DLayer.LAYER_HIGHLIGHTS)
             alpha = defaultHighlightAlpha;
-        if (layer == TileLayer.LAYER_GRID)
+        if (layer == Mesh2DLayer.LAYER_GRID)
             alpha = defaultGridAlpha;
 
         // Highlight layer automatically receives an alpha channel.
@@ -147,9 +99,9 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="id">The id of the tile material.</param>
     /// <returns>The previously assigned material.</returns>
-    public MaterialId SetTileMaterial(TileLayer layer, int id)
+    public Mesh2DMaterial SetTileMaterial(Mesh2DLayer layer, int id)
     {
-        return SetMaterial(layer, new MaterialId(id, MaterialType.TILE));
+        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.TILE));
     }
 
     /// <summary>
@@ -158,9 +110,9 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="id">The id of the tile material.</param>
     /// <returns>The previously assigned material.</returns>
-    public MaterialId SetUnitMaterial(TileLayer layer, int id)
+    public Mesh2DMaterial SetUnitMaterial(Mesh2DLayer layer, int id)
     {
-        return SetMaterial(layer, new MaterialId(id, MaterialType.UNIT));
+        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.UNIT));
     }
 
     /// <summary>
@@ -169,19 +121,19 @@ public class TileRenderer : MonoBehaviour
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="id">The id of the tile material.</param>
     /// <returns>The previously assigned material.</returns>
-    public MaterialId SetEffectMaterial(TileLayer layer, int id)
+    public Mesh2DMaterial SetEffectMaterial(Mesh2DLayer layer, int id)
     {
-        return SetMaterial(layer, new MaterialId(id, MaterialType.EFFECT));
+        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.EFFECT));
     }
 
     /// <summary>Sets the material of the specified layer.</summary>
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="material">The material you want to set the tile to.</param>
     /// <returns>The previously assigned material.</returns>
-    public MaterialId SetMaterial(TileLayer layer, MaterialId materialId)
+    public Mesh2DMaterial SetMaterial(Mesh2DLayer layer, Mesh2DMaterial material)
     {
         // Store the material that was currently set.
-        MaterialId oldMaterial = materials[(int)layer];
+        Mesh2DMaterial oldMaterial = materials[(int)layer];
 
         // Ensure there is a game object at this layer.
         if (gameObjects[(int)layer] == null)
@@ -189,10 +141,10 @@ public class TileRenderer : MonoBehaviour
 
         // Get the renderer component and assign the current material to the mesh.
         MeshRenderer renderer = gameObjects[(int)layer].GetComponent<MeshRenderer>();
-        renderer.material = materialId.GetMaterial();
+        renderer.material = material.GetMaterial();
 
         // Store the material for later.
-        materials[(int)layer] = materialId;
+        materials[(int)layer] = material;
 
         // Regenerate the mesh on that layer.
         if (renderer.material != null)
@@ -202,17 +154,17 @@ public class TileRenderer : MonoBehaviour
         return oldMaterial;
     }
 
-    /// <summary>Get the materialId of the mesh from the specified layer.</summary>
+    /// <summary>Get the material of the mesh from the specified layer.</summary>
     /// <param name="layer">The layer to pull the material from.</param>
     /// <returns>Returns the material at that layer.</returns>
-    public MaterialId GetMaterial(TileLayer layer)
+    public Mesh2DMaterial GetMaterial(Mesh2DLayer layer)
     {
         return materials[(int)layer];
     }
 
     /// <summary>Removes the material from that layer, and removes the mesh.</summary>
     /// <param name="layer">The layer to remove the material from.</param>
-    public void RemoveMaterial(TileLayer layer)
+    public void RemoveMaterial(Mesh2DLayer layer)
     {
         // Store the material for later.
         materials[(int)layer] = null;
@@ -223,17 +175,31 @@ public class TileRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// Get the meshese real rect based on the grid position and scale.
+    /// </summary>
+    /// <returns>Returns the real size of the tile mesh.</returns>
+    public Rect GetGlobalMeshRect()
+    {
+        float x1 = position.x * gridScale;
+        float y1 = position.y * gridScale;
+        float x2 = (position.x + 1) * gridScale;
+        float y2 = (position.y + 1) * gridScale;
+
+        return new Rect(x1, y2, x2 - x1, y2 - y1);
+    }
+
+    /// <summary>
     /// Regenerates all meshes from every layer. Does not draw meshes for
     /// layers that have no material assigned.
     /// </summary>
     private void RegenerateMeshes()
     {
         // Regenerate all tiles with the appropriate coordinate.
-        for (int index = 0; index < (int)TileLayer.LAYER_COUNT; ++index)
+        for (int index = 0; index < (int)Mesh2DLayer.LAYER_COUNT; ++index)
         {
             if (materials[index] != null)
             {
-                GenerateMesh((TileLayer)index);
+                GenerateMesh((Mesh2DLayer)index);
             }
         }
     }
@@ -242,7 +208,7 @@ public class TileRenderer : MonoBehaviour
     /// Destroy a mesh at specified layer.
     /// </summary>
     /// <param name="layer">The layer of the mesh to destroy.</param>
-    private void DestroyMesh(TileLayer layer)
+    private void DestroyMesh(Mesh2DLayer layer)
     {
         // Destroy the mesh at that layer.
         if (gameObjects[(int)layer] != null)
@@ -258,7 +224,7 @@ public class TileRenderer : MonoBehaviour
     /// Allocate mesh at specified layer.
     /// </summary>
     /// <param name="layer">The layer of the mesh to create.</param>
-    private void AllocateMesh(TileLayer layer)
+    private void AllocateMesh(Mesh2DLayer layer)
     {
         // Create a custom mesh at the specified layer.
         if (gameObjects[(int)layer] == null)
@@ -277,7 +243,7 @@ public class TileRenderer : MonoBehaviour
     /// function is safe to call again
     /// </summary>
     /// <param name="layer">The layer to generate the mesh on.</param>
-    private void GenerateMesh(TileLayer layer)
+    private void GenerateMesh(Mesh2DLayer layer)
     {
         // Add a mesh filter and mesh renderer.
         MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
@@ -337,7 +303,7 @@ public class TileRenderer : MonoBehaviour
     /// Update the mesh for any animation changes.
     /// </summary>
     /// <param name="layer">The layer to update.</param>
-    private void UpdateMesh(TileLayer layer)
+    private void UpdateMesh(Mesh2DLayer layer)
     {
         // The mesh may receive animation updates. Update the material uv map
         // accordingly.
@@ -354,27 +320,27 @@ public class TileRenderer : MonoBehaviour
     /// <returns>
     /// Returns the z value to use for the meshes vertices data.
     /// </returns>
-    private float GetZOrder(TileLayer layer)
+    private float GetZOrder(Mesh2DLayer layer)
     {
         switch (layer)
         {
-            case TileLayer.LAYER_INVISIBLE:
+            case Mesh2DLayer.LAYER_INVISIBLE:
                 return -1f;
-            case TileLayer.LAYER_BURROWED:
+            case Mesh2DLayer.LAYER_BURROWED:
                 return 0.01f;
-            case TileLayer.LAYER_FLOOR:
+            case Mesh2DLayer.LAYER_FLOOR:
                 return 0f;
-            case TileLayer.LAYER_OBJECT:
+            case Mesh2DLayer.LAYER_OBJECT:
                 return -0.01f;
-            case TileLayer.LAYER_UNITS:
+            case Mesh2DLayer.LAYER_UNITS:
                 return -0.02f;
-            case TileLayer.LAYER_ROOF:
+            case Mesh2DLayer.LAYER_ROOF:
                 return -0.03f;
-            case TileLayer.LAYER_FLYINGUNITS:
+            case Mesh2DLayer.LAYER_FLYINGUNITS:
                 return -0.04f;
-            case TileLayer.LAYER_HIGHLIGHTS:
+            case Mesh2DLayer.LAYER_HIGHLIGHTS:
                 return -0.05f;
-            case TileLayer.LAYER_GRID:
+            case Mesh2DLayer.LAYER_GRID:
                 return -0.06f;
             default:
                 return 0f;
@@ -387,15 +353,15 @@ public class TileRenderer : MonoBehaviour
     private void Update()
     {
         // Every frame, update each material with animations.
-        for (int index = 0; index < (int)TileLayer.LAYER_COUNT; ++index)
+        for (int index = 0; index < (int)Mesh2DLayer.LAYER_COUNT; ++index)
         {
             if (materials[index] != null)
             {
                 // Update the animation.
-                materials[index].animationManager.Update();
+                materials[index].Update();
 
                 // Update the mesh for any animation changes.
-                UpdateMesh((TileLayer)index);
+                UpdateMesh((Mesh2DLayer)index);
             }
         }
     }
