@@ -163,13 +163,13 @@ public class Astar
 
         int i = 0;
         AStarTile[] result = new AStarTile[4];
-        if (N < tileMap.height && (canFly ? !tileMap.tiles[x][N].airCollision : !tileMap.tiles[x][N].groundCollision))
+        if (N < tileMap.height && (canFly ? !tileMap.tiles[x][N].trueCollision : !tileMap.tiles[x][N].groundCollision))
             result[i++] = new AStarTile(new Vector2(x, N));
-        if (E < tileMap.width && (canFly ? !tileMap.tiles[E][y].airCollision : !tileMap.tiles[E][y].groundCollision))
+        if (E < tileMap.width && (canFly ? !tileMap.tiles[E][y].trueCollision : !tileMap.tiles[E][y].groundCollision))
             result[i++] = new AStarTile(new Vector2(E, y));
-        if (S > -1  && (canFly ? !tileMap.tiles[x][S].airCollision : !tileMap.tiles[x][S].groundCollision))
+        if (S > -1  && (canFly ? !tileMap.tiles[x][S].trueCollision : !tileMap.tiles[x][S].groundCollision))
             result[i++] = new AStarTile(new Vector2(x, S));
-        if (W > -1 && (canFly ? !tileMap.tiles[W][y].airCollision : !tileMap.tiles[W][y].groundCollision))
+        if (W > -1 && (canFly ? !tileMap.tiles[W][y].trueCollision : !tileMap.tiles[W][y].groundCollision))
             result[i++] = new AStarTile(new Vector2(W, y));
         return result;
     }

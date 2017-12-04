@@ -155,11 +155,11 @@ public class Tile : Mesh2D
     /// <summary>
     /// Whether this tile has movement collision for air units.
     /// </summary>
-    private bool _airCollision = false;
-    public bool airCollision
+    private bool _trueCollision = false;
+    public bool trueCollision
     {
-        get { return _airCollision; }
-        set { _airCollision = value; }
+        get { return _trueCollision; }
+        set { _trueCollision = value; }
     }
 
     /// <summary>

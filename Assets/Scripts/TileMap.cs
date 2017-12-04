@@ -80,20 +80,24 @@ public class TileMap : MonoBehaviour
                 if (missionTile != null)
                 {
                     tile.movementCost = missionTile.movementCost;
-                    tile.airCollision = missionTile.airCollision;
+                    tile.trueCollision = missionTile.trueCollision;
                     tile.groundCollision = missionTile.groundCollision;
-                    if (missionTile.floorMaterialId != -1)
-                        tile.SetFloorMaterial(missionTile.floorMaterialId, missionTile.frameId);
-                    if (missionTile.objectMaterialId != -1)
-                        tile.SetObjectMaterial(missionTile.objectMaterialId);
-                    if (missionTile.roofMaterialId != -1)
-                        tile.SetRoofMaterial(missionTile.roofMaterialId);
+
+                    foreach (MissionMaterial material in missionTile.materials)
+                    {
+                        if (material.layer == MissionMaterial.Layer.FLOOR)
+                            tile.SetFloorMaterial(material.materialId, material.frameId);
+                        if (material.layer == MissionMaterial.Layer.OBJECT)
+                            tile.SetObjectMaterial(material.materialId, material.frameId);
+                        if (material.layer == MissionMaterial.Layer.ROOF)
+                            tile.SetRoofMaterial(material.materialId, material.frameId);
+                    }
                 }
                 else
                 {
                     // Basic floor tile without mission information.
                     tile.groundCollision = true;
-                    tile.airCollision = true;
+                    tile.trueCollision = true;
                     tile.SetFloorMaterial(0);
                 }
 
@@ -216,7 +220,7 @@ public class TileMap : MonoBehaviour
         // add it to the list of visited
         return (tile != null
             && !IsVector2InVector2List(coord, visited)
-            && (canFly ? !tile.airCollision : !tile.groundCollision));
+            && (canFly ? !tile.trueCollision : !tile.groundCollision));
     }
 
     /// <summary>
