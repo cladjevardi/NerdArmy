@@ -14,6 +14,18 @@ public enum TileHighlightColor
 public class Tile : Mesh2D
 {
     /// <summary>
+    /// Attach a box collider to each tile which allows for raycast detection
+    /// </summary>
+    public void Start()
+    {
+        this.gameObject.AddComponent<BoxCollider>();
+        BoxCollider collider = this.gameObject.GetComponent<BoxCollider>();
+
+        collider.size = new Vector3(gridScale, gridScale, 0);
+        collider.center = new Vector3(position.x * gridScale + gridScale / 2, position.y * gridScale + gridScale / 2, 0);
+    }
+
+    /// <summary>
     /// Set the material of the the floor tile that renders below all other tiles.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>

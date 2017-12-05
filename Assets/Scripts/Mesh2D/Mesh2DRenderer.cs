@@ -53,6 +53,15 @@ public class Mesh2DRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// Get the grid scale of the tile.
+    /// </summary>
+    /// <returns>Returns the current position of the tile.</returns>
+    public float GetGridScale()
+    {
+        return gridScale;
+    }
+
+    /// <summary>
     /// Set the color of the material. This can be used to highlight a unit
     /// or tile a specific color, or to add an alpha channel.
     /// </summary>
@@ -175,7 +184,7 @@ public class Mesh2DRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Get the meshese real rect based on the grid position and scale.
+    /// Get the meshes real rect based on the grid position and scale.
     /// </summary>
     /// <returns>Returns the real size of the tile mesh.</returns>
     public Rect GetGlobalMeshRect()

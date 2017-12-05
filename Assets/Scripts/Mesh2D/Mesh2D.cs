@@ -31,6 +31,12 @@ public abstract class Mesh2D : MonoBehaviour
         set { mesh.SetPosition(value); }
     }
 
+    /// <summary>Grid scale information.</summary>
+    public float gridScale
+    {
+        get { return mesh.GetGridScale(); }
+    }
+
     /// <summary>The real rect size and location of the mesh.</summary>
     public Rect _rect = Rect.zero;
     public Rect rect

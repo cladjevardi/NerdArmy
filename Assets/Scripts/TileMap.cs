@@ -4,6 +4,32 @@ using System.Collections.Generic;
 
 public class TileMap : MonoBehaviour
 {
+    /// <summary> Check the user input.</summary>
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Collider coll;
+
+            // Iterate through each tile until the clicked tile is discovered
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    coll = tiles[i][j].GetComponent<BoxCollider>();
+
+                    if (coll.Raycast(ray, out hit, 100.0f))
+                    {
+                        actors[0].position = tiles[i][j].position;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>Internal data structure for highlights.</summary>
     private class Visited
     {
