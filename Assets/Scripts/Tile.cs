@@ -18,11 +18,13 @@ public class Tile : Mesh2D
     /// </summary>
     public void Start()
     {
-        this.gameObject.AddComponent<BoxCollider>();
+        gameObject.AddComponent<BoxCollider>();
         BoxCollider collider = this.gameObject.GetComponent<BoxCollider>();
 
+        float gridScale = GameManager.instance.gridScale;
         collider.size = new Vector3(gridScale, gridScale, 0);
-        collider.center = new Vector3(position.x * gridScale + gridScale / 2, position.y * gridScale + gridScale / 2, 0);
+        collider.center = new Vector3(transform.position.x * gridScale + gridScale / 2,
+            transform.position.y * gridScale + gridScale / 2, 0);
     }
 
     /// <summary>

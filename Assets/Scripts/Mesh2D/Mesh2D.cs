@@ -10,6 +10,24 @@ public abstract class Mesh2D : MonoBehaviour
     private GameObject meshRenderer = null;
 
     /// <summary>
+    /// How fast the mesh moves when applying smooth movement.
+    /// </summary>
+    private float _speed = 0.1f;
+    public float speed
+    {
+        get { return _speed; }
+        set { _speed = value; }
+    }
+
+    /// <summary>Whether we are currently applying movement.</summary>
+    private bool _moving = false;
+    public bool moving
+    {
+        get { return _moving; }
+        internal set { _moving = value; }
+    }
+
+    /// <summary>
     /// When an animation stops after completion.
     /// </summary>
     /// <param name="name">
@@ -21,27 +39,6 @@ public abstract class Mesh2D : MonoBehaviour
     public Mesh2DRenderer mesh
     {
         get { return meshRenderer.GetComponent<Mesh2DRenderer>(); }
-    }
-
-    /// <summary>Tile positional information.</summary>
-    private Vector2 _position = Vector2.zero;
-    public Vector2 position
-    {
-        get { return mesh.GetPosition(); }
-        set { mesh.SetPosition(value); }
-    }
-
-    /// <summary>Grid scale information.</summary>
-    public float gridScale
-    {
-        get { return mesh.GetGridScale(); }
-    }
-
-    /// <summary>The real rect size and location of the mesh.</summary>
-    public Rect _rect = Rect.zero;
-    public Rect rect
-    {
-        get { return mesh.GetGlobalMeshRect(); }
     }
 
     /// <summary>
@@ -95,6 +92,34 @@ public abstract class Mesh2D : MonoBehaviour
 
         // Set the animation of the current material.
         mesh.SetMaterial(layer, material);
+    }
+
+    /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
+    /// <param name="end">The end position for the mesh to move towards.</param>
+    public IEnumerator SmoothMovement(Vector3 end)
+    {
+        // Tell anyone who accesses the mesh that its moving.
+        moving = true;
+
+        // We need to apply the grid scale to animation.
+        float gridScale = GameManager.instance.gridScale;
+        Vector3 realEnd = end * gridScale;
+
+        // While that distance is greater than a very small amount (Epsilon, almost zero):
+        while (transform.position != realEnd)
+        {
+            // Find a new position proportionally closer to the end, based on the moveTime
+            Vector2 newPostion = Vector2.MoveTowards(transform.position, end, (1f / speed) * Time.deltaTime);
+
+            // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+            transform.position = newPostion;
+
+            // Return and loop until sqrRemainingDistance is close enough to zero to end the function
+            yield return null;
+        }
+
+        // Tell everyone that moving is complete.
+        moving = false;
     }
 
     /// <summary>Call at creation of object.</summary>

@@ -262,6 +262,19 @@ public class MissionDialog
 }
 
 /// <summary>
+/// An enumerator that represents the factions participating in a mission.
+/// </summary>
+public enum MissionFaction
+{
+    PLAYER,
+    COMPUTER1,
+    COMPUTER2,
+    COMPUTER3,
+
+    // TODO: However many factions we need within a mission.
+}
+
+/// <summary>
 /// Data that makes up an entire mission. Used to construct and display
 /// predefined levels.
 /// </summary>
@@ -275,6 +288,21 @@ public class MissionSchematic
 
     /// <summary>The height of the map in tiles.</summary>
     public int tileHeight = 0;
+
+    /// <summary>The default starting player for the mission.</summary>
+    public Owner startingPlayer = Owner.PLAYER1;
+
+    /// <summary>For every mission. Player1 is always the player.</summary>
+    public MissionFaction player1 = MissionFaction.PLAYER;
+
+    /// <summary>What faction player 2 is associated with.</summary>
+    public MissionFaction player2 = MissionFaction.COMPUTER1;
+
+    /// <summary>What faction player 3 is associated with.</summary>
+    public MissionFaction player3 = MissionFaction.COMPUTER2;
+
+    /// <summary>What faction player 3 is associated with.</summary>
+    public MissionFaction player4 = MissionFaction.COMPUTER3;
 
     /// <summary>
     /// Tile metadata that makes up how a mission is layed out.

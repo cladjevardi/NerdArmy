@@ -5,9 +5,6 @@
 /// </summary>
 public class Mesh2DRenderer : MonoBehaviour
 {
-    /// <summary>The visual scale of the grid.</summary>
-    private float gridScale = 3.75f;
-
     /// <summary>The highlight layers default alpha.</summary>
     private float defaultHighlightAlpha = 0.6f;
 
@@ -15,7 +12,7 @@ public class Mesh2DRenderer : MonoBehaviour
     private float defaultGridAlpha = 1.00f;
 
     /// <summary>The position of the tile.</summary>
-    private Vector2 position;
+    //private Vector2 position;
     
     /// <summary>Tile materials at every layer.</summary>
     private Mesh2DMaterial[] materials = new Mesh2DMaterial[(int)Mesh2DLayer.LAYER_COUNT];
@@ -28,38 +25,6 @@ public class Mesh2DRenderer : MonoBehaviour
     /// alpha highlights. Or highlighting an enemy/item to the payer.
     /// </summary>
     private Color[] colors = new Color[(int)Mesh2DLayer.LAYER_COUNT];
-
-    /// <summary>
-    /// Reset the coordinate of the MeshRenderer. This moves all layers to the
-    /// new coordinate by destroying all meshes and regenerating them.
-    /// </summary>
-    /// <param name="position">The new position.</param>
-    public void SetPosition(Vector2 position)
-    {
-        // Store the values.
-        this.position = position;
-
-        // Redraw all meshes in new coordinate.
-        RegenerateMeshes();
-    }
-
-    /// <summary>
-    /// Get the positional information of the rendered tile.
-    /// </summary>
-    /// <returns>Returns the current position of the tile.</returns>
-    public Vector2 GetPosition()
-    {
-        return position;
-    }
-
-    /// <summary>
-    /// Get the grid scale of the tile.
-    /// </summary>
-    /// <returns>Returns the current position of the tile.</returns>
-    public float GetGridScale()
-    {
-        return gridScale;
-    }
 
     /// <summary>
     /// Set the color of the material. This can be used to highlight a unit
@@ -184,20 +149,6 @@ public class Mesh2DRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// Get the meshes real rect based on the grid position and scale.
-    /// </summary>
-    /// <returns>Returns the real size of the tile mesh.</returns>
-    public Rect GetGlobalMeshRect()
-    {
-        float x1 = position.x * gridScale;
-        float y1 = position.y * gridScale;
-        float x2 = (position.x + 1) * gridScale;
-        float y2 = (position.y + 1) * gridScale;
-
-        return new Rect(x1, y2, x2 - x1, y2 - y1);
-    }
-
-    /// <summary>
     /// Regenerates all meshes from every layer. Does not draw meshes for
     /// layers that have no material assigned.
     /// </summary>
@@ -269,16 +220,16 @@ public class Mesh2DRenderer : MonoBehaviour
 
         // Get positional information.
         // Get the z order from the layer.
-        float x = position.x;
-        float y = position.y;
+        float x = transform.position.x;
+        float y = transform.position.y;
         float z = GetZOrder(layer);
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(x, y, z) * gridScale;
-        verts[1] = new Vector3(x + 1, y, z) * gridScale;
-        verts[2] = new Vector3(x, y + 1, z) * gridScale;
-        verts[3] = new Vector3(x + 1, y + 1, z) * gridScale;
+        verts[0] = new Vector3(x, y, z) * GameManager.instance.gridScale;
+        verts[1] = new Vector3(x + 1, y, z) * GameManager.instance.gridScale;
+        verts[2] = new Vector3(x, y + 1, z) * GameManager.instance.gridScale;
+        verts[3] = new Vector3(x + 1, y + 1, z) * GameManager.instance.gridScale;
 
         // Create the list of uvmap coordinates pull from the texture.
         Vector2[] uv = materials[(int)layer].uv();

@@ -15,6 +15,13 @@ public enum Owner
     PLAYER4
 };
 
+public enum Player
+{
+    NONE = -1,
+    HUMAN,
+    COMPUTER,
+}
+
 /// <summary>The type of unit.</summary>
 public enum UnitType
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>The list of unit animations.</summary>
 public enum ActorAnimation
@@ -145,6 +146,16 @@ public class Actor : Mesh2D
     }
 
     /// <summary>
+    /// Whether the character has already moved or performed an action.
+    /// </summary>
+    private bool _done = false;
+    public bool done
+    {
+        get { return _done; }
+        set { _done = value; }
+    }
+
+    /// <summary>
     /// Get the current visual layer the unit is residing on.
     /// </summary>
     /// <returns>Returns the current layer of the unit.</returns>
@@ -251,5 +262,11 @@ public class Actor : Mesh2D
             || animationName == "damaged"
             || animationName == "celebrate")
             SetAnimation(GetCurrentLayer(), "idle");
+    }
+
+    /// <summary>Reset the done state.</summary>
+    public void Reset()
+    {
+        _done = false;
     }
 }

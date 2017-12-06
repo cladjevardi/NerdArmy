@@ -16,21 +16,15 @@ public class WorldManager : MonoBehaviour
     private List<Unit> roster = new List<Unit>();
 
     /// <summary>The entire map and list of units and enemies.</summary>
-    private GameObject tileMap = null;
+    private GameObject mission = null;
 
     private void LoadLevel()
     {
         // Tell TileMap to generate the level.
         MissionSchematic missionSchematic = missionDatabase.GetMission(world, level);
         Debug.Log("Loading " + missionSchematic.name);
-        tileMap.name = missionSchematic.name;
-        tileMap.GetComponent<TileMap>().GenerateMission(
-            roster, missionSchematic);
 
-        tileMap.GetComponent<TileMap>().ShowActorHighlights(tileMap.GetComponent<TileMap>().actors[0]);
-        tileMap.GetComponent<TileMap>().ShowPath(new Vector2(1, 1), new Vector2(3, 1), false);
-
-        // TODO: Start the mission.
+        mission.GetComponent<Mission>().Initialize(roster, missionSchematic);
     }
 
     private void Start()
@@ -52,8 +46,8 @@ public class WorldManager : MonoBehaviour
     private void Awake()
     {
         // Create the TileMap object.
-        tileMap = new GameObject("TileMap");
-        tileMap.transform.parent = transform;
-        tileMap.AddComponent<TileMap>();
+        mission = new GameObject("Mission");
+        mission.transform.parent = transform;
+        mission.AddComponent<Mission>();
     }
 }
