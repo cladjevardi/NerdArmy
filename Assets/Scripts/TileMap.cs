@@ -93,17 +93,15 @@ public class TileMap : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            // Iterate through each tile until the clicked tile is discovered
-            for (int x = 0; x < width; x++)
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            Debug.Log(mousePos2D);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+            if (hit.collider != null)
             {
-                for (int y = 0; y < height; y++)
-                {
-                    Collider coll = tiles[x][y].GetComponent<BoxCollider>();
-                    RaycastHit hit;
-                    if (coll.Raycast(ray, out hit, 100.0f))
-                        return tiles[x][y];
-                }
+                Debug.Log(hit.collider.name);
+                return hit.collider.gameObject.GetComponent<Tile>();
             }
         }
 

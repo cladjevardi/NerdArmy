@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     public Material[] unitMaterials;
 
     /// <summary>The visual scale of the grid.</summary>
-    public float gridScale = 3.75f;
+    public float gridScale = 0f;
 
     /// <summary>Setup our singleton instance.</summary>
     private void Awake()

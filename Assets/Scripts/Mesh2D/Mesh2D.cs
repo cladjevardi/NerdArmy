@@ -102,8 +102,7 @@ public abstract class Mesh2D : MonoBehaviour
         moving = true;
 
         // We need to apply the grid scale to animation.
-        float gridScale = GameManager.instance.gridScale;
-        Vector3 realEnd = end * gridScale;
+        Vector3 realEnd = end;
 
         // While that distance is greater than a very small amount (Epsilon, almost zero):
         while (transform.position != realEnd)

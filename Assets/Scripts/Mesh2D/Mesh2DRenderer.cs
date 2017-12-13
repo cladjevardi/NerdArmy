@@ -226,10 +226,10 @@ public class Mesh2DRenderer : MonoBehaviour
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(x, y, z) * GameManager.instance.gridScale;
-        verts[1] = new Vector3(x + 1, y, z) * GameManager.instance.gridScale;
-        verts[2] = new Vector3(x, y + 1, z) * GameManager.instance.gridScale;
-        verts[3] = new Vector3(x + 1, y + 1, z) * GameManager.instance.gridScale;
+        verts[0] = new Vector3(x, y, z);
+        verts[1] = new Vector3(x + 1, y, z);
+        verts[2] = new Vector3(x, y + 1, z);
+        verts[3] = new Vector3(x + 1, y + 1, z);
 
         // Create the list of uvmap coordinates pull from the texture.
         Vector2[] uv = materials[(int)layer].uv();
