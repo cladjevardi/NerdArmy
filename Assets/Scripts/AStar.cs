@@ -51,8 +51,27 @@ public class AStarVector
 
 public class Astar
 {
-    /// <summary>The resulting path.</summary>
+    /// <summary>The resulting path with more information.</summary>
     public List<AStarVector> result = new List<AStarVector>();
+
+    /// <summary>The resulting path.</summary>
+    public List<Vector2> AsListVector2()
+    {
+        List<Vector2> list = new List<Vector2>();
+        foreach (AStarVector vec in result)
+            list.Add(vec.position);
+        return list;
+    }
+
+    /// <summary>
+    /// Get the last position in the aStarPath
+    /// </summary>
+    /// <returns>Returns the last position in the list.</returns>
+    public Vector2 GetLastPosition()
+    {
+        List<Vector2> list = AsListVector2();
+        return list[list.Count - 1];
+    }
 
     /// <summary>Tile metadata for the a* algorithm.</summary>
     private class AStarTile

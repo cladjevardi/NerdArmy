@@ -4,22 +4,6 @@ using System.Collections.Generic;
 
 public class TileMap : MonoBehaviour
 {
-    /// <summary>Internal data structure for highlights.</summary>
-    private class Visited
-    {
-        public Vector2 position;
-        public TileHighlightColor color;
-
-        /// <summary>Constructor for Visited.</summary>
-        /// <param name="position">Tile position information.</param>
-        /// <param name="color">Tile highlight color.</param>
-        public Visited(Vector2 position, TileHighlightColor color)
-        {
-            this.position = position;
-            this.color = color;
-        }
-    };
-
     /// <summary>In-memory data of each tile.</summary>
     [HideInInspector]
     public List<List<Tile>> tiles = new List<List<Tile>>();
@@ -49,17 +33,45 @@ public class TileMap : MonoBehaviour
     /// <returns>
     /// Returns whether or not the cooridnate exists in the list.
     /// </returns>
-    private bool IsVector2InVector2List(Vector2 entry, List<Visited> list)
+    private bool IsVector2InVector2List(Vector2 entry, List<Vector2> list)
     {
         // Look for the given coordinate in the list of coordinates.
         bool contains = false;
-        foreach (Visited item in list)
+        foreach (Vector2 item in list)
         {
-            if (entry.x == item.position.x && entry.y == item.position.y)
+            if (entry.x == item.x && entry.y == item.y)
                 contains = true;
         }
 
         return contains;
+    }
+
+    /// <summary>
+    /// Get the actor that matches the coordinate specified.
+    /// </summary>
+    /// <param name="coord">The coordinate to look for an actor.</param>
+    /// <param name="actors">The list of actors to check against.</param>
+    /// <returns></returns>
+    private Actor GetSelectedActor(Vector2 coord, List<Actor> actors)
+    {
+        // Are we within bounds of the map.
+        if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
+            return null;
+
+        // Get the actor of the position, if any.
+        foreach (Actor actor in actors)
+        {
+            if (actor.transform.position.x == coord.x
+                && actor.transform.position.y == coord.y)
+            {
+                // This may be an enemies actor or a players actor.
+                // Display their current highlights.
+                return actor;
+            }
+        }
+
+        // No actor found at that location.
+        return null;
     }
 
     /// <summary>
@@ -72,18 +84,24 @@ public class TileMap : MonoBehaviour
     /// <returns>
     /// Returns whether or not the coordinate should be checked next pass.
     /// </returns>
-    private bool ShouldAdd(Vector2 coord, List<Visited> visited, bool canFly)
+    private bool ShouldAdd(Vector2 coord, List<Vector2> visited, Owner owner, List<Actor> actors, bool canFly)
     {
         // Are we within bounds of the map.
         if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
             return false;
 
         Tile tile = tiles[(int)coord.x][(int)coord.y];
+        Actor actor = GetSelectedActor(coord, actors);
+
+        bool actorCheck = owner == Owner.NONE ?
+            (actor == null || (actor != null && actor.owner != owner)) :
+            (actor == null || (actor != null && actor.owner == owner));
 
         // If the coord is valid, not already visited previously, or has collision
         // add it to the list of visited
         return (tile != null
             && !IsVector2InVector2List(coord, visited)
+            && actorCheck
             && (canFly ? !tile.trueCollision : !tile.groundCollision));
     }
 
@@ -109,46 +127,33 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
-    /// Show movement and attack highlights.
+    /// Get the list of tile positions that should be highlighted for movement for an actor.
     /// </summary>
-    /// <param name="actor">The actor to display.</param>
-    public void ShowActorHighlights(Actor actor)
+    /// <param name="actor">The actor that needs its movement highlights displayed.</param>
+    /// <param name="actors">The list of actors on the field.</param>
+    /// <returns>Returns a list of Tiles that need to be</returns>
+    public List<Vector2> GetMovementTiles(Actor actor, List<Actor> actors)
     {
         int movement = actor.unit.baseMovement;
-        int minRange = actor.unit.baseMinRange;
-        int maxRange = actor.unit.baseMaxRange;
 
-        List<Visited> visited = new List<Visited>();
+        List<Vector2> visited = new List<Vector2>();
         List<Vector2> toCheck = new List<Vector2>();
 
-        // Start off with what we know for sure we should check
+        // Start off with what we know for sure we should check.
         toCheck.Add(actor.transform.position);
 
         bool shouldIgnoreGround = actor.flying;
-        while (movement + minRange + maxRange > 0)
+        while (movement >= 0)
         {
-            // The next group of tiles to check
+            // The next group of tiles to check.
             List<Vector2> newToCheck = new List<Vector2>();
 
-            // Iterate through our toCheck
+            // Iterate through our toCheck.
             foreach (Vector2 coord in toCheck)
             {
-                // Add ourself to visited
+                // Add ourself to visited.
                 if (!IsVector2InVector2List(coord, visited))
-                {
-                    if (movement > 0)
-                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_BLUE));
-                    else if (minRange > 0)
-                    {
-                        shouldIgnoreGround = true;
-                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_NONE));
-                    }
-                    else
-                    {
-                        shouldIgnoreGround = true;
-                        visited.Add(new Visited(new Vector2(coord.x, coord.y), TileHighlightColor.HIGHLIGHT_RED));
-                    }
-                }
+                    visited.Add(new Vector2(coord.x, coord.y));
 
                 Vector2 north = new Vector2(coord.x, coord.y - 1);
                 Vector2 east = new Vector2(coord.x + 1, coord.y);
@@ -157,38 +162,137 @@ public class TileMap : MonoBehaviour
 
                 // Check if we should add any given direction to the next
                 // potential list of tiles.
-                if (ShouldAdd(north, visited, shouldIgnoreGround))
+                if (ShouldAdd(north, visited, actor.owner, actors, shouldIgnoreGround))
                     newToCheck.Add(north);
-                if (ShouldAdd(east, visited, shouldIgnoreGround))
+                if (ShouldAdd(east, visited, actor.owner, actors, shouldIgnoreGround))
                     newToCheck.Add(east);
-                if (ShouldAdd(south, visited, shouldIgnoreGround))
+                if (ShouldAdd(south, visited, actor.owner, actors, shouldIgnoreGround))
                     newToCheck.Add(south);
-                if (ShouldAdd(west, visited, shouldIgnoreGround))
+                if (ShouldAdd(west, visited, actor.owner, actors, shouldIgnoreGround))
                     newToCheck.Add(west);
             }
 
-            // Replace list with new list
-            toCheck.Clear();
             toCheck = newToCheck;
-
-            // Subtract movement spaces in order of highlighted.
-            if (movement > 0)
-                movement--;
-            else if (minRange > 0)
-                minRange--;
-            else if (maxRange > 0)
-                maxRange--;
+            movement--;
         }
 
-        // Apply the highlight to the valid tiles to move to
-        foreach (Visited visit in visited)
+        foreach (Actor unit in actors)
         {
-            Tile tile = tiles[(int)visit.position.x][(int)visit.position.y];
+            // Remove all actor locations from the visitor list.
+            for (int index = 0; index != visited.Count; ++index)
+            {
+                if (unit.transform.position.x == visited[index].x
+                    && unit.transform.position.y == visited[index].y)
+                {
+                    visited.RemoveAt(index);
+                    break;
+                }
+            }
+        }
+
+        return visited;
+    }
+
+    public List<Vector2> GetAttackTiles(List<Vector2> validMovementTiles, Actor actor, List<Actor> actors)
+    {
+        // The full list of attack tiles to highlight.
+        List<Vector2> attackTiles = new List<Vector2>();
+
+        // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
+        foreach (Vector2 validMovement in validMovementTiles)
+        {
+            int minRange = actor.unit.baseMinRange;
+            int maxRange = actor.unit.baseMaxRange - actor.unit.baseMinRange;
+
+            List<Vector2> visited = new List<Vector2>();
+            List<Vector2> toCheck = new List<Vector2>();
+
+            // Start off with what we know for sure we should check.
+            toCheck.Add(validMovement);
+
+            bool shouldIgnoreGround = actor.flying;
+            while (minRange + maxRange >= 0)
+            {
+                // The next group of tiles to check.
+                List<Vector2> newToCheck = new List<Vector2>();
+
+                // Iterate through our toCheck.
+                foreach (Vector2 coord in toCheck)
+                {
+                    // Add ourself to visited.
+                    if (!IsVector2InVector2List(coord, visited) && minRange == 0)
+                        visited.Add(new Vector2(coord.x, coord.y));
+
+                    Vector2 north = new Vector2(coord.x, coord.y - 1);
+                    Vector2 east = new Vector2(coord.x + 1, coord.y);
+                    Vector2 south = new Vector2(coord.x, coord.y + 1);
+                    Vector2 west = new Vector2(coord.x - 1, coord.y);
+
+                    // Check if we should add any given direction to the next
+                    // potential list of tiles.
+                    if (ShouldAdd(north, visited, Owner.NONE, actors, shouldIgnoreGround))
+                        newToCheck.Add(north);
+                    if (ShouldAdd(east, visited, Owner.NONE, actors, shouldIgnoreGround))
+                        newToCheck.Add(east);
+                    if (ShouldAdd(south, visited, Owner.NONE, actors, shouldIgnoreGround))
+                        newToCheck.Add(south);
+                    if (ShouldAdd(west, visited, Owner.NONE, actors, shouldIgnoreGround))
+                        newToCheck.Add(west);
+                }
+
+                toCheck = newToCheck;
+
+                // Adjust minimum range first before subtracting against maxRange.
+                if (minRange > 0)
+                    minRange--;
+                else
+                    maxRange--;
+            }
+
+            // Add all the list of current visited to our giant attack list.
+            // Exclude duplicates.
+            foreach (Vector2 tile in visited)
+            {
+                // If we are not in the list, nor are we our current actor position. Add.
+                if (!IsVector2InVector2List(tile, attackTiles)
+                    && !(tile.x == actor.transform.position.x && tile.y == actor.transform.position.y))
+                    attackTiles.Add(tile);
+            }
+        }
+
+        return attackTiles;
+    }
+
+    /// <summary>
+    /// Take a list of coordinates and highlight all those tiles the color specified.
+    /// </summary>
+    /// <param name="coordinates">The list of tile coordinates to highlight.</param>
+    /// <param name="color">The color the tiles should be highlighted.</param>
+    public void HighlightTiles(List<Vector2> coordinates, TileHighlightColor color)
+    {
+        foreach (Vector2 coordinate in coordinates)
+        {
+            Tile tile = tiles[(int)coordinate.x][(int)coordinate.y];
             tile.highlight = true;
-            tile.highlightColor = visit.color;
+            tile.highlightColor = color;
         }
     }
-    
+
+    /// <summary>
+    /// Remove all highlighted effects from the tilemap.
+    /// </summary>
+    public void RemoveAllHighlights()
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                tiles[x][y].highlight = false;
+                tiles[x][y].highlightColor = TileHighlightColor.HIGHLIGHT_NONE;
+            }
+        }
+    }
+
     /// <summary>
     /// Draw an arrow from point a to point b keeping collision in mind.
     /// </summary>

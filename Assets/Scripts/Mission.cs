@@ -184,7 +184,11 @@ public class Mission : MonoBehaviour
             if (currentlySelectedActor != null)
             {
                 // Display the tile highlights for that actor.
-                tileMap.GetComponent<TileMap>().ShowActorHighlights(currentlySelectedActor);
+                List<Vector2> movementTiles = tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors);
+                movementTiles.Add(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
+                List<Vector2> attackTiles = tileMap.GetComponent<TileMap>().GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+                tileMap.GetComponent<TileMap>().HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
+                tileMap.GetComponent<TileMap>().HighlightTiles(tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors), TileHighlightColor.HIGHLIGHT_BLUE);
             }
         }
         else if (currentlySelectedActor != null)
@@ -207,7 +211,14 @@ public class Mission : MonoBehaviour
 
                 // Track our movement that needs to be applied.
                 if (pathing.result.Count != 0)
+                {
                     currentPathing = pathing.result;
+
+                    // Draw an arrow from the start position to the last position of the path.
+                    //Vector2 fromPosition = new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y);
+                    //Vector2 toPosition = pathing.GetLastPosition();
+                    //tileMap.GetComponent<TileMap>().ShowPath(fromPosition, toPosition, currentlySelectedActor.unit.flying);
+                }
 
                 // Queue up our actor to attack once we apply our pathing.
                 actorToAttack = actor;
@@ -230,7 +241,14 @@ public class Mission : MonoBehaviour
 
                 // Track our movement that needs to be applied.
                 if (pathing.result.Count != 0)
+                {
                     currentPathing = pathing.result;
+
+                    // Draw an arrow from the start position to the last position of the path.
+                    //Vector2 fromPosition = new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y);
+                    //Vector2 toPosition = pathing.GetLastPosition();
+                    //tileMap.GetComponent<TileMap>().ShowPath(fromPosition, toPosition, currentlySelectedActor.unit.flying);
+                }
             }
         }
 
