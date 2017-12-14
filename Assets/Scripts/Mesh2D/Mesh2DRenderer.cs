@@ -225,9 +225,6 @@ public class Mesh2DRenderer : MonoBehaviour
         float y = 0;
         float z = GetZOrder(layer);
 
-        if (layer == Mesh2DLayer.LAYER_UNITS)
-            Debug.LogFormat("x:{0} y:{1}", x, y);
-
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
         verts[0] = new Vector3(x, y, z);
