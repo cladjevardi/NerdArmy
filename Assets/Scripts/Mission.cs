@@ -133,6 +133,10 @@ public class Mission : MonoBehaviour
             yield return null;
         }
 
+        // If this is the last movement. Set to idle.
+        if (currentPathing.Count == 0)
+            actor.SetAnimation(ActorAnimation.IDLE);
+
         // Tell everyone that moving is complete.
         actor.moving = false;
     }
@@ -275,9 +279,15 @@ public class Mission : MonoBehaviour
             {
                 // Set the animation to walking
                 if (currentPathing[0].direction == AStarDirection.EAST)
+                {
+                    currentlySelectedActor.facing = ActorFacing.EAST;
                     currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+                }
                 else if (currentPathing[0].direction == AStarDirection.WEST)
+                {
+                    currentlySelectedActor.facing = ActorFacing.WEST;
                     currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+                }
 
                 // If this is a movement and attack, see if we can just stop here and attack.
                 if (actorToAttack != null)

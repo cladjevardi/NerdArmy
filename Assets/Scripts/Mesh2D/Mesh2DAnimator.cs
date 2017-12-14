@@ -127,6 +127,7 @@ public class Mesh2DAnimation
     /// <summary>Set pause to false to begin animation updating.</summary>
     public void Play()
     {
+        currentFrameSequenceIndex = 0;
         _isPaused = false;
     }
 

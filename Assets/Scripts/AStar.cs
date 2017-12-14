@@ -290,15 +290,19 @@ public class Astar
             {
                 case AStarDirection.NORTH:
                     aStarVector.mask[0] = 0x1;
+                    aStarVector.direction = AStarDirection.SOUTH;
                     break;
                 case AStarDirection.EAST:
                     aStarVector.mask[1] = 0x1;
+                    aStarVector.direction = AStarDirection.WEST;
                     break;
                 case AStarDirection.SOUTH:
                     aStarVector.mask[2] = 0x1;
+                    aStarVector.direction = AStarDirection.NORTH;
                     break;
                 case AStarDirection.WEST:
                     aStarVector.mask[3] = 0x1;
+                    aStarVector.direction = AStarDirection.EAST;
                     break;
             }
         }

@@ -12,7 +12,7 @@ public abstract class Mesh2D : MonoBehaviour
     /// <summary>
     /// How fast the mesh moves when applying smooth movement.
     /// </summary>
-    private float _speed = 0.1f;
+    private float _speed = 0.5f;
     public float speed
     {
         get { return _speed; }

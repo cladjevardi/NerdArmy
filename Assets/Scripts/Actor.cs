@@ -18,6 +18,12 @@ public enum ActorAnimation
     CELEBRATE,
 }
 
+public enum ActorFacing
+{
+    EAST,
+    WEST,
+}
+
 /// <summary>
 /// The unity representation of a unit in combat or a mission. This information
 /// represents temporary status.
@@ -34,21 +40,26 @@ public class Actor : Mesh2D
         {
             case ActorAnimation.IDLE:
                 animationName = "idle";
+                facing = ActorFacing.WEST;
                 break;
             case ActorAnimation.ATTACKING:
                 animationName = "attacking";
+                facing = ActorFacing.WEST;
                 break;
             case ActorAnimation.DAMAGED:
                 animationName = "damaged";
+                facing = ActorFacing.WEST;
                 break;
             case ActorAnimation.WALKING_NORTH:
                 animationName = "walking_north";
+                facing = ActorFacing.WEST;
                 break;
             case ActorAnimation.WALKING_EAST:
                 animationName = "walking_east";
                 break;
             case ActorAnimation.WALKING_SOUTH:
                 animationName = "walking_south";
+                facing = ActorFacing.WEST;
                 break;
             case ActorAnimation.WALKING_WEST:
                 animationName = "walking_west";
@@ -61,6 +72,26 @@ public class Actor : Mesh2D
         }
 
         SetAnimation(GetCurrentLayer(), animationName);
+    }
+
+    /// <summary>Internal facing value to handle flips.</summary>
+    private ActorFacing _facing = ActorFacing.WEST;
+    public ActorFacing facing
+    {
+        get { return _facing; }
+        set {
+            if (value != _facing)
+            {
+                // Flip the scale
+                Vector3 scale = mesh.transform.localScale;
+                scale.x *= -1;
+                mesh.transform.localScale = scale;
+            }
+
+            // Adjust the center.
+            mesh.transform.localPosition = (value == ActorFacing.WEST) ? new Vector2(0, 0) : new Vector2(1, 0);
+            _facing = value;
+        }
     }
 
     /// <summary>
@@ -262,11 +293,5 @@ public class Actor : Mesh2D
             || animationName == "damaged"
             || animationName == "celebrate")
             SetAnimation(GetCurrentLayer(), "idle");
-    }
-
-    /// <summary>Reset the done state.</summary>
-    public void Reset()
-    {
-        _done = false;
     }
 }
