@@ -109,7 +109,7 @@ public class TileMap : MonoBehaviour
     /// <returns>Returns the Tile selected.</returns>
     public Tile GetTileSelected()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);

@@ -201,7 +201,10 @@ public class Tile : Mesh2D
         get { return _highlight; }
         set
         {
-            SetHighlightMaterial(2, 0);
+            if (value)
+                SetHighlightMaterial(2, 0);
+            else
+                RemoveLayer(Mesh2DLayer.LAYER_HIGHLIGHTS);
             _highlight = value;
         }
     }

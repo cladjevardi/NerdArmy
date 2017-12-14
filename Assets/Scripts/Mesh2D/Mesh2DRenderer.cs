@@ -144,8 +144,11 @@ public class Mesh2DRenderer : MonoBehaviour
         materials[(int)layer] = null;
 
         // Delete any drawn mesh.
-        MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
-        filter.mesh.Clear();
+        if (gameObjects[(int)layer] != null)
+        {
+            MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
+            filter.mesh.Clear();
+        }
     }
 
     /// <summary>

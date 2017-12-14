@@ -94,6 +94,13 @@ public abstract class Mesh2D : MonoBehaviour
         mesh.SetMaterial(layer, material);
     }
 
+    /// <summary>Remove the layer from a mesh.</summary>
+    /// <param name="layer">The layer to remove.</param>
+    protected void RemoveLayer(Mesh2DLayer layer)
+    {
+        mesh.RemoveMaterial(layer);
+    }
+
     /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
     /// <param name="end">The end position for the mesh to move towards.</param>
     public IEnumerator SmoothMovement(Vector3 end)
