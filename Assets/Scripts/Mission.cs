@@ -20,7 +20,7 @@ public class Mission : MonoBehaviour
     private List<Actor> actors = new List<Actor>();
 
     /// <summary>Movement not yet done.</summary>
-    private List<AStarVector> currentPathing = null;
+    private List<AStarVector> currentPathing = new List<AStarVector>();
 
     /// <summary>The tile the currently selected actor is moving towards.</summary>
     private AStarVector currentMoving = null;
@@ -255,7 +255,7 @@ public class Mission : MonoBehaviour
         // Iterate through all of the current players actors for their done state.
         foreach (Actor actor in actors)
         {
-            if (actor.moving || (currentPathing != null && currentPathing.Count != 0))
+            if (actor.moving || currentPathing.Count != 0)
                 return false;
 
             if (actor.owner == currentFaction && !actor.done)
@@ -267,33 +267,41 @@ public class Mission : MonoBehaviour
 
     private bool ActorCurrentlyMoving()
     {
-        if (currentPathing != null
-            && currentPathing.Count > 0
-            && currentlySelectedActor != null
-            && !currentlySelectedActor.moving)
+        if (currentlySelectedActor != null
+            && currentPathing.Count > 0)
         {
-            // Set the animation to walking
-            if (currentPathing[0].direction == AStarDirection.EAST)
-                currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST); // LOL
-
-            // If this is a movement and attack, see if we can just stop here and attack.
-            if (actorToAttack != null)
+            // Check if we're ready to issue the next move.
+            if (!currentlySelectedActor.moving)
             {
-                // Check and see if we can stop here!
-                Actor actor = GetActor(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
-                if (currentPathing.Count <= currentlySelectedActor.unit.baseMaxRange
-                    && currentPathing.Count >= currentlySelectedActor.unit.baseMinRange
-                    && actor == null)
+                // Set the animation to walking
+                if (currentPathing[0].direction == AStarDirection.EAST)
+                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+                else if (currentPathing[0].direction == AStarDirection.WEST)
+                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+
+                // If this is a movement and attack, see if we can just stop here and attack.
+                if (actorToAttack != null)
                 {
-                    currentPathing.Clear();
+                    // Check and see if we can stop here!
+                    Actor actor = GetActor(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
+                    if (currentPathing.Count <= currentlySelectedActor.unit.baseMaxRange
+                        && currentPathing.Count >= currentlySelectedActor.unit.baseMinRange
+                        && actor != null)
+                    {
+                        // Stop all movement and go strait to attacking.
+                        currentPathing.Clear();
+                        return false;
+                    }
                 }
+
+                // Apply that smooth movement.
+                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position));
+
+                // After were done moving remove the first entry.
+                currentPathing.RemoveAt(0);
             }
 
-            // Apply that smooth movement.
-            StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position));
-
-            // After were done moving remove the first entry.
-            currentPathing.RemoveAt(0);
+            // Still in the process of moving. Skip the rest of the Update until complete.
             return true;
         }
 
@@ -304,8 +312,12 @@ public class Mission : MonoBehaviour
     {
         if (actorToAttack != null)
         {
+            // Display attacking animation.
+            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACKING);
+
             // Apply damage to unit.
             actorToAttack.health -= currentlySelectedActor.unit.baseDamage;
+            Debug.LogFormat("Damage dealt: {0}", currentlySelectedActor.unit.baseDamage);
 
             // Check if the unit is dead.
             if (actorToAttack.health <= 0)
@@ -314,7 +326,11 @@ public class Mission : MonoBehaviour
                 for (int index = 0; index < actors.Count; ++index)
                 {
                     if (actors[index] == actorToAttack)
+                    {
+                        DestroyObject(actors[index]);
                         actors.RemoveAt(index);
+                        break;
+                    }
                 }
             }
             

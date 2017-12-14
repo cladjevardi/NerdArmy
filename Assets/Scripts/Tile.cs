@@ -199,8 +199,7 @@ public class Tile : Mesh2D
     public bool highlight
     {
         get { return _highlight; }
-        set
-        {
+        set {
             if (value)
                 SetHighlightMaterial(2, 0);
             else
@@ -216,8 +215,7 @@ public class Tile : Mesh2D
     public TileHighlightColor highlightColor
     {
         get { return _highlightColor; }
-        set
-        {
+        set {
             switch(value)
             {
                 case TileHighlightColor.HIGHLIGHT_BLUE:

@@ -195,8 +195,7 @@ public class Mesh2DAnimator
     public GameObject listener
     {
         get { return _listener; }
-        set
-        {
+        set {
             // Update the game object for all curreny animations.
             _listener = value;
             foreach (Mesh2DAnimation animation in animations)

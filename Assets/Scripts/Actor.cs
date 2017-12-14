@@ -70,8 +70,7 @@ public class Actor : Mesh2D
     public Unit unit
     {
         get { return _unit; }
-        set
-        {
+        set {
             _unit = value;
 
             // Apply the flying trait based on the unit.
@@ -100,7 +99,11 @@ public class Actor : Mesh2D
     public int health
     {
         get { return _health; }
-        set { _health = value; }
+        set {
+            if (value <= 0)
+                RemoveLayer(GetCurrentLayer());
+            _health = value;
+        }
     }
 
     /// <summary>
@@ -110,8 +113,7 @@ public class Actor : Mesh2D
     public bool flying
     {
         get { return _flying; }
-        set
-        {
+        set {
             // TODO: Move the current material to the flying layer.
             _flying = value;
         }
@@ -124,8 +126,7 @@ public class Actor : Mesh2D
     public bool burrowed
     {
         get { return _burrowed; }
-        set
-        {
+        set {
             // TODO: Move the current material to the burrowed layer.
             _burrowed = value;
         }
@@ -138,8 +139,7 @@ public class Actor : Mesh2D
     public bool invisible
     {
         get { return _invisible; }
-        set
-        {
+        set {
             // TODO: Move the current material to the invisible layer.
             _invisible = value;
         }
@@ -231,7 +231,7 @@ public class Actor : Mesh2D
         List<Mesh2DAnimation> animations = new List<Mesh2DAnimation>() {
             new Mesh2DAnimation("idle", new List<int>()
                 { 9, 14 }, 1.0f, true, gameObject),
-            new Mesh2DAnimation("attack", new List<int>()
+            new Mesh2DAnimation("attacking", new List<int>()
                 { 14, 9, 4, 4, 4, 4, 14, 9 }, 0.10f, false, gameObject),
             new Mesh2DAnimation("damaged", new List<int>()
                 { 0, 0 }, 1.0f, false, gameObject),
@@ -244,7 +244,7 @@ public class Actor : Mesh2D
         };
 
         SetMaterial(GetCurrentLayer(), GetUnitMaterialId(unit.type),
-            MaterialType.UNIT, 33, 32, 0, animations, "attack", true);
+            MaterialType.UNIT, 33, 32, 0, animations, "attacking", true);
     }
 
     /// <summary>
