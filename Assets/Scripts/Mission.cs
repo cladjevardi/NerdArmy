@@ -357,7 +357,6 @@ public class Mission : MonoBehaviour
             actorToAttack = actor;
 
             // Deselect our currently selected actor.
-            currentlySelectedActor = null;
             tileMap.GetComponent<TileMap>().RemoveAllHighlights();
             return true;
         }
