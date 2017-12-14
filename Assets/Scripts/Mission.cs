@@ -68,7 +68,7 @@ public class Mission : MonoBehaviour
             Vector2 position = validSpawnPositions[spawnIndex];
             string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
-            actor.transform.parent = transform;
+            actor.transform.SetParent(transform);
             actor.transform.position = position;
             actor.unit = unit;
             actor.owner = Owner.PLAYER1;
@@ -95,7 +95,7 @@ public class Mission : MonoBehaviour
             Unit unit = UnitFactory.Create(enemy.type);
             string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
-            actor.transform.parent = transform;
+            actor.transform.SetParent(transform);
             actor.transform.position = enemy.position;
             actor.unit = unit;
             actor.owner = Owner.PLAYER2;
@@ -104,6 +104,37 @@ public class Mission : MonoBehaviour
             // Add the actor to the mission.
             actors.Add(actor);
         }
+    }
+
+    /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
+    /// <param name="actor">The actor to move.</param>
+    /// <param name="end">The end position for the mesh to move towards.</param>
+    public IEnumerator SmoothMovement(Actor actor, Vector3 end)
+    {
+        Debug.LogFormat("Moving to {0}", end.ToString());
+
+        // Tell anyone who accesses the mesh that its moving.
+        actor.moving = true;
+
+        // We need to apply the grid scale to animation.
+        Vector3 realEnd = end;
+
+        // While that distance is greater than a very small amount (Epsilon, almost zero):
+        while (actor.transform.position != realEnd)
+        {
+            // Find a new position proportionally closer to the end, based on the moveTime
+            Vector2 newPostion = Vector2.MoveTowards(
+                actor.transform.position, end, (1f / actor.speed) * Time.deltaTime);
+
+            // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+            actor.transform.position = newPostion;
+
+            // Return and loop until sqrRemainingDistance is close enough to zero to end the function
+            yield return null;
+        }
+
+        // Tell everyone that moving is complete.
+        actor.moving = false;
     }
 
     public IEnumerator TransitionTurns()
@@ -259,7 +290,7 @@ public class Mission : MonoBehaviour
             }
 
             // Apply that smooth movement.
-            StartCoroutine(currentlySelectedActor.SmoothMovement(currentPathing[0].position));
+            StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position));
 
             // After were done moving remove the first entry.
             currentPathing.RemoveAt(0);
@@ -436,12 +467,12 @@ public class Mission : MonoBehaviour
     {
         // Create the TileMap object.
         tileMap = new GameObject("TileMap");
-        tileMap.transform.parent = transform;
+        tileMap.transform.SetParent(transform);
         tileMap.AddComponent<TileMap>();
 
         /*
         canvas = new GameObject("Canvas");
-        canvas.transform.parent = transform;
+        canvas.transform.SetParent(transform);
         canvas.AddComponent<Canvas>();
         var rectTransform = canvas.AddComponent<RectTransform>();
         */

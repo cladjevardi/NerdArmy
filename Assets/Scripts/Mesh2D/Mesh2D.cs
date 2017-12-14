@@ -100,39 +100,12 @@ public abstract class Mesh2D : MonoBehaviour
     {
         mesh.RemoveMaterial(layer);
     }
-
-    /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
-    /// <param name="end">The end position for the mesh to move towards.</param>
-    public IEnumerator SmoothMovement(Vector3 end)
-    {
-        // Tell anyone who accesses the mesh that its moving.
-        moving = true;
-
-        // We need to apply the grid scale to animation.
-        Vector3 realEnd = end;
-
-        // While that distance is greater than a very small amount (Epsilon, almost zero):
-        while (transform.position != realEnd)
-        {
-            // Find a new position proportionally closer to the end, based on the moveTime
-            Vector2 newPostion = Vector2.MoveTowards(transform.position, end, (1f / speed) * Time.deltaTime);
-
-            // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
-            transform.position = newPostion;
-
-            // Return and loop until sqrRemainingDistance is close enough to zero to end the function
-            yield return null;
-        }
-
-        // Tell everyone that moving is complete.
-        moving = false;
-    }
-
+    
     /// <summary>Call at creation of object.</summary>
     private void Awake()
     {
         meshRenderer = new GameObject("MeshRenderer");
-        meshRenderer.transform.parent = transform;
+        meshRenderer.transform.SetParent(transform);
         meshRenderer.AddComponent<Mesh2DRenderer>();
     }
 }

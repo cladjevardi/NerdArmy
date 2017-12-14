@@ -47,7 +47,7 @@ public class WorldManager : MonoBehaviour
     {
         // Create the TileMap object.
         mission = new GameObject("Mission");
-        mission.transform.parent = transform;
+        mission.transform.SetParent(transform);
         mission.AddComponent<Mission>();
     }
 }

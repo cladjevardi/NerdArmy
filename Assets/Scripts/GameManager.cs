@@ -67,14 +67,14 @@ public class GameManager : MonoBehaviour
         if (soundManager == null)
         {
             soundManager = new GameObject("SoundManager");
-            soundManager.transform.parent = transform;
+            soundManager.transform.SetParent(transform);
             soundManager.AddComponent<SoundManager>();
         }
 
         if (worldManager == null)
         {
             worldManager = new GameObject("WorldManager");
-            worldManager.transform.parent = transform;
+            worldManager.transform.SetParent(transform);
             worldManager.AddComponent<WorldManager>();
         }
     }

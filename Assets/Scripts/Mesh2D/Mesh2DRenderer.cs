@@ -10,9 +10,6 @@ public class Mesh2DRenderer : MonoBehaviour
 
     /// <summary>The highlight layers default alpha.</summary>
     private float defaultGridAlpha = 1.00f;
-
-    /// <summary>The position of the tile.</summary>
-    //private Vector2 position;
     
     /// <summary>Tile materials at every layer.</summary>
     private Mesh2DMaterial[] materials = new Mesh2DMaterial[(int)Mesh2DLayer.LAYER_COUNT];
@@ -193,7 +190,8 @@ public class Mesh2DRenderer : MonoBehaviour
         if (gameObjects[(int)layer] == null)
         {
             gameObjects[(int)layer] = new GameObject("GameObject_" + layer.ToString());
-            gameObjects[(int)layer].transform.parent = transform;
+            gameObjects[(int)layer].transform.SetParent(transform);
+            gameObjects[(int)layer].transform.localPosition = new Vector2(0, 0);
             gameObjects[(int)layer].AddComponent<MeshFilter>();
             gameObjects[(int)layer].AddComponent<MeshRenderer>();
 
@@ -223,9 +221,12 @@ public class Mesh2DRenderer : MonoBehaviour
 
         // Get positional information.
         // Get the z order from the layer.
-        float x = transform.position.x;
-        float y = transform.position.y;
+        float x = 0;
+        float y = 0;
         float z = GetZOrder(layer);
+
+        if (layer == Mesh2DLayer.LAYER_UNITS)
+            Debug.LogFormat("x:{0} y:{1}", x, y);
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];

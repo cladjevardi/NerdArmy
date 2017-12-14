@@ -113,7 +113,6 @@ public class TileMap : MonoBehaviour
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-            Debug.Log(mousePos2D);
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
 
             if (hit.collider != null)
@@ -350,7 +349,7 @@ public class TileMap : MonoBehaviour
 
                 // Basic tile information.
                 Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
-                tile.transform.parent = transform;
+                tile.transform.SetParent(transform);
                 tile.transform.position = new Vector2(i, j);
 
                 // Tile found in mission tile list. Construct it.
