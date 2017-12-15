@@ -1,17 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Mission : MonoBehaviour
 {
     /// <summary>The entire map and list of units and enemies.</summary>
     private GameObject tileMap = null;
 
-    /// <summary>The transition screen.</summary>
+    /// <summary>The canvas for UI.</summary>
     private GameObject canvas = null;
 
-    /// <summary>Transition image object.</summary>
-    private GameObject transitionImage = null;
+    /// <summary>The transition text.</summary>
+    private GameObject transitionText = null;
 
     /// <summary>Whether the mission is transitioning between factions.</summary>
     private bool transitioning = false;
@@ -149,11 +150,25 @@ public class Mission : MonoBehaviour
         currentlySelectedActor = null;
 
         // Set the current player to the next players turn.
-        UpdateCurrentFaction();
-        Debug.LogFormat("Transitioning to {0}", currentFaction.ToString());
+        if (UpdateCurrentFaction())
+        {
+            Debug.LogFormat("Transitioning to {0}", currentFaction.ToString());
 
-        yield return new WaitForSeconds(2);
-        transitioning = false;
+            // Display the transition text.
+            Text text = transitionText.GetComponent<Text>();
+            Player turn = GetTurn(currentFaction);
+            if (turn == Player.HUMAN)
+                text.text = "Player's Turn";
+            else if (turn == Player.COMPUTER)
+                text.text = "Enemy's Turn";
+
+            // Wait for 2 seconds.
+            yield return new WaitForSeconds(2);
+
+            // Remove the transition text.
+            text.text = "";
+            transitioning = false;
+        }
     }
 
     private bool IsFactionActive(Owner faction)
@@ -189,7 +204,7 @@ public class Mission : MonoBehaviour
         return turn;
     }
 
-    private void UpdateCurrentFaction()
+    private bool UpdateCurrentFaction()
     {
         // Cycle through each faction until a faction exists.
         Owner previousFaction = currentFaction;
@@ -214,17 +229,25 @@ public class Mission : MonoBehaviour
             // We looped over all possible factions and couldn't find one. Game over!
             if (previousFaction == currentFaction)
             {
-                Debug.Log("Game over!");
-                transitioning = true;
+                // Display the victor or defeat text.
+                Text text = transitionText.GetComponent<Text>();
+                Player turn = GetTurn(currentFaction);
+                if (turn == Player.HUMAN)
+                    text.text = "Mission Complete!";
+                if (turn == Player.COMPUTER)
+                    text.text = "Mission Failure!";
+
+                return false;
             }
         } while (!IsFactionActive(currentFaction));
-
 
         // Reset all actors before initiating the next factions turn.
         foreach (Actor actor in actors)
         {
             actor.done = false;
         }
+
+        return true;
     }
 
     private Actor GetActor(Vector2 position)
@@ -496,12 +519,24 @@ public class Mission : MonoBehaviour
         tileMap.transform.SetParent(transform);
         tileMap.AddComponent<TileMap>();
 
-        /*
+        // Setup the Canvas for drawing UI elements.
         canvas = new GameObject("Canvas");
         canvas.transform.SetParent(transform);
-        canvas.AddComponent<Canvas>();
-        var rectTransform = canvas.AddComponent<RectTransform>();
-        */
+        Canvas can = canvas.AddComponent<Canvas>();
+        can.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        // Create a UI.Text object.
+        transitionText = new GameObject("TransitionText");
+        transitionText.transform.SetParent(canvas.gameObject.transform);
+        Text text = transitionText.AddComponent<Text>();
+        text.text = "";
+        text.color = new Color(0, 0, 0, 255);
+        text.transform.localPosition = new Vector2(0, 0);
+        text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        text.fontSize = 32;
+        text.fontStyle = FontStyle.Italic;
+        RectTransform rect = text.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(300, 100);
     }
 
     private void Update()
