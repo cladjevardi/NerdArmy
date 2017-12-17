@@ -8,30 +8,35 @@
     <abilities>grapple</abilities>
     <passives>pull</passives>
     <material id="0">
+      <animation name="idle" speed="0.5" loop="true">
+        <north_sequence>6|7|0</north_sequence>
+        <south_sequence>6|7|0</south_sequence>
+        <east_sequence>6|7|0</east_sequence>
+      </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>0|1|2</north_sequence>
-        <south_sequence>3|4|5</south_sequence>
-        <east_sequence>6|7|8</east_sequence>
+        <north_sequence>8|9</north_sequence>
+        <south_sequence>8|9</south_sequence>
+        <east_sequence>8|9</east_sequence>
+      </animation>
+      <animation name="walking" speed="0.5" loop="true">
+        <north_sequence>6|7|0</north_sequence>
+        <south_sequence>6|7|0</south_sequence>
+        <east_sequence>6|7|0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>9</north_sequence>
-        <south_sequence>9</south_sequence>
-        <east_sequence>9</east_sequence>
-      </animation>
-      <animation name="idle" speed="0.5" loop="true">
-        <north_sequence>10|11|12</north_sequence>
-        <south_sequence>13|14|15</south_sequence>
-        <east_sequence>16|17|18</east_sequence>
+        <north_sequence>10</north_sequence>
+        <south_sequence>10</south_sequence>
+        <east_sequence>10</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
-        <north_sequence>19|20|21</north_sequence>
-        <south_sequence>19|20|21</south_sequence>
-        <east_sequence>19|20|21</east_sequence>
+        <north_sequence>11|4|5</north_sequence>
+        <south_sequence>11|4|5</south_sequence>
+        <east_sequence>11|4|5</east_sequence>
       </animation>
       <animation name="victory" speed="0.5" on_complete="idle">
-        <north_sequence>22|23|24|22|23|24|22|23|24</north_sequence>
-        <south_sequence>22|23|24|22|23|24|22|23|24</south_sequence>
-        <east_sequence>22|23|24|22|23|24|22|23|24</east_sequence>
+        <north_sequence>1|2</north_sequence>
+        <south_sequence>1|2</south_sequence>
+        <east_sequence>1|2</east_sequence>
       </animation>
     </material>
   </unit>

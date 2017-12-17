@@ -6,21 +6,18 @@ using UnityEngine;
 public enum ActorAnimation
 {
     IDLE,
-    ATTACKING,
-    DAMAGED,
-    WALKING_NORTH,
-    WALKING_EAST,
-    WALKING_SOUTH,
-    WALKING_WEST,
-
-    // TODO:
+    WALKING,
+    ATTACK,
+    DAMAGE,
     DEATH,
-    CELEBRATE,
+    VICTORY,
 }
 
 public enum ActorFacing
 {
+    NORTH,
     EAST,
+    SOUTH,
     WEST,
 }
 
@@ -39,30 +36,22 @@ public class Actor : Mesh2D
         switch (animation)
         {
             case ActorAnimation.IDLE:
-                animationName = "idle";
-                facing = ActorFacing.WEST;
+                animationName = "idle_" + GetFacingString();
                 break;
-            case ActorAnimation.ATTACKING:
-                animationName = "attacking";
-                facing = ActorFacing.WEST;
+            case ActorAnimation.ATTACK:
+                animationName = "attack_" + GetFacingString();
                 break;
-            case ActorAnimation.DAMAGED:
-                animationName = "damaged";
-                facing = ActorFacing.WEST;
+            case ActorAnimation.DAMAGE:
+                animationName = "damage_" + GetFacingString();
                 break;
-            case ActorAnimation.WALKING_NORTH:
-                animationName = "walking_north";
-                facing = ActorFacing.WEST;
+            case ActorAnimation.DEATH:
+                animationName = "death_" + GetFacingString();
                 break;
-            case ActorAnimation.WALKING_EAST:
-                animationName = "walking_east";
+            case ActorAnimation.WALKING:
+                animationName = "walking_" + GetFacingString();
                 break;
-            case ActorAnimation.WALKING_SOUTH:
-                animationName = "walking_south";
-                facing = ActorFacing.WEST;
-                break;
-            case ActorAnimation.WALKING_WEST:
-                animationName = "walking_west";
+            case ActorAnimation.VICTORY:
+                animationName = "victory_" + GetFacingString();
                 break;
 
             // Not implemente
@@ -92,6 +81,29 @@ public class Actor : Mesh2D
             mesh.transform.localPosition = (value == ActorFacing.WEST) ? new Vector2(0, 0) : new Vector2(1, 0);
             _facing = value;
         }
+    }
+
+    /// <summary>
+    /// Get the string of the direction the actor is facing.
+    /// </summary>
+    /// <returns>
+    /// Returns the string of the direction the actor is facing.
+    /// </returns>
+    private string GetFacingString()
+    {
+        switch (facing)
+        {
+            case ActorFacing.NORTH:
+                return "north";
+            case ActorFacing.EAST:
+                return "east";
+            case ActorFacing.SOUTH:
+                return "south";
+            case ActorFacing.WEST:
+                return "west";
+        }
+
+        return "";
     }
 
     /// <summary>
@@ -203,79 +215,13 @@ public class Actor : Mesh2D
     }
 
     /// <summary>
-    /// Get the sprite sheet material id.
-    /// </summary>
-    /// <param name="unitType">The unit type to lookup for the id.</param>
-    /// <returns>Returns the material lookup id to use with GameManager.</returns>
-    private int GetUnitMaterialId(UnitType unitType)
-    {
-        switch (unitType)
-        {
-            // Hero units.
-            case UnitType.MAINCHARACTER:
-                return 15; // TODO: Fix me.
-            case UnitType.CHARGER:
-                return 1;
-            case UnitType.MAGICIAN:
-                return 2;
-            case UnitType.ELEMENTALIST:
-                return 3;
-            case UnitType.BOMBER:
-                return 4;
-
-            // Enemy units.
-            case UnitType.GUMBALL:
-                return 16; // TODO: Fix me.
-            case UnitType.EAGLE:
-                return 6;
-            case UnitType.RUNNINGMAN:
-                return 7;
-            case UnitType.REDARCHER:
-                return 8;
-            case UnitType.BLACKARCHER:
-                return 9;
-            case UnitType.BACKPACK:
-                return 10;
-            case UnitType.SHIELD:
-                return 11;
-            case UnitType.DITTO:
-                return 12;
-            case UnitType.LIGHTBULB:
-                return 13;
-            case UnitType.HEDGEHOG:
-                return 14;
-
-            // Not implemented or NONE will trigger this.
-            default:
-                throw new ArgumentException("Invalid unit type", "type");
-        }
-    }
-
-    /// <summary>
     /// Set the material of the the unit.
     /// </summary>
     /// <param name="tileId">The GameManager unit identifier of the material.</param>
     private void SetUnitMaterial()
     {
-        // Setup each unit animation.
-        // TODO: Fill in all missing animations.
-        List<Mesh2DAnimation> animations = new List<Mesh2DAnimation>() {
-            new Mesh2DAnimation("idle", new List<int>()
-                { 9, 14 }, 1.0f, true, gameObject),
-            new Mesh2DAnimation("attacking", new List<int>()
-                { 14, 9, 4, 4, 4, 4, 14, 9 }, 0.10f, false, gameObject),
-            new Mesh2DAnimation("damaged", new List<int>()
-                { 0, 0 }, 1.0f, false, gameObject),
-            new Mesh2DAnimation("walking_west", new List<int>()
-                { 1, 6, 11, 16 }, 0.2f, true, gameObject),
-            new Mesh2DAnimation("walking_south", new List<int>()
-                { 2, 7, 12, 17 }, 0.2f, true, gameObject),
-            new Mesh2DAnimation("walking_north", new List<int>()
-                { 3, 8, 13, 18 }, 0.2f, true, gameObject),
-        };
-
-        SetMaterial(GetCurrentLayer(), GetUnitMaterialId(unit.type),
-            MaterialType.UNIT, 33, 32, 0, animations, "attacking", true);
+        SetMaterial(GetCurrentLayer(), unit.materialId, MaterialType.UNIT,
+            125, 125, 0, unit.animations, "idle_east", true);
     }
 
     /// <summary>
@@ -289,9 +235,20 @@ public class Actor : Mesh2D
         string animationName = name as String;
 
         // On completion of an attack set the animation back to idle.
-        if (animationName == "attack"
-            || animationName == "damaged"
-            || animationName == "celebrate")
-            SetAnimation(GetCurrentLayer(), "idle");
+        if (animationName == "attack_north"
+            || animationName == "attack_east"
+            || animationName == "attack_south"
+            || animationName == "attack_west"
+            || animationName == "damage_north"
+            || animationName == "damage_east"
+            || animationName == "damage_south"
+            || animationName == "damage_west"
+            || animationName == "victory_north"
+            || animationName == "victory_east"
+            || animationName == "victory_south"
+            || animationName == "victory_west")
+        {
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+        }
     }
 }

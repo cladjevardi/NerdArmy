@@ -304,12 +304,12 @@ public class Mission : MonoBehaviour
                 if (currentPathing[0].direction == AStarDirection.EAST)
                 {
                     currentlySelectedActor.facing = ActorFacing.EAST;
-                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING);
                 }
                 else if (currentPathing[0].direction == AStarDirection.WEST)
                 {
                     currentlySelectedActor.facing = ActorFacing.WEST;
-                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING_WEST);
+                    currentlySelectedActor.SetAnimation(ActorAnimation.WALKING);
                 }
 
                 // If this is a movement and attack, see if we can just stop here and attack.
@@ -346,7 +346,7 @@ public class Mission : MonoBehaviour
         if (actorToAttack != null)
         {
             // Display attacking animation.
-            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACKING);
+            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
 
             // Apply damage to unit.
             actorToAttack.health -= currentlySelectedActor.unit.baseDamage;
