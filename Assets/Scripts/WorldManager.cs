@@ -33,7 +33,7 @@ public class WorldManager : MonoBehaviour
         missionDatabase.Initialize();
 
         // Give the player a main character to start the game.
-        roster.Add(UnitFactory.Create(UnitType.MAINCHARACTER));
+        roster.Add(new Unit(UnitType.MAINCHARACTER));
 
         // Start the game off at 1-1.
         world = 1;

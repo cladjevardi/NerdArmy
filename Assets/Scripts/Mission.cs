@@ -93,7 +93,7 @@ public class Mission : MonoBehaviour
         foreach (MissionEnemy enemy in missionEnemies)
         {
             // Create a new actor.
-            Unit unit = UnitFactory.Create(enemy.type);
+            Unit unit = new Unit(enemy.type);
             string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.type.ToString();
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.transform.SetParent(transform);

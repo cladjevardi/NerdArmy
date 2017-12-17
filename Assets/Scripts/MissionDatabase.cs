@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
+/// <summary>
+/// The database object for mission information.
+/// </summary>
 public class MissionDatabase
 {
     /// <summary>World mission blueprints.</summary>
@@ -193,6 +196,9 @@ public class MissionDatabase
     }
 }
 
+/// <summary>
+/// The metadata that makes up a tile material to be displayed in a mission.
+/// </summary>
 public class MissionMaterial
 {
     public enum Layer

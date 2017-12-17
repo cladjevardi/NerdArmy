@@ -225,7 +225,8 @@ public class Mesh2DAnimator
     /// Whether the animation should loop automatically or stop after
     /// one sequence.
     /// </param>
-    public void AddAnimation(string name, List<int> frameIndices, float frameRate = 0.25f, bool shouldLoop = true)
+    public void AddAnimation(string name, List<int> frameIndices,
+        float frameRate = 0.25f, bool shouldLoop = true)
     {
         // Construct an animation for a material.
         Mesh2DAnimation animation = new Mesh2DAnimation();

@@ -31,6 +31,17 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// The unit database for the game. This class can be invoked through
+    /// GameManager.instance.unitDatabase.
+    /// </summary>
+    private UnitDatabase _unitDatabase = new UnitDatabase();
+    public UnitDatabase unitDatabase
+    {
+        get { return _unitDatabase; }
+        internal set { _unitDatabase = value; }
+    }
+
+    /// <summary>
     /// The material pallete off tiles to use for tile renderer.
     /// </summary>
     public Material[] tileMaterials;
@@ -63,6 +74,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        unitDatabase.Initialize();
+
         // Assign the GameManager as the parent.
         if (soundManager == null)
         {
