@@ -105,6 +105,64 @@ public class TileMap : MonoBehaviour
             && (canFly ? !tile.trueCollision : !tile.groundCollision));
     }
 
+    /// <summary>
+    /// Determines if a coordinate is within the tilemap.
+    /// </summary>
+    /// <param name="x">The x position of the coordinate.</param>
+    /// <param name="y">The y position of the coordinate.</param>
+    /// <returns>Returns whether the coordinate is valid.</returns>
+    private bool IsValidTile(int x, int y)
+    {
+        return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    /// <summary>
+    /// Get the string mask from a tiles highlighted neighbors.
+    /// </summary>
+    /// <param name="x">The x coordinate of the tile to check.</param>
+    /// <param name="y">The y coordinate of the tile to check.</param>
+    /// <param name="color">The highlight color to check against.</param>
+    /// <returns>Returns the string mask of the highlighted neighbor tiles.</returns>
+    private byte[] GetTileHighlightMask(int x, int y, TileHighlightColor color)
+    {
+        int N = y + 1;
+        int S = y - 1;
+        int E = x + 1;
+        int W = x - 1;
+
+        // Create a byte array and clear it out.
+        byte[] mask = new byte[8];
+        mask[0] = 0x0; mask[1] = 0x0; mask[2] = 0x0; mask[3] = 0x0;
+        mask[4] = 0x0; mask[5] = 0x0; mask[6] = 0x0; mask[7] = 0x0;
+
+        // North
+        if (IsValidTile(x, N) && tiles[x][N].highlight == true && tiles[x][N].highlightColor == color)
+            mask[0] = 0x1;
+        // North East
+        if (IsValidTile(E, N) && tiles[E][N].highlight == true && tiles[E][N].highlightColor == color)
+            mask[1] = 0x1;
+        // East
+        if (IsValidTile(E, y) && tiles[E][y].highlight == true && tiles[E][y].highlightColor == color)
+            mask[2] = 0x1;
+        // South East
+        if (IsValidTile(E, S) && tiles[E][S].highlight == true && tiles[E][S].highlightColor == color)
+            mask[3] = 0x1;
+        // South
+        if (IsValidTile(x, S) && tiles[x][S].highlight == true && tiles[x][S].highlightColor == color)
+            mask[4] = 0x1;
+        // South West
+        if (IsValidTile(W, S) && tiles[W][S].highlight == true && tiles[W][S].highlightColor == color)
+            mask[5] = 0x1;
+        // West
+        if (IsValidTile(W, y) && tiles[W][y].highlight == true && tiles[W][y].highlightColor == color)
+            mask[6] = 0x1;
+        // North West
+        if (IsValidTile(W, N) && tiles[W][N].highlight == true && tiles[W][N].highlightColor == color)
+            mask[7] = 0x1;
+
+        return mask;
+    }
+
     /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
     /// <returns>Returns the Tile selected.</returns>
     public Tile GetTileSelected()
@@ -188,6 +246,9 @@ public class TileMap : MonoBehaviour
                 }
             }
         }
+
+        // Always add myself to the end list.
+        visited.Add(new Vector2(actor.transform.position.x, actor.transform.position.y));
 
         return visited;
     }
@@ -274,6 +335,29 @@ public class TileMap : MonoBehaviour
             Tile tile = tiles[(int)coordinate.x][(int)coordinate.y];
             tile.highlight = true;
             tile.highlightColor = color;
+        }
+    }
+
+    /// <summary>
+    /// When the highlighted tiles are finalized. Update the image of the highlights to match what
+    /// images they should be showing depending on their neighbors.
+    /// </summary>
+    public void AdjustHighlightFrameIds()
+    {
+        // Iterate through each color and fix the frame id of the highlight image.
+        for (int highlightColor = 0; highlightColor < (int)TileHighlightColor.HIGHLIGHT_COUNT; ++highlightColor)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                for (int y = 0; y < height; ++y)
+                {
+                    Tile tile = tiles[(int)x][(int)y];
+                    if (tile.highlight && tile.highlightColor == (TileHighlightColor)highlightColor)
+                    {
+                        tile.SetHighlightMask(GetTileHighlightMask(x, y, (TileHighlightColor)highlightColor));
+                    }
+                }
+            }
         }
     }
 

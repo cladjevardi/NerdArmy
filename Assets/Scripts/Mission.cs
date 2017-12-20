@@ -388,10 +388,16 @@ public class Mission : MonoBehaviour
         {
             // Display the actors movement and attack highlights.
             List<Vector2> movementTiles = tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors);
-            movementTiles.Add(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
             List<Vector2> attackTiles = tileMap.GetComponent<TileMap>().GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+
+            // First display all attack tiles.
             tileMap.GetComponent<TileMap>().HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
-            tileMap.GetComponent<TileMap>().HighlightTiles(tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors), TileHighlightColor.HIGHLIGHT_BLUE);
+
+            // Display all movement tiles OVER the attack tiles. This takes into account enemies on tiles.
+            tileMap.GetComponent<TileMap>().HighlightTiles(movementTiles, TileHighlightColor.HIGHLIGHT_BLUE);
+
+            // Adjust the highlighted tiles images.
+            tileMap.GetComponent<TileMap>().AdjustHighlightFrameIds();
         }
         else
         {

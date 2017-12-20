@@ -38,6 +38,11 @@ public class Mesh2DRenderer : MonoBehaviour
         // When generate mesh is called this color will be applied over it.
         colors[(int)layer] = color;
 
+        // Regenerate the mesh on that layer.
+        Mesh2DMaterial material = materials[(int)layer];
+        if (material != null)
+            GenerateMesh(layer);
+
         // Return the color we changed from.
         return oldColor;
     }
