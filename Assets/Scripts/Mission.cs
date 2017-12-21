@@ -11,9 +11,6 @@ public class Mission : MonoBehaviour
     /// <summary>The canvas for UI.</summary>
     private GameObject canvas = null;
 
-    /// <summary>The transition text.</summary>
-    private GameObject transitionText = null;
-
     /// <summary>Whether the mission is transitioning between factions.</summary>
     private bool transitioning = false;
 
@@ -22,9 +19,6 @@ public class Mission : MonoBehaviour
 
     /// <summary>Movement not yet done.</summary>
     private List<AStarVector> currentPathing = new List<AStarVector>();
-
-    /// <summary>The tile the currently selected actor is moving towards.</summary>
-    private AStarVector currentMoving = null;
 
     /// <summary>The currently selected actor.</summary>
     private Actor currentlySelectedActor = null;
@@ -152,21 +146,47 @@ public class Mission : MonoBehaviour
         // Set the current player to the next players turn.
         if (UpdateCurrentFaction())
         {
-            Debug.LogFormat("Transitioning to {0}", currentFaction.ToString());
+            // Create a new backdrop object.
+            GameObject transitionBackdrop = new GameObject("TransitionBackdrop");
+            transitionBackdrop.transform.SetParent(canvas.gameObject.transform);
+            Image backdrop = transitionBackdrop.AddComponent<Image>();
+            backdrop.material = GameManager.instance.effectMaterials[5];
+            RectTransform backdropRect = backdrop.GetComponent<RectTransform>();
+            backdropRect.transform.position = new Vector3(100, 300, -0.1f);
+            backdropRect.sizeDelta = new Vector2(1038, 116);
 
-            // Display the transition text.
-            Text text = transitionText.GetComponent<Text>();
+            // Create a new transition text image.
+            GameObject transitionTextImage = new GameObject("TransitionText");
+            transitionTextImage.transform.SetParent(canvas.gameObject.transform);
+            Image textImage = transitionTextImage.AddComponent<Image>();
+
             Player turn = GetTurn(currentFaction);
             if (turn == Player.HUMAN)
-                text.text = "Player's Turn";
-            else if (turn == Player.COMPUTER)
-                text.text = "Enemy's Turn";
+            {
+                textImage.material = GameManager.instance.effectMaterials[4];
+                RectTransform textImageRect = textImage.GetComponent<RectTransform>();
+                textImageRect.transform.position = new Vector3(100, 300, -0.11f);
+                textImageRect.sizeDelta = new Vector2(340, 50);
+            }
+            else
+            {
+                textImage.material = GameManager.instance.effectMaterials[2];
+                RectTransform textImageRect = textImage.GetComponent<RectTransform>();
+                textImageRect.transform.position = new Vector3(100, 300, -0.11f);
+                textImageRect.sizeDelta = new Vector2(414, 54);
+            }
+
+            Debug.LogFormat("Transitioning to {0}", currentFaction.ToString());
 
             // Wait for 2 seconds.
             yield return new WaitForSeconds(2);
 
             // Remove the transition text.
-            text.text = "";
+            //text.text = "";
+
+            DestroyObject(transitionTextImage);
+            DestroyObject(transitionBackdrop);
+
             transitioning = false;
         }
     }
@@ -230,12 +250,12 @@ public class Mission : MonoBehaviour
             if (previousFaction == currentFaction)
             {
                 // Display the victor or defeat text.
-                Text text = transitionText.GetComponent<Text>();
-                Player turn = GetTurn(currentFaction);
-                if (turn == Player.HUMAN)
-                    text.text = "Mission Complete!";
-                if (turn == Player.COMPUTER)
-                    text.text = "Mission Failure!";
+                //Text text = transitionText.GetComponent<Text>();
+                //Player turn = GetTurn(currentFaction);
+                //if (turn == Player.HUMAN)
+                //    text.text = "Mission Complete!";
+                //if (turn == Player.COMPUTER)
+                //    text.text = "Mission Failure!";
 
                 return false;
             }
@@ -469,6 +489,8 @@ public class Mission : MonoBehaviour
                 currentPathing = pathing.result;
 
             // TODO: Show attack highlights only.
+            tileMap.GetComponent<TileMap>().ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
+
             // For now issue the unit as done and remove highlights.
             currentlySelectedActor.done = true;
             tileMap.GetComponent<TileMap>().RemoveAllHighlights();
@@ -532,17 +554,17 @@ public class Mission : MonoBehaviour
         can.renderMode = RenderMode.ScreenSpaceOverlay;
 
         // Create a UI.Text object.
-        transitionText = new GameObject("TransitionText");
-        transitionText.transform.SetParent(canvas.gameObject.transform);
-        Text text = transitionText.AddComponent<Text>();
-        text.text = "";
-        text.color = new Color(0, 0, 0, 255);
-        text.transform.localPosition = new Vector2(0, 0);
-        text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        text.fontSize = 32;
-        text.fontStyle = FontStyle.Italic;
-        RectTransform rect = text.GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(300, 100);
+        //transitionText = new GameObject("TransitionText");
+        //transitionText.transform.SetParent(canvas.gameObject.transform);
+        //Text text = transitionText.AddComponent<Text>();
+        //text.text = "";
+        //text.color = new Color(0, 0, 0, 255);
+        //text.transform.localPosition = new Vector2(0, 0);
+        //text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        //text.fontSize = 32;
+        //text.fontStyle = FontStyle.Italic;
+        //RectTransform rect = text.GetComponent<RectTransform>();
+        //rect.sizeDelta = new Vector2(300, 100);
     }
 
     private void Update()

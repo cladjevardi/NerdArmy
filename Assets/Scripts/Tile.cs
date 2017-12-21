@@ -32,7 +32,7 @@ public class Tile : Mesh2D
     /// <param name="frameId">The sprite index to display inside the material.</param>
     public void SetFloorMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 32, 32, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 128, 128, frameId);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class Tile : Mesh2D
     /// <param name="frameId">The frame id inside the effect tile to use.</param>
     public void SetGridMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 32, 32, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 128, 128, frameId);
     }
 
     /// <summary>
@@ -96,39 +96,39 @@ public class Tile : Mesh2D
         {
             // Use the arrow begin frame over the arrow point.
             if (mask == "01-00-00-00")
-                SetGridMaterial(3, 7);
+                SetGridMaterial(0, 5);
             if (mask == "00-01-00-00")
-                SetGridMaterial(3, 1);
+                SetGridMaterial(0, 4);
             if (mask == "00-00-01-00")
-                SetGridMaterial(3, 0);
+                SetGridMaterial(0, 7);
             if (mask == "00-00-00-01")
-                SetGridMaterial(3, 8);
+                SetGridMaterial(0, 6);
         }
         else
         {
             // Draw the direction based arrow sprites.
             if (mask == "01-00-00-00")
-                SetGridMaterial(3, 6);
+                SetGridMaterial(0, 9);
             if (mask == "00-01-00-00")
-                SetGridMaterial(3, 13);
+                SetGridMaterial(0, 8);
             if (mask == "00-00-01-00")
-                SetGridMaterial(3, 12);
+                SetGridMaterial(0, 11);
             if (mask == "00-00-00-01")
-                SetGridMaterial(3, 5);
+                SetGridMaterial(0, 10);
         }
                 
         if (mask == "01-01-00-00")
-            SetGridMaterial(3, 10);
+            SetGridMaterial(0, 2);
         if (mask == "01-00-01-00")
-            SetGridMaterial(3, 2);
+            SetGridMaterial(0, 19);
         if (mask == "01-00-00-01")
-            SetGridMaterial(3, 11);
+            SetGridMaterial(0, 1);
         if (mask == "00-01-01-00")
-            SetGridMaterial(3, 4);
+            SetGridMaterial(0, 3);
         if (mask == "00-01-00-01")
-            SetGridMaterial(3, 9);
+            SetGridMaterial(0, 18);
         if (mask == "00-00-01-01")
-            SetGridMaterial(3, 3);
+            SetGridMaterial(0, 0);
     }
 
     public void SetHighlightMask(byte[] mask)
