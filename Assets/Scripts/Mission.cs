@@ -147,48 +147,84 @@ public class Mission : MonoBehaviour
         if (UpdateCurrentFaction())
         {
             // Create a new backdrop object.
-            GameObject transitionBackdrop = new GameObject("TransitionBackdrop");
-            transitionBackdrop.transform.SetParent(canvas.gameObject.transform);
-            Image backdrop = transitionBackdrop.AddComponent<Image>();
-            backdrop.material = GameManager.instance.effectMaterials[7];
+            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+            GameObject backdrop = CreateBackdrop(canvasRect);
+            GameObject text = CreateText(canvasRect);
             RectTransform backdropRect = backdrop.GetComponent<RectTransform>();
-            backdropRect.transform.position = new Vector3(100, 300, -0.1f);
-            backdropRect.sizeDelta = new Vector2(1038, 116);
+            RectTransform textRect = text.GetComponent<RectTransform>();
 
-            // Create a new transition text image.
-            GameObject transitionTextImage = new GameObject("TransitionText");
-            transitionTextImage.transform.SetParent(canvas.gameObject.transform);
-            Image textImage = transitionTextImage.AddComponent<Image>();
+            // End position for text
+            Vector3 endBackdrop = new Vector3(canvasRect.rect.x - 500, canvasRect.rect.height / 2, -0.1f);
+            Vector3 endText = new Vector3(canvasRect.rect.width + 250, canvasRect.rect.height / 2, -0.11f);
 
-            Player turn = GetTurn(currentFaction);
-            if (turn == Player.HUMAN)
+            // While that distance is greater than a very small amount (Epsilon, almost zero):
+            while (backdropRect.transform.position.x != endBackdrop.x)
             {
-                textImage.material = GameManager.instance.effectMaterials[5];
-                RectTransform textImageRect = textImage.GetComponent<RectTransform>();
-                textImageRect.transform.position = new Vector3(100, 300, -0.11f);
-                textImageRect.sizeDelta = new Vector2(340, 50);
-            }
-            else
-            {
-                textImage.material = GameManager.instance.effectMaterials[4];
-                RectTransform textImageRect = textImage.GetComponent<RectTransform>();
-                textImageRect.transform.position = new Vector3(100, 300, -0.11f);
-                textImageRect.sizeDelta = new Vector2(414, 54);
+                // Find a new position proportionally closer to the end, based on the moveTime
+                Vector2 newTextPostion = Vector2.MoveTowards(
+                    textRect.transform.position, endText, (1f / .001f) * Time.deltaTime);
+                Vector2 newBackdropPostion = Vector2.MoveTowards(
+                    backdropRect.transform.position, endBackdrop, (1f / .001f) * Time.deltaTime);
+
+                // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+                textRect.transform.position = newTextPostion;
+                backdropRect.transform.position = newBackdropPostion;
+
+                // Return and loop until sqrRemainingDistance is close enough to zero to end the function
+                yield return null;
             }
 
             Debug.LogFormat("Transitioning to {0}", currentFaction.ToString());
 
-            // Wait for 2 seconds.
-            yield return new WaitForSeconds(2);
-
-            // Remove the transition text.
-            //text.text = "";
-
-            DestroyObject(transitionTextImage);
-            DestroyObject(transitionBackdrop);
+            DestroyObject(backdrop);
+            DestroyObject(text);
 
             transitioning = false;
         }
+    }
+
+    private GameObject CreateBackdrop(RectTransform canvasRect)
+    {
+        GameObject transitionBackdrop = new GameObject("TransitionBackdrop");
+        transitionBackdrop.transform.SetParent(canvas.gameObject.transform);
+        Image backdrop = transitionBackdrop.AddComponent<Image>();
+        backdrop.material = GameManager.instance.effectMaterials[7];
+        backdrop.transform.position = new Vector3(0, 0, -0.1f);
+        RectTransform backdropRect = backdrop.GetComponent<RectTransform>();
+        backdropRect.transform.position = new Vector3(
+            canvasRect.rect.width + 500,
+            canvasRect.rect.height / 2, -0.1f);
+        backdropRect.sizeDelta = new Vector2(1038, 116);
+        return transitionBackdrop;
+    }
+
+    private GameObject CreateText(RectTransform canvasRect)
+    {
+        GameObject transitionTextImage = new GameObject("TransitionText");
+        transitionTextImage.transform.SetParent(canvas.gameObject.transform);
+        Image textImage = transitionTextImage.AddComponent<Image>();
+
+        Player turn = GetTurn(currentFaction);
+        if (turn == Player.HUMAN)
+        {
+            textImage.material = GameManager.instance.effectMaterials[5];
+            RectTransform textImageRect = textImage.GetComponent<RectTransform>();
+            textImageRect.transform.position = new Vector3(
+                canvasRect.rect.x - 250,
+                canvasRect.rect.height / 2, -0.11f);
+            textImageRect.sizeDelta = new Vector2(340, 50);
+        }
+        else
+        {
+            textImage.material = GameManager.instance.effectMaterials[4];
+            RectTransform textImageRect = textImage.GetComponent<RectTransform>();
+            textImageRect.transform.position = new Vector3(
+                canvasRect.rect.x - 250,
+                canvasRect.rect.height / 2, -0.11f);
+            textImageRect.sizeDelta = new Vector2(414, 54);
+        }
+
+        return transitionTextImage;
     }
 
     private bool IsFactionActive(Owner faction)
