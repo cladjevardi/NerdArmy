@@ -1,56 +1,56 @@
 fileFormatVersion: 2
-guid: 811d1a74cc214f648a59ccb288d5c46c
-timeCreated: 1513985680
+guid: 5b5c74ce6c4be9642aa0f7e940030531
+timeCreated: 1513985699
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: blue_highlight_0
-    21300002: blue_highlight_1
-    21300004: blue_highlight_2
-    21300006: blue_highlight_3
-    21300008: blue_highlight_4
-    21300010: blue_highlight_5
-    21300012: blue_highlight_6
-    21300014: blue_highlight_7
-    21300016: blue_highlight_8
-    21300018: blue_highlight_9
-    21300020: blue_highlight_10
-    21300022: blue_highlight_11
-    21300024: blue_highlight_12
-    21300026: blue_highlight_13
-    21300028: blue_highlight_14
-    21300030: blue_highlight_15
-    21300032: blue_highlight_16
-    21300034: blue_highlight_17
-    21300036: blue_highlight_18
-    21300038: blue_highlight_19
-    21300040: blue_highlight_20
-    21300042: blue_highlight_21
-    21300044: blue_highlight_22
-    21300046: blue_highlight_23
-    21300048: blue_highlight_24
-    21300050: blue_highlight_25
-    21300052: blue_highlight_26
-    21300054: blue_highlight_27
-    21300056: blue_highlight_28
-    21300058: blue_highlight_29
-    21300060: blue_highlight_30
-    21300062: blue_highlight_31
-    21300064: blue_highlight_32
-    21300066: blue_highlight_33
-    21300068: blue_highlight_34
-    21300070: blue_highlight_35
-    21300072: blue_highlight_36
-    21300074: blue_highlight_37
-    21300076: blue_highlight_38
-    21300078: blue_highlight_39
-    21300080: blue_highlight_40
-    21300082: blue_highlight_41
-    21300084: blue_highlight_42
-    21300086: blue_highlight_43
-    21300088: blue_highlight_44
-    21300090: blue_highlight_45
-    21300092: blue_highlight_46
+    21300000: red_highlight_0
+    21300002: red_highlight_1
+    21300004: red_highlight_2
+    21300006: red_highlight_3
+    21300008: red_highlight_4
+    21300010: red_highlight_5
+    21300012: red_highlight_6
+    21300014: red_highlight_7
+    21300016: red_highlight_8
+    21300018: red_highlight_9
+    21300020: red_highlight_10
+    21300022: red_highlight_11
+    21300024: red_highlight_12
+    21300026: red_highlight_13
+    21300028: red_highlight_14
+    21300030: red_highlight_15
+    21300032: red_highlight_16
+    21300034: red_highlight_17
+    21300036: red_highlight_18
+    21300038: red_highlight_19
+    21300040: red_highlight_20
+    21300042: red_highlight_21
+    21300044: red_highlight_22
+    21300046: red_highlight_23
+    21300048: red_highlight_24
+    21300050: red_highlight_25
+    21300052: red_highlight_26
+    21300054: red_highlight_27
+    21300056: red_highlight_28
+    21300058: red_highlight_29
+    21300060: red_highlight_30
+    21300062: red_highlight_31
+    21300064: red_highlight_32
+    21300066: red_highlight_33
+    21300068: red_highlight_34
+    21300070: red_highlight_35
+    21300072: red_highlight_36
+    21300074: red_highlight_37
+    21300076: red_highlight_38
+    21300078: red_highlight_39
+    21300080: red_highlight_40
+    21300082: red_highlight_41
+    21300084: red_highlight_42
+    21300086: red_highlight_43
+    21300088: red_highlight_44
+    21300090: red_highlight_45
+    21300092: red_highlight_46
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -121,29 +121,11 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: blue_highlight_0
+      name: red_highlight_0
       rect:
         serializedVersion: 2
         x: 0
@@ -157,7 +139,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_1
+      name: red_highlight_1
       rect:
         serializedVersion: 2
         x: 128
@@ -171,7 +153,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_2
+      name: red_highlight_2
       rect:
         serializedVersion: 2
         x: 256
@@ -185,7 +167,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_3
+      name: red_highlight_3
       rect:
         serializedVersion: 2
         x: 384
@@ -199,7 +181,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_4
+      name: red_highlight_4
       rect:
         serializedVersion: 2
         x: 768
@@ -213,7 +195,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_5
+      name: red_highlight_5
       rect:
         serializedVersion: 2
         x: 896
@@ -227,7 +209,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_6
+      name: red_highlight_6
       rect:
         serializedVersion: 2
         x: 1024
@@ -241,7 +223,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_7
+      name: red_highlight_7
       rect:
         serializedVersion: 2
         x: 0
@@ -255,7 +237,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_8
+      name: red_highlight_8
       rect:
         serializedVersion: 2
         x: 128
@@ -269,7 +251,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_9
+      name: red_highlight_9
       rect:
         serializedVersion: 2
         x: 256
@@ -283,7 +265,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_10
+      name: red_highlight_10
       rect:
         serializedVersion: 2
         x: 384
@@ -297,7 +279,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_11
+      name: red_highlight_11
       rect:
         serializedVersion: 2
         x: 640
@@ -311,7 +293,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_12
+      name: red_highlight_12
       rect:
         serializedVersion: 2
         x: 768
@@ -325,7 +307,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_13
+      name: red_highlight_13
       rect:
         serializedVersion: 2
         x: 896
@@ -339,7 +321,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_14
+      name: red_highlight_14
       rect:
         serializedVersion: 2
         x: 1024
@@ -353,7 +335,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_15
+      name: red_highlight_15
       rect:
         serializedVersion: 2
         x: 0
@@ -367,7 +349,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_16
+      name: red_highlight_16
       rect:
         serializedVersion: 2
         x: 128
@@ -381,7 +363,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_17
+      name: red_highlight_17
       rect:
         serializedVersion: 2
         x: 256
@@ -395,7 +377,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_18
+      name: red_highlight_18
       rect:
         serializedVersion: 2
         x: 384
@@ -409,7 +391,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_19
+      name: red_highlight_19
       rect:
         serializedVersion: 2
         x: 512
@@ -423,7 +405,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_20
+      name: red_highlight_20
       rect:
         serializedVersion: 2
         x: 640
@@ -437,7 +419,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_21
+      name: red_highlight_21
       rect:
         serializedVersion: 2
         x: 768
@@ -451,7 +433,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_22
+      name: red_highlight_22
       rect:
         serializedVersion: 2
         x: 896
@@ -465,7 +447,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_23
+      name: red_highlight_23
       rect:
         serializedVersion: 2
         x: 1024
@@ -479,7 +461,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_24
+      name: red_highlight_24
       rect:
         serializedVersion: 2
         x: 0
@@ -493,7 +475,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_25
+      name: red_highlight_25
       rect:
         serializedVersion: 2
         x: 128
@@ -507,7 +489,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_26
+      name: red_highlight_26
       rect:
         serializedVersion: 2
         x: 256
@@ -521,7 +503,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_27
+      name: red_highlight_27
       rect:
         serializedVersion: 2
         x: 384
@@ -535,7 +517,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_28
+      name: red_highlight_28
       rect:
         serializedVersion: 2
         x: 512
@@ -549,7 +531,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_29
+      name: red_highlight_29
       rect:
         serializedVersion: 2
         x: 640
@@ -563,7 +545,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_30
+      name: red_highlight_30
       rect:
         serializedVersion: 2
         x: 768
@@ -577,7 +559,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_31
+      name: red_highlight_31
       rect:
         serializedVersion: 2
         x: 896
@@ -591,7 +573,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_32
+      name: red_highlight_32
       rect:
         serializedVersion: 2
         x: 1024
@@ -605,7 +587,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_33
+      name: red_highlight_33
       rect:
         serializedVersion: 2
         x: 0
@@ -619,7 +601,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_34
+      name: red_highlight_34
       rect:
         serializedVersion: 2
         x: 128
@@ -633,7 +615,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_35
+      name: red_highlight_35
       rect:
         serializedVersion: 2
         x: 256
@@ -647,7 +629,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_36
+      name: red_highlight_36
       rect:
         serializedVersion: 2
         x: 384
@@ -661,7 +643,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_37
+      name: red_highlight_37
       rect:
         serializedVersion: 2
         x: 512
@@ -675,7 +657,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_38
+      name: red_highlight_38
       rect:
         serializedVersion: 2
         x: 640
@@ -689,7 +671,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_39
+      name: red_highlight_39
       rect:
         serializedVersion: 2
         x: 768
@@ -703,7 +685,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_40
+      name: red_highlight_40
       rect:
         serializedVersion: 2
         x: 896
@@ -717,7 +699,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_41
+      name: red_highlight_41
       rect:
         serializedVersion: 2
         x: 1024
@@ -731,7 +713,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_42
+      name: red_highlight_42
       rect:
         serializedVersion: 2
         x: 0
@@ -745,7 +727,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_43
+      name: red_highlight_43
       rect:
         serializedVersion: 2
         x: 128
@@ -759,7 +741,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_44
+      name: red_highlight_44
       rect:
         serializedVersion: 2
         x: 256
@@ -773,7 +755,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_45
+      name: red_highlight_45
       rect:
         serializedVersion: 2
         x: 384
@@ -787,7 +769,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: blue_highlight_46
+      name: red_highlight_46
       rect:
         serializedVersion: 2
         x: 512

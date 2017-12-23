@@ -56,10 +56,12 @@ MonoBehaviour:
   - {fileID: 2100000, guid: d98f33be75a55124ba0f6f078753af5b, type: 2}
   effectMaterials:
   - {fileID: 2100000, guid: d67b90451e9030547ad079360cccca0b, type: 2}
+  - {fileID: 2100000, guid: c7d17f2286f4dff47b1cb499f7d2ca83, type: 2}
   - {fileID: 2100000, guid: 5a5597d5cbd11a74e9f323ab884d29e9, type: 2}
+  - {fileID: 2100000, guid: eeaaaad1b418eb148822293b4b33b9af, type: 2}
   - {fileID: 2100000, guid: 38a846db1354c0a41b5ccff92c23801f, type: 2}
-  - {fileID: 2100000, guid: 5a22f64ec6549294b8429ab4a065c215, type: 2}
   - {fileID: 2100000, guid: df73faa404ec10b4fa4c9e407359ae48, type: 2}
+  - {fileID: 2100000, guid: 5a22f64ec6549294b8429ab4a065c215, type: 2}
   - {fileID: 2100000, guid: 5557e8a60752d50478e66719a5165edf, type: 2}
   unitMaterials:
   - {fileID: 2100000, guid: d63892b42b76ee94d905e48406e8fa4a, type: 2}

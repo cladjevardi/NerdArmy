@@ -150,7 +150,7 @@ public class Mission : MonoBehaviour
             GameObject transitionBackdrop = new GameObject("TransitionBackdrop");
             transitionBackdrop.transform.SetParent(canvas.gameObject.transform);
             Image backdrop = transitionBackdrop.AddComponent<Image>();
-            backdrop.material = GameManager.instance.effectMaterials[5];
+            backdrop.material = GameManager.instance.effectMaterials[7];
             RectTransform backdropRect = backdrop.GetComponent<RectTransform>();
             backdropRect.transform.position = new Vector3(100, 300, -0.1f);
             backdropRect.sizeDelta = new Vector2(1038, 116);
@@ -163,14 +163,14 @@ public class Mission : MonoBehaviour
             Player turn = GetTurn(currentFaction);
             if (turn == Player.HUMAN)
             {
-                textImage.material = GameManager.instance.effectMaterials[4];
+                textImage.material = GameManager.instance.effectMaterials[5];
                 RectTransform textImageRect = textImage.GetComponent<RectTransform>();
                 textImageRect.transform.position = new Vector3(100, 300, -0.11f);
                 textImageRect.sizeDelta = new Vector2(340, 50);
             }
             else
             {
-                textImage.material = GameManager.instance.effectMaterials[2];
+                textImage.material = GameManager.instance.effectMaterials[4];
                 RectTransform textImageRect = textImage.GetComponent<RectTransform>();
                 textImageRect.transform.position = new Vector3(100, 300, -0.11f);
                 textImageRect.sizeDelta = new Vector2(414, 54);
@@ -489,7 +489,7 @@ public class Mission : MonoBehaviour
                 currentPathing = pathing.result;
 
             // TODO: Show attack highlights only.
-            tileMap.GetComponent<TileMap>().ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
+            //tileMap.GetComponent<TileMap>().ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
 
             // For now issue the unit as done and remove highlights.
             currentlySelectedActor.done = true;

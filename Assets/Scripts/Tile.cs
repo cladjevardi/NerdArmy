@@ -70,7 +70,7 @@ public class Tile : Mesh2D
     public void SetHighlightMaterial(int tileId, int frameId = 0)
     {
         SetMaterial(Mesh2DLayer.LAYER_HIGHLIGHTS, tileId, MaterialType.EFFECT,
-            66, 66, frameId);
+            128, 128, frameId);
     }
 
     /// <summary>
@@ -133,102 +133,101 @@ public class Tile : Mesh2D
 
     public void SetHighlightMask(byte[] mask)
     {
-        //           n  ne e  se s  sw w  nw
         if (mask[0] == 0x0 && mask[2] == 0x0 && mask[4] == 0x0 && mask[6] == 0x0)
-            SetHighlightMaterial(1, 0);
+            SetHighlightMaterial(2, 22);
 
         // 1 highlight
         else if (mask[0] == 0x1 && mask[2] == 0x0 && mask[4] == 0x0 && mask[6] == 0x0)
-            SetHighlightMaterial(1, 14);
+            SetHighlightMaterial(2, 1);
         else if (mask[0] == 0x0 && mask[2] == 0x1 && mask[4] == 0x0 && mask[6] == 0x0)
-            SetHighlightMaterial(1, 12);
+            SetHighlightMaterial(2, 0);
         else if (mask[0] == 0x0 && mask[2] == 0x0 && mask[4] == 0x1 && mask[6] == 0x0)
-            SetHighlightMaterial(1, 13);
+            SetHighlightMaterial(2, 3);
         else if (mask[0] == 0x0 && mask[2] == 0x0 && mask[4] == 0x0 && mask[6] == 0x1)
-            SetHighlightMaterial(1, 11);
+            SetHighlightMaterial(2, 2);
 
         // 2 highlights
         else if (mask[0] == 0x1 && mask[2] == 0x1 && mask[4] == 0x0 && mask[6] == 0x0)
         {
             if (mask[1] == 0x1)
-                SetHighlightMaterial(1, 24);
+                SetHighlightMaterial(2, 20);
             else
-                SetHighlightMaterial(1, 19);
+                SetHighlightMaterial(2, 9);
         }
         else if (mask[0] == 0x1 && mask[2] == 0x0 && mask[4] == 0x1 && mask[6] == 0x0)
         {
-            SetHighlightMaterial(1, 10);
+            SetHighlightMaterial(2, 4);
         }
         else if (mask[0] == 0x1 && mask[2] == 0x0 && mask[4] == 0x0 && mask[6] == 0x1)
         {
             if (mask[7] == 0x1)
-                SetHighlightMaterial(1, 22);
+                SetHighlightMaterial(2, 18);
             else
-                SetHighlightMaterial(1, 18);
+                SetHighlightMaterial(2, 11);
         }
         else if (mask[0] == 0x0 && mask[2] == 0x1 && mask[4] == 0x1 && mask[6] == 0x0)
         {
             if (mask[3] == 0x1)
-                SetHighlightMaterial(1, 23);
+                SetHighlightMaterial(2, 21);
             else
-                SetHighlightMaterial(1, 9);
+                SetHighlightMaterial(2, 12);
         }
         else if (mask[0] == 0x0 && mask[2] == 0x1 && mask[4] == 0x0 && mask[6] == 0x1)
         {
-            SetHighlightMaterial(1, 20);
+            SetHighlightMaterial(2, 13);
         }
         else if (mask[0] == 0x0 && mask[2] == 0x0 && mask[4] == 0x1 && mask[6] == 0x1)
         {
             if (mask[5] == 0x1)
-                SetHighlightMaterial(1, 21);
+                SetHighlightMaterial(2, 19);
             else
-                SetHighlightMaterial(1, 8);
+                SetHighlightMaterial(2, 10);
         }
 
         // 3 highlights
         else if (mask[0] == 0x1 && mask[2] == 0x1 && mask[4] == 0x1 && mask[6] == 0x0)
         {
             if (mask[1] == 0x0 && mask[3] == 0x0)
-                SetHighlightMaterial(1, 27);
+                SetHighlightMaterial(2, 14);
             else if (mask[1] == 0x1 && mask[3] == 0x0)
-                SetHighlightMaterial(1, 25);
+                SetHighlightMaterial(2, 23);
             else if (mask[1] == 0x0 && mask[3] == 0x1)
-                SetHighlightMaterial(1, 26);
+                SetHighlightMaterial(2, 32);
             else if (mask[1] == 0x1 && mask[3] == 0x1)
-                SetHighlightMaterial(1, 32);
+                SetHighlightMaterial(2, 29);
         }
         else if (mask[0] == 0x1 && mask[2] == 0x1 && mask[4] == 0x0 && mask[6] == 0x1)
         {
             if (mask[1] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 37);
+                SetHighlightMaterial(2, 17);
             else if (mask[1] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 36);
+                SetHighlightMaterial(2, 35);
             else if (mask[1] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 35);
+                SetHighlightMaterial(2, 26);
             else if (mask[1] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 33);
+                SetHighlightMaterial(2, 28);
         }
         else if (mask[0] == 0x0 && mask[2] == 0x1 && mask[4] == 0x1 && mask[6] == 0x1)
         {
             if (mask[3] == 0x0 && mask[5] == 0x0)
-                SetHighlightMaterial(1, 17);
+                SetHighlightMaterial(2, 15);
             else if (mask[3] == 0x1 && mask[5] == 0x0)
-                SetHighlightMaterial(1, 16);
+                SetHighlightMaterial(2, 24);
             else if (mask[3] == 0x0 && mask[5] == 0x1)
-                SetHighlightMaterial(1, 15);
+                SetHighlightMaterial(2, 33);
             else if (mask[3] == 0x1 && mask[5] == 0x1)
-                SetHighlightMaterial(1, 34);
+                SetHighlightMaterial(2, 30);
         }
         else if (mask[0] == 0x1 && mask[2] == 0x0 && mask[4] == 0x1 && mask[6] == 0x1)
         {
             if (mask[5] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 7);
+                SetHighlightMaterial(2, 16);
             else if (mask[5] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 5);
+                SetHighlightMaterial(2, 25);
             else if (mask[5] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 6);
+                SetHighlightMaterial(2, 34);
             else if (mask[5] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 31);
+                SetHighlightMaterial(2, 27);
         }
 
         // 4 highlights
@@ -236,45 +235,45 @@ public class Tile : Mesh2D
         {
             // 0 remove
             if (mask[1] == 0x0 && mask[3] == 0x0 && mask[5] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 51);
 
             // 1 remove
             else if (mask[1] == 0x1 && mask[3] == 0x0 && mask[5] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 44);
             else if (mask[1] == 0x0 && mask[3] == 0x1 && mask[5] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 43);
             else if (mask[1] == 0x0 && mask[3] == 0x0 && mask[5] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 42);
             else if (mask[1] == 0x0 && mask[3] == 0x0 && mask[5] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 41);
 
             // 2 remove
             else if (mask[1] == 0x1 && mask[3] == 0x1 && mask[5] == 0x0 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 45);
             else if (mask[1] == 0x1 && mask[3] == 0x0 && mask[5] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 53);
             else if (mask[1] == 0x1 && mask[3] == 0x0 && mask[5] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 48);
             else if (mask[1] == 0x0 && mask[3] == 0x1 && mask[5] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 46);
             else if (mask[1] == 0x0 && mask[3] == 0x1 && mask[5] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 52);
             else if (mask[1] == 0x0 && mask[3] == 0x0 && mask[5] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 47);
 
             // 3 remove
             else if (mask[1] == 0x1 && mask[3] == 0x1 && mask[5] == 0x1 && mask[7] == 0x0)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 37);
             else if (mask[1] == 0x1 && mask[3] == 0x1 && mask[5] == 0x0 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 39);
             else if (mask[1] == 0x1 && mask[3] == 0x0 && mask[5] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 36);
             else if (mask[1] == 0x0 && mask[3] == 0x1 && mask[5] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 38);
 
             // 4 remove
             else if (mask[1] == 0x1 && mask[3] == 0x1 && mask[5] == 0x1 && mask[7] == 0x1)
-                SetHighlightMaterial(1, 30);
+                SetHighlightMaterial(2, 31);
         }
     }
 
@@ -336,7 +335,7 @@ public class Tile : Mesh2D
         get { return _highlight; }
         set {
             if (value)
-                SetHighlightMaterial(1, 0);
+                SetHighlightMaterial(2, 0);
             else
                 RemoveLayer(Mesh2DLayer.LAYER_HIGHLIGHTS);
             _highlight = value;
