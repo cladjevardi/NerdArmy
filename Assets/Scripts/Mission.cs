@@ -11,6 +11,9 @@ public class Mission : MonoBehaviour
     /// <summary>The canvas for UI.</summary>
     private GameObject canvas = null;
 
+    /// <summary>The sideBar for button UI.</summary>
+    private GameObject sideBar = null;
+
     /// <summary>Whether the mission is transitioning between factions.</summary>
     private bool transitioning = false;
 
@@ -586,19 +589,19 @@ public class Mission : MonoBehaviour
         canvas.transform.SetParent(transform);
         Canvas can = canvas.AddComponent<Canvas>();
         can.renderMode = RenderMode.ScreenSpaceOverlay;
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
-        // Create a UI.Text object.
-        //transitionText = new GameObject("TransitionText");
-        //transitionText.transform.SetParent(canvas.gameObject.transform);
-        //Text text = transitionText.AddComponent<Text>();
-        //text.text = "";
-        //text.color = new Color(0, 0, 0, 255);
-        //text.transform.localPosition = new Vector2(0, 0);
-        //text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        //text.fontSize = 32;
-        //text.fontStyle = FontStyle.Italic;
-        //RectTransform rect = text.GetComponent<RectTransform>();
-        //rect.sizeDelta = new Vector2(300, 100);
+        // Create the sidebar to contain the buttons.
+        sideBar = new GameObject("Sidebar");
+        sideBar.transform.SetParent(canvas.gameObject.transform);
+        Image sideBarImage = sideBar.AddComponent<Image>();
+        sideBarImage.material = GameManager.instance.uiMaterials[0];
+        sideBarImage.transform.position = new Vector3(0, 0, -0.1f);
+        RectTransform sidebarRect = sideBarImage.GetComponent<RectTransform>();
+        sidebarRect.anchorMin = new Vector2(1, 0);
+        sidebarRect.anchorMax = new Vector2(1, 1);
+        sidebarRect.anchoredPosition = new Vector2(-64, 0);
+        sidebarRect.sizeDelta = new Vector2(128, 0);
     }
 
     private void Update()

@@ -65,4 +65,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5557e8a60752d50478e66719a5165edf, type: 2}
   unitMaterials:
   - {fileID: 2100000, guid: d63892b42b76ee94d905e48406e8fa4a, type: 2}
+  uiMaterials:
+  - {fileID: 2100000, guid: da5c8ddc8bf73734598f0ada7fa0dd37, type: 2}
   gridScale: 1
