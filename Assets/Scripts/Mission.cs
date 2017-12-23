@@ -483,8 +483,7 @@ public class Mission : MonoBehaviour
             && currentlySelectedActor.owner == currentFaction
             && actor.owner != currentlySelectedActor.owner
             && tile != null
-            && tile.highlight
-            && tile.highlightColor == TileHighlightColor.HIGHLIGHT_RED)
+            && tile.attackHighlight)
         {
             // Find the nearest path to the unit you want to attack.
             Astar pathing = new Astar(tileMap.GetComponent<TileMap>(),
@@ -510,8 +509,7 @@ public class Mission : MonoBehaviour
     {
         // See if this was a simple movement click.
         if (tile != null
-            && tile.highlight
-            && tile.highlightColor == TileHighlightColor.HIGHLIGHT_BLUE
+            && tile.movementHighlight
             && actor == null)
         {
             // Find the nearest path to the tile selected.

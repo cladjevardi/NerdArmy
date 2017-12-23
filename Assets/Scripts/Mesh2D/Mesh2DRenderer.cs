@@ -60,10 +60,10 @@ public class Mesh2DRenderer : MonoBehaviour
     public void ResetColor(Mesh2DLayer layer)
     {
         float alpha = 1.0f;
-        if (layer == Mesh2DLayer.LAYER_HIGHLIGHTS)
-            alpha = defaultHighlightAlpha;
-        if (layer == Mesh2DLayer.LAYER_GRID)
-            alpha = defaultGridAlpha;
+        //if (layer == Mesh2DLayer.LAYER_HIGHLIGHTS)
+        //    alpha = defaultHighlightAlpha;
+        //if (layer == Mesh2DLayer.LAYER_GRID)
+        //    alpha = defaultGridAlpha;
 
         // Highlight layer automatically receives an alpha channel.
         colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f, alpha);
@@ -304,10 +304,14 @@ public class Mesh2DRenderer : MonoBehaviour
                 return -0.03f;
             case Mesh2DLayer.LAYER_FLYINGUNITS:
                 return -0.04f;
-            case Mesh2DLayer.LAYER_HIGHLIGHTS:
+            case Mesh2DLayer.LAYER_ATTACK_HIGHLIGHTS:
                 return -0.05f;
-            case Mesh2DLayer.LAYER_GRID:
+            case Mesh2DLayer.LAYER_MOVEMENT_HIGHLIGHTS:
                 return -0.06f;
+            case Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS:
+                return -0.07f;
+            case Mesh2DLayer.LAYER_GRID:
+                return -0.08f;
             default:
                 return 0f;
         }

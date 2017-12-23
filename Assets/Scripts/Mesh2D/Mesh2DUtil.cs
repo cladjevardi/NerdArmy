@@ -49,8 +49,14 @@ public enum Mesh2DLayer
     /// </summary>
     LAYER_FLYINGUNITS,
 
-    /// <summary>The layer for tile highlighted effects.</summary>
-    LAYER_HIGHLIGHTS,
+    /// <summary>The layer for red tile highlighted effects.</summary>
+    LAYER_ATTACK_HIGHLIGHTS,
+
+    /// <summary>The layer for blue tile highlighted effects.</summary>
+    LAYER_MOVEMENT_HIGHLIGHTS,
+
+    /// <summary>The layer for astart pathing arrow effects.</summary>
+    LAYER_ARROW_HIGHLIGHTS,
 
     /// <summary>
     /// The layer of the grid. Or special effects.
