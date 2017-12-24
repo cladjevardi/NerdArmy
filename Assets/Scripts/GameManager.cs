@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public Material[] unitMaterials;
 
+    /// <summary>
+    /// The list of ui materials.
+    /// </summary>
+    public Material[] uiMaterials;
+
     /// <summary>The visual scale of the grid.</summary>
     public float gridScale = 0f;
 

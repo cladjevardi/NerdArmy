@@ -117,6 +117,28 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
+    /// Helper function to determine if a tile is specifically colored.
+    /// </summary>
+    /// <param name="x">The x coordinate to check.</param>
+    /// <param name="y">The x coordinate to check.</param>
+    /// <param name="color">The color we are looking for.</param>
+    /// <returns>Returns whether the tile is highlighted that color.</returns>
+    private bool IsTileColored(int x, int y, TileHighlightColor color)
+    {
+        if (!IsValidTile(x, y))
+            return false;
+
+        else if (color == TileHighlightColor.HIGHLIGHT_BLUE)
+            return tiles[x][y].movementHighlight;
+        else if (color == TileHighlightColor.HIGHLIGHT_RED)
+            return tiles[x][y].attackHighlight;
+        else if (color == TileHighlightColor.HIGHLIGHT_GREEN)
+            return false; // Twiddle thumbs until dave needs this.
+
+        return false;
+    }
+
+    /// <summary>
     /// Get the string mask from a tiles highlighted neighbors.
     /// </summary>
     /// <param name="x">The x coordinate of the tile to check.</param>
@@ -136,28 +158,28 @@ public class TileMap : MonoBehaviour
         mask[4] = 0x0; mask[5] = 0x0; mask[6] = 0x0; mask[7] = 0x0;
 
         // North
-        if (IsValidTile(x, N) && tiles[x][N].highlight == true && tiles[x][N].highlightColor == color)
+        if (IsTileColored(x, N, color))
             mask[0] = 0x1;
         // North East
-        if (IsValidTile(E, N) && tiles[E][N].highlight == true && tiles[E][N].highlightColor == color)
+        if (IsTileColored(E, N, color))
             mask[1] = 0x1;
         // East
-        if (IsValidTile(E, y) && tiles[E][y].highlight == true && tiles[E][y].highlightColor == color)
+        if (IsTileColored(E, y, color))
             mask[2] = 0x1;
         // South East
-        if (IsValidTile(E, S) && tiles[E][S].highlight == true && tiles[E][S].highlightColor == color)
+        if (IsTileColored(E, S, color))
             mask[3] = 0x1;
         // South
-        if (IsValidTile(x, S) && tiles[x][S].highlight == true && tiles[x][S].highlightColor == color)
+        if (IsTileColored(x, S, color))
             mask[4] = 0x1;
         // South West
-        if (IsValidTile(W, S) && tiles[W][S].highlight == true && tiles[W][S].highlightColor == color)
+        if (IsTileColored(W, S, color))
             mask[5] = 0x1;
         // West
-        if (IsValidTile(W, y) && tiles[W][y].highlight == true && tiles[W][y].highlightColor == color)
+        if (IsTileColored(W, y, color))
             mask[6] = 0x1;
         // North West
-        if (IsValidTile(W, N) && tiles[W][N].highlight == true && tiles[W][N].highlightColor == color)
+        if (IsTileColored(W, N, color))
             mask[7] = 0x1;
 
         return mask;
@@ -333,8 +355,10 @@ public class TileMap : MonoBehaviour
         foreach (Vector2 coordinate in coordinates)
         {
             Tile tile = tiles[(int)coordinate.x][(int)coordinate.y];
-            tile.highlight = true;
-            tile.highlightColor = color;
+            if (color == TileHighlightColor.HIGHLIGHT_BLUE)
+                tile.movementHighlight = true;
+            else
+                tile.attackHighlight = true;
         }
     }
 
@@ -344,19 +368,15 @@ public class TileMap : MonoBehaviour
     /// </summary>
     public void AdjustHighlightFrameIds()
     {
-        // Iterate through each color and fix the frame id of the highlight image.
-        for (int highlightColor = 0; highlightColor < (int)TileHighlightColor.HIGHLIGHT_COUNT; ++highlightColor)
+        for (int x = 0; x < width; ++x)
         {
-            for (int x = 0; x < width; ++x)
+            for (int y = 0; y < height; ++y)
             {
-                for (int y = 0; y < height; ++y)
-                {
-                    Tile tile = tiles[(int)x][(int)y];
-                    if (tile.highlight && tile.highlightColor == (TileHighlightColor)highlightColor)
-                    {
-                        tile.SetHighlightMask(GetTileHighlightMask(x, y, (TileHighlightColor)highlightColor));
-                    }
-                }
+                Tile tile = tiles[x][y];
+                if (tile.movementHighlight)
+                    tile.SetMovementHighlightMaterial(2, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_BLUE));
+                if (tile.attackHighlight)
+                    tile.SetAttackHighlightMaterial(3, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_RED));
             }
         }
     }
@@ -370,8 +390,8 @@ public class TileMap : MonoBehaviour
         {
             for (int y = 0; y < height; ++y)
             {
-                tiles[x][y].highlight = false;
-                tiles[x][y].highlightColor = TileHighlightColor.HIGHLIGHT_NONE;
+                tiles[x][y].movementHighlight = false;
+                tiles[x][y].attackHighlight = false;
             }
         }
     }
