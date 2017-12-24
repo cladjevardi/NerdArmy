@@ -185,26 +185,6 @@ public class TileMap : MonoBehaviour
         return mask;
     }
 
-    /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
-    /// <returns>Returns the Tile selected.</returns>
-    public Tile GetTileSelected()
-    {
-        if (Input.GetMouseButtonUp(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                Debug.Log(hit.collider.name);
-                return hit.collider.gameObject.GetComponent<Tile>();
-            }
-        }
-
-        return null;
-    }
-
     /// <summary>
     /// Get the list of tile positions that should be highlighted for movement for an actor.
     /// </summary>

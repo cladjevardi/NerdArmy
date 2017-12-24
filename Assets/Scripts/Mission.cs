@@ -44,6 +44,15 @@ public class Mission : MonoBehaviour
     /// <summary>Faction 4 player.</summary>
     private Player faction4 = Player.COMPUTER;
 
+    /// <summaryThe original global position of the mouse at click down.</summary>
+    private Vector3 mouseOriginalPosition = Vector3.zero;
+
+    /// <summary>Keeps track of if the mouse is down.</summary>
+    private bool mouseDown = false;
+
+    /// <summary>Keeps track of if the mouse has been dragged.</summary>
+    private bool mouseDrag = false;
+
     /// <summary>
     /// Add loadout roster of actors to the map.
     /// </summary>
@@ -142,6 +151,11 @@ public class Mission : MonoBehaviour
     public IEnumerator TransitionTurns()
     {
         transitioning = true;
+
+        // Reset any dragging effects while transitioning.
+        mouseDown = false;
+        mouseDrag = false;
+        mouseOriginalPosition = Vector3.zero;
 
         // Clear out any currently selected actor.
         currentlySelectedActor = null;
@@ -336,6 +350,26 @@ public class Mission : MonoBehaviour
         return GetActor(tile.transform.position);
     }
 
+    /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
+    /// <returns>Returns the Tile selected.</returns>
+    public Tile GetTileSelected()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+            if (hit.collider != null)
+            {
+                Debug.Log(hit.collider.name);
+                return hit.collider.gameObject.GetComponent<Tile>();
+            }
+        }
+
+        return null;
+    }
+
     private bool CheckIfDone()
     {
         // Iterate through all of the current players actors for their done state.
@@ -439,29 +473,75 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    private bool DragDetection()
+    {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Check if we let go of the drag
+        if (!Input.GetMouseButton(0)
+            && mouseOriginalPosition != Vector3.zero)
+        {
+            mouseDown = false;
+            mouseDrag = false;
+            mouseOriginalPosition = Vector3.zero;
+            return false;
+        }
+        // Check if the mouse button was pressed this frame.
+        else if (Input.GetMouseButtonDown(0) && !mouseDown)
+        {
+            mouseDown = true;
+            mouseOriginalPosition = mousePosition;
+            return false;
+        }
+        // Check if we've exceeding a specific distance of dragging.
+        else if (mouseDown
+            && Input.GetMouseButton(0)
+            && !mouseDrag
+            && Vector3.Distance(mousePosition, mouseOriginalPosition) >= .1f)
+        {
+            mouseDrag = true;
+        }
+
+        // Perform dragging of camera position.
+        if (mouseDrag)
+        {
+            Vector3 difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
+            Camera.main.transform.position = mouseOriginalPosition - difference;
+            
+            // We handle the drag event.
+            return true;
+        }
+
+        return false;
+    }
+
     private void DisplayHighlights()
     {
+        TileMap tileMapObject = tileMap.GetComponent<TileMap>();
+
         if (currentlySelectedActor != null
             && currentFaction == currentlySelectedActor.owner
             && !currentlySelectedActor.done)
         {
             // Display the actors movement and attack highlights.
-            List<Vector2> movementTiles = tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors);
-            List<Vector2> attackTiles = tileMap.GetComponent<TileMap>().GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
+            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
 
             // First display all attack tiles.
-            tileMap.GetComponent<TileMap>().HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
+            tileMapObject.HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
 
             // Display all movement tiles OVER the attack tiles. This takes into account enemies on tiles.
-            tileMap.GetComponent<TileMap>().HighlightTiles(movementTiles, TileHighlightColor.HIGHLIGHT_BLUE);
+            tileMapObject.HighlightTiles(movementTiles, TileHighlightColor.HIGHLIGHT_BLUE);
 
             // Adjust the highlighted tiles images.
-            tileMap.GetComponent<TileMap>().AdjustHighlightFrameIds();
+            tileMapObject.AdjustHighlightFrameIds();
         }
         else
         {
             // The actor is not owned by the current players. Display only the actors movement.
-            tileMap.GetComponent<TileMap>().HighlightTiles(tileMap.GetComponent<TileMap>().GetMovementTiles(currentlySelectedActor, actors), TileHighlightColor.HIGHLIGHT_BLUE);
+            tileMapObject.HighlightTiles(
+                tileMapObject.GetMovementTiles(currentlySelectedActor, actors),
+                TileHighlightColor.HIGHLIGHT_BLUE);
         }
     }
 
@@ -508,7 +588,7 @@ public class Mission : MonoBehaviour
         return false;
     }
 
-    private void IssueMove(Actor actor, Tile tile)
+    private bool IssueMove(Actor actor, Tile tile)
     {
         // See if this was a simple movement click.
         if (tile != null
@@ -531,40 +611,50 @@ public class Mission : MonoBehaviour
             // For now issue the unit as done and remove highlights.
             currentlySelectedActor.done = true;
             tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            return true;
         }
-        else
-            ShouldUnselectUnit(actor, tile);
+        return false;
     }
 
     private void UpdateHuman()
     {
-        // Display buttons and stuff.
-
         // If we are currently moving a unit.
         if (ActorCurrentlyMoving())
             return;
 
+        // If we've queued up an attack.
         if (ActorCurrentlyAttacking())
             return;
 
+        // Detect mouse drag inputs. Move the camera.
+        if (DragDetection())
+            return;
+
         // Figure out if we're clicking on an actor.
-        Tile tile = tileMap.GetComponent<TileMap>().GetTileSelected();
+        Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
 
         // If we do not have an actor check the tile for an actor.
         if (currentlySelectedActor == null
             && actor != null)
         {
+            // An actor was selected.
             currentlySelectedActor = actor;
             DisplayHighlights();
             return;
         }
         else if (currentlySelectedActor != null)
         {
+            // While actor was selected, another actor was selected.
             if (ShouldAttackUnit(actor, tile))
                 return;
 
-            IssueMove(actor, tile);
+            // We clicked on a valid movement tile for the selected actor.
+            if (IssueMove(actor, tile))
+                return;
+
+            // We clicked off the highlights. Unselect.
+            ShouldUnselectUnit(actor, tile);
         }
     }
 
