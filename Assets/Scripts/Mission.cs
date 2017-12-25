@@ -354,7 +354,7 @@ public class Mission : MonoBehaviour
     /// <returns>Returns the Tile selected.</returns>
     public Tile GetTileSelected()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && !mouseDrag)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -635,13 +635,13 @@ public class Mission : MonoBehaviour
         if (ActorCurrentlyAttacking())
             return;
 
-        // Detect mouse drag inputs. Move the camera.
-        if (DragDetection())
-            return;
-
         // Figure out if we're clicking on an actor.
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
+
+        // Detect mouse drag inputs. Move the camera.
+        if (DragDetection())
+            return;
 
         // If we do not have an actor check the tile for an actor.
         if (currentlySelectedActor == null
