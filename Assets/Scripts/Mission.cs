@@ -177,11 +177,13 @@ public class Mission : MonoBehaviour
             // While that distance is greater than a very small amount (Epsilon, almost zero):
             while (backdropRect.transform.position.x != endBackdrop.x)
             {
+                float speed = Mathf.Abs(Vector2.Distance(textRect.transform.position, new Vector2(canvasRect.rect.width / 2, textRect.transform.position.y))) * 8 + 1;
+
                 // Find a new position proportionally closer to the end, based on the moveTime
                 Vector2 newTextPostion = Vector2.MoveTowards(
-                    textRect.transform.position, endText, (1f / .001f) * Time.deltaTime);
+                    textRect.transform.position, endText, speed * Time.deltaTime);
                 Vector2 newBackdropPostion = Vector2.MoveTowards(
-                    backdropRect.transform.position, endBackdrop, (1f / .001f) * Time.deltaTime);
+                    backdropRect.transform.position, endBackdrop, speed * Time.deltaTime);
 
                 // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
                 textRect.transform.position = newTextPostion;
