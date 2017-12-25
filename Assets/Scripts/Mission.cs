@@ -487,7 +487,9 @@ public class Mission : MonoBehaviour
             return false;
         }
         // Check if the mouse button was pressed this frame.
-        else if (Input.GetMouseButtonDown(0) && !mouseDown)
+        else if (Input.GetMouseButtonDown(0)
+            && !mouseDown
+            && mouseOriginalPosition == Vector3.zero)
         {
             mouseDown = true;
             mouseOriginalPosition = mousePosition;
@@ -497,7 +499,7 @@ public class Mission : MonoBehaviour
         else if (mouseDown
             && Input.GetMouseButton(0)
             && !mouseDrag
-            && Vector3.Distance(mousePosition, mouseOriginalPosition) >= .1f)
+            && Vector3.Distance(mousePosition, mouseOriginalPosition) >= .15f)
         {
             mouseDrag = true;
         }
@@ -505,9 +507,16 @@ public class Mission : MonoBehaviour
         // Perform dragging of camera position.
         if (mouseDrag)
         {
+            // Find the difference of the mouse movement and adjust the camera.
             Vector3 difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
             Camera.main.transform.position = mouseOriginalPosition - difference;
-            
+
+            // Clamp the camera position to the bounds of the tilemap.
+            Camera.main.transform.position = new Vector3(
+                Mathf.Clamp(Camera.main.transform.position.x, 1, tileMap.GetComponent<TileMap>().width),
+                Mathf.Clamp(Camera.main.transform.position.y, 0, tileMap.GetComponent<TileMap>().height),
+                Camera.main.transform.position.z);
+
             // We handle the drag event.
             return true;
         }
