@@ -1,10 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Mission : MonoBehaviour
 {
+    public class ThreatTile
+    {
+        public Vector2 position = Vector2.zero;
+        public double threat = 0f;
+        public int attackers = 0;
+    }
+
     /// <summary>The entire map and list of units and enemies.</summary>
     private GameObject tileMap = null;
 
@@ -691,6 +699,151 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Get the next available actor that hasn't moved.</summary>
+    /// <returns>Returns the next available actor of the current player.</returns>
+    private Actor GetNextActor()
+    {
+        // Iterate through actors for all actors from the current players
+        // turn and return the first available actor that hasn't already
+        // moved.
+        foreach (Actor actor in actors)
+        {
+            if (actor.owner == currentFaction
+                && !actor.done)
+            {
+                return actor;
+            }
+        }
+
+        // No available actor left.
+        return null;
+    }
+
+    /// <summary>
+    /// Take a list of attack tiles and find ones that have an enemy on it
+    /// and attack that.
+    /// 
+    /// TODO: Add smarts if multiple enemies are within range.
+    /// </summary>
+    /// <param name="attackTiles">
+    /// The list of attack tiles the unit can issue and attack on.
+    /// </param>
+    /// <returns>Returns whether an attack was issued or not.</returns>
+    private bool IssueAnAttackWithinRange(List<Vector2> attackTiles)
+    {
+        foreach (Vector2 position in attackTiles)
+        {
+            Actor actor = GetActor(position);
+            Tile tile = tileMap.GetComponent<TileMap>().tiles[(int)position.x][(int)position.y];
+            if (actor != null
+                && actor.owner != currentFaction)
+            {
+                if (ShouldAttackUnit(actor, tile))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Return least threatening tile based on enemies position.</summary>
+    /// <param name="movementTiles">The list of available movement tiles.</param>
+    /// <returns>Returns the least threatening position.</returns>
+    private Vector2 GetLeastThreateningMovementTile(List<Vector2> movementTiles)
+    {
+        double leastThreat = 0;
+        Vector2 leastThreateningPosition = Vector2.zero;
+        foreach (Vector2 movementTile in movementTiles)
+        {
+            double currentThreat = 0;
+
+            // Iterate through all the enemies and calculate their threat sum.
+            foreach (Actor actor in actors)
+            {
+                if (actor.owner != currentFaction)
+                {
+                    // Use manhatten algorithm to determine threat
+                    currentThreat += Math.Abs(movementTile.x - actor.transform.position.x)
+                        + Math.Abs(movementTile.y - actor.transform.position.y);
+                }
+            }
+
+            // Keep track of the best tile.
+            if (currentThreat > leastThreat)
+            {
+                leastThreat = currentThreat;
+                leastThreateningPosition = movementTile;
+            }
+        }
+
+        return leastThreateningPosition;
+    }
+
+    /// <summary>Convert movement tiles to a list of threat ordered tiles for AI calculations.</summary>
+    /// <param name="movementTiles">The list of tiles available.</param>
+    /// <returns>Returns an ordered list of tiles and their threat.</returns>
+    private List<ThreatTile> CalculateThreat(List<Vector2> movementTiles)
+    {
+        List<ThreatTile> threatTiles = new List<ThreatTile>();
+
+        // Iterate through all the movement possibilities and assign data.
+        foreach (Vector2 movementTile in movementTiles)
+        {
+            ThreatTile threatTile = new ThreatTile();
+            threatTile.position = movementTile;
+            foreach (Actor actor in actors)
+            {
+                if (actor.owner != currentFaction)
+                {
+                    // Use manhatten algorithm to determine threat
+                    threatTile.threat += Math.Abs(movementTile.x - actor.transform.position.x)
+                        + Math.Abs(movementTile.y - actor.transform.position.y);
+
+                    // Determine if the enemy is within attack range of a position.
+                    List<Vector2> enemyMovementTiles = tileMap.GetComponent<TileMap>().GetMovementTiles(actor, actors);
+                    List<Vector2> enemyAttackTiles = tileMap.GetComponent<TileMap>().GetAttackTiles(enemyMovementTiles, actor, actors);
+                    foreach (Vector2 enemyAttackTile in enemyMovementTiles)
+                    {
+                        if (movementTile.x == enemyAttackTile.x
+                            && movementTile.y == enemyAttackTile.y)
+                        {
+                            // Increment the amount of attackers for a location.
+                            threatTile.attackers++;
+                            break;
+                        }
+                    }
+                }
+            }
+            threatTiles.Add(threatTile);
+        }
+
+        // Order the list by lowest attackers then lowest threat.
+        // Unfortunately I need to create a new list for this and remove
+        // each entry from the old list.
+        List<ThreatTile> threatList = new List<ThreatTile>();
+        while(threatTiles.Count != 0)
+        {
+            int lowestIndex = 0;
+            ThreatTile lowest = null;
+            for(int index = 0; index < threatTiles.Count; ++index)
+            {
+                if (lowest == null)
+                    lowest = threatTiles[index];
+                if (threatTiles[index].attackers <= lowest.attackers
+                    && threatTiles[index].threat < lowest.threat)
+                {
+                    lowest = threatTiles[index];
+                    lowestIndex = index;
+                }
+            }
+
+            threatList.Add(lowest);
+            threatTiles.RemoveAt(lowestIndex);
+        }
+
+        return threatTiles;
+    }
+
     /// <summary>Handle a human game loop frame.</summary>
     private void UpdateHuman()
     {
@@ -737,10 +890,91 @@ public class Mission : MonoBehaviour
     /// <summary>Handle a computer game loop frame.</summary>
     private void UpdateComputer()
     {
-        foreach (Actor actor in actors)
+        // If we are currently moving a unit.
+        if (ActorCurrentlyMoving())
+            return;
+
+        // If we've queued up an attack.
+        if (ActorCurrentlyAttacking())
+            return;
+
+        // Select the next actor.
+        currentlySelectedActor = GetNextActor();
+        DisplayHighlights();
+
+        // Calculate the list of attack tiles.
+        TileMap tileMapObject = tileMap.GetComponent<TileMap>();
+
+        // Do nothing
+        if (currentlySelectedActor.strategy == ActorStrategy.NONE)
         {
-            if (actor.owner == currentFaction)
-                actor.done = true;
+            // Sit there.
+            currentlySelectedActor.done = true;
+            tileMapObject.RemoveAllHighlights();
+        }
+        // Attack anything in site and move in!
+        else if (currentlySelectedActor.strategy == ActorStrategy.CHARGE_IN)
+        {
+            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
+            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+
+            if (!IssueAnAttackWithinRange(attackTiles))
+            {
+                // Calculate worst possible move.
+                List<ThreatTile> possibilities = CalculateThreat(movementTiles);
+                possibilities.Reverse(); // Reverse the order to get worst move in front.
+                Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
+
+                // Issue a move as close as you can to an enemy without getting surrounded.
+                IssueMove(currentlySelectedActor, tile);
+            }
+        }
+        // Stand still and attack only those next to me.
+        else if (currentlySelectedActor.strategy == ActorStrategy.WAITS)
+        {
+            List<Vector2> movementTiles = new List<Vector2>();
+            movementTiles.Add(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
+            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+            if (!IssueAnAttackWithinRange(attackTiles))
+            {
+                currentlySelectedActor.done = true;
+                tileMapObject.RemoveAllHighlights();
+            }
+        }
+        // Run away as far as possible. If cornered attack.
+        else if (currentlySelectedActor.strategy == ActorStrategy.COWERS)
+        {
+            Vector2 leastThreateningPosition = GetLeastThreateningMovementTile(
+                tileMapObject.GetMovementTiles(currentlySelectedActor, actors));
+
+            // Check if cornered and issue an attack there.
+            Tile tile = tileMapObject.tiles[(int)leastThreateningPosition.x][(int)leastThreateningPosition.y];
+            List<Vector2> movementTiles = new List<Vector2>();
+            movementTiles.Add(new Vector2(leastThreateningPosition.x, leastThreateningPosition.y));
+            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+            if (!IssueAnAttackWithinRange(attackTiles))
+            {
+                IssueMove(null, tile);
+            }
+        }
+        // Move as close as can get with least threat. Make them come to you.
+        else if (currentlySelectedActor.strategy == ActorStrategy.CAUTIOUS)
+        {
+            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
+            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
+
+            // TODO: Ideally we would want to calculate threat first and attack
+            // from the best spot or against the highest value target or lowerest HP enemy.
+            if (!IssueAnAttackWithinRange(attackTiles))
+            {
+                // Calculate best move that is just out of the range of most
+                // attackers, and close enough to strike within the next round.
+                List<ThreatTile> possibilities = CalculateThreat(movementTiles);
+                Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
+
+                // Issue a move as close as you can to an enemy without getting surrounded.
+                IssueMove(currentlySelectedActor, tile);
+            }
         }
     }
 

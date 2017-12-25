@@ -21,6 +21,20 @@ public enum ActorFacing
     WEST,
 }
 
+public enum ActorStrategy
+{
+    /// <summary>Stand there.</summary>
+    NONE,
+    /// <summary>Get as close as you can to your enemy.</summary>
+    CHARGE_IN,
+    /// <summary>Run as far away as possible.</summary>
+    COWERS,
+    /// <summary>Chuck Norris doesn't sleep. He waits.</summary>
+    WAITS,
+    /// <summary>Stay out of attack range of all enemies. Attack when near.</summary>
+    CAUTIOUS,
+}
+
 /// <summary>
 /// The unity representation of a unit in combat or a mission. This information
 /// represents temporary status.
@@ -196,6 +210,16 @@ public class Actor : Mesh2D
     {
         get { return _done; }
         set { _done = value; }
+    }
+
+    /// <summary>
+    /// The strategy to use if controlled by an AI.
+    /// </summary>
+    private ActorStrategy _strategy = ActorStrategy.CHARGE_IN;
+    public ActorStrategy strategy
+    {
+        get { return _strategy; }
+        set { _strategy = value; }
     }
 
     /// <summary>
