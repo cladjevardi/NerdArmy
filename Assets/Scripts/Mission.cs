@@ -53,13 +53,9 @@ public class Mission : MonoBehaviour
     /// <summary>Keeps track of if the mouse has been dragged.</summary>
     private bool mouseDrag = false;
 
-    /// <summary>
-    /// Add loadout roster of actors to the map.
-    /// </summary>
+    /// <summary>Add loadout roster of actors to the map.</summary>
     /// <param name="roster">The list of player controlled units.</param>
-    /// <param name="validSpawnPositions">
-    /// The list of valid rost spawn locations.
-    /// </param>
+    /// <param name="validSpawnPositions">The list of valid rost spawn locations.</param>
     private void AddRoster(List<Unit> roster, List<Vector2> validSpawnPositions)
     {
         int spawnIndex = 0;
@@ -89,9 +85,7 @@ public class Mission : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Add enemy actors to the map.
-    /// </summary>
+    /// <summary>Add enemy actors to the map.</summary>
     /// <param name="missionEnemies">The list of enemies.</param>
     private void AddEnemies(List<MissionEnemy> missionEnemies)
     {
@@ -116,7 +110,8 @@ public class Mission : MonoBehaviour
     /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
     /// <param name="actor">The actor to move.</param>
     /// <param name="end">The end position for the mesh to move towards.</param>
-    public IEnumerator SmoothMovement(Actor actor, Vector3 end)
+    /// <returns>Coruitine.</returns>
+    private IEnumerator SmoothMovement(Actor actor, Vector3 end)
     {
         Debug.LogFormat("Moving to {0}", end.ToString());
 
@@ -148,7 +143,11 @@ public class Mission : MonoBehaviour
         actor.moving = false;
     }
 
-    public IEnumerator TransitionTurns()
+    /// <summary>
+    /// An async transition call that switches players and draws whose turn it is.
+    /// </summary>
+    /// <returns>Coruitine.</returns>
+    private IEnumerator TransitionTurns()
     {
         transitioning = true;
 
@@ -204,6 +203,9 @@ public class Mission : MonoBehaviour
         }
     }
 
+    /// <summary>Create the backdrop of the transition text.</summary>
+    /// <param name="canvasRect">The rect of the canvas.</param>
+    /// <returns>Returns the new object for the backdrop.</returns>
     private GameObject CreateBackdrop(RectTransform canvasRect)
     {
         GameObject transitionBackdrop = new GameObject("TransitionBackdrop");
@@ -219,6 +221,9 @@ public class Mission : MonoBehaviour
         return transitionBackdrop;
     }
 
+    /// <summary>Create the text object for the transition.</summary>
+    /// <param name="canvasRect">The rect of the canvas.</param>
+    /// <returns>Returns the new object for the transition text.</returns>
     private GameObject CreateText(RectTransform canvasRect)
     {
         GameObject transitionTextImage = new GameObject("TransitionText");
@@ -248,6 +253,9 @@ public class Mission : MonoBehaviour
         return transitionTextImage;
     }
 
+    /// <summary>Returns whether a given faction exists on the battlefield.</summary>
+    /// <param name="faction">The faction to check.</param>
+    /// <returns>Returns whether the faction is still active.</returns>
     private bool IsFactionActive(Owner faction)
     {
         foreach (Actor actor in actors)
@@ -259,6 +267,9 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Get the player of the faction specified.</summary>
+    /// <param name="currentFaction">The faction to check.</param>
+    /// <returns>Returns the player of the faction.</returns>
     private Player GetTurn(Owner currentFaction)
     {
         Player turn = Player.NONE;
@@ -281,6 +292,12 @@ public class Mission : MonoBehaviour
         return turn;
     }
 
+    /// <summary>
+    /// Adjust current players turn. This cycles through all factions
+    /// until a different active faction is selected. This also detects
+    /// if end game has been reached and who the winner is.
+    /// </summary>
+    /// <returns>Returns whether the faction was successfully cycled.</returns>
     private bool UpdateCurrentFaction()
     {
         // Cycle through each faction until a faction exists.
@@ -327,6 +344,9 @@ public class Mission : MonoBehaviour
         return true;
     }
 
+    /// <summary>Get the actor at the given coordinate.</summary>
+    /// <param name="position">The coordinate to check.</param>
+    /// <returns>Returns the actor at the given coordinate if found or null if not.</returns>
     private Actor GetActor(Vector2 position)
     {
         foreach (Actor actor in actors)
@@ -343,6 +363,9 @@ public class Mission : MonoBehaviour
         return null;
     }
 
+    /// <summary>Get the selected actor from the position within Tile.</summary>
+    /// <param name="tile">The tile to check for an actor.</param>
+    /// <returns>Returns the actor found, or null if not.</returns>
     private Actor GetSelectedActor(Tile tile)
     {
         // Get the currently selected tile, if any.
@@ -356,14 +379,18 @@ public class Mission : MonoBehaviour
 
     /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
     /// <returns>Returns the Tile selected.</returns>
-    public Tile GetTileSelected()
+    private Tile GetTileSelected()
     {
         if (Input.GetMouseButtonUp(0) && !mouseDrag)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+            // Initiate a raycast for any colliders.
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
 
+            // Return the Tile of the collider found.
+            // TODO: Check if the UI buttons have been pressed.
             if (hit.collider != null)
             {
                 Debug.Log(hit.collider.name);
@@ -374,6 +401,8 @@ public class Mission : MonoBehaviour
         return null;
     }
 
+    /// <summary>Check if the current player has finished moving all of their actors.</summary>
+    /// <returns>Returns whether all current factions actors have made their moves.</returns>
     private bool CheckIfDone()
     {
         // Iterate through all of the current players actors for their done state.
@@ -389,6 +418,63 @@ public class Mission : MonoBehaviour
         return true;
     }
 
+    /// <summary>Helper function for dealing damage to an actor.</summary>
+    /// <param name="attacker">The unit initiating the attack.</param>
+    /// <param name="attacked">The unit recieving the damage.</param>
+    private void ApplyDamage(Actor attacker, Actor attacked)
+    {
+        // Calculate the total damage to deal.
+        int damage = (int)Mathf.Clamp(
+            attacker.unit.baseDamage - attacked.unit.baseArmor,
+            0, float.MaxValue);
+
+        // Apply damage to unit.
+        attacked.health -= damage;
+        Debug.LogFormat("Damage dealt: {0}", damage);
+
+        // Check if the unit is dead.
+        if (attacked.health <= 0)
+        {
+            // Find the actor within the list and remove it.
+            for (int index = 0; index < actors.Count; ++index)
+            {
+                if (actors[index] == attacked)
+                {
+                    DestroyObject(actors[index]);
+                    actors.RemoveAt(index);
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>Check the update state to determine if an move and attack was issued.</summary>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
+    private bool ActorCurrentlyAttacking()
+    {
+        if (actorToAttack != null)
+        {
+            // Display attacking animation.
+            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
+
+            // Deal the damage.
+            ApplyDamage(currentlySelectedActor, actorToAttack);
+
+            // Unselect the attacked unit.
+            actorToAttack = null;
+
+            // Issue the currently selected actor as finished for this turn.
+            currentlySelectedActor.done = true;
+            currentlySelectedActor = null;
+            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>Checks the update state to determine if an actor is currently moving.</summary>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool ActorCurrentlyMoving()
     {
         if (currentlySelectedActor != null
@@ -438,45 +524,8 @@ public class Mission : MonoBehaviour
         return false;
     }
 
-    private bool ActorCurrentlyAttacking()
-    {
-        if (actorToAttack != null)
-        {
-            // Display attacking animation.
-            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
-
-            // Apply damage to unit.
-            actorToAttack.health -= currentlySelectedActor.unit.baseDamage;
-            Debug.LogFormat("Damage dealt: {0}", currentlySelectedActor.unit.baseDamage);
-
-            // Check if the unit is dead.
-            if (actorToAttack.health <= 0)
-            {
-                // Find the actor within the list and remove it.
-                for (int index = 0; index < actors.Count; ++index)
-                {
-                    if (actors[index] == actorToAttack)
-                    {
-                        DestroyObject(actors[index]);
-                        actors.RemoveAt(index);
-                        break;
-                    }
-                }
-            }
-            
-            // Unselect the attacked unit.
-            actorToAttack = null;
-
-            // Issue the currently selected actor as finished for this turn.
-            currentlySelectedActor.done = true;
-            currentlySelectedActor = null;
-            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
-            return true;
-        }
-
-        return false;
-    }
-
+    /// <summary>Check the update state to determine mouse dragging inputs.</summary>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool DragDetection()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -528,6 +577,7 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Display the highlights for the currently selected actor.</summary>
     private void DisplayHighlights()
     {
         TileMap tileMapObject = tileMap.GetComponent<TileMap>();
@@ -558,6 +608,10 @@ public class Mission : MonoBehaviour
         }
     }
 
+    /// <summary>Whether the currently selected actor should be deselected.</summary>
+    /// <param name="actor">The clicked actor within this update loop.</param>
+    /// <param name="tile">The clicked tile within this update loop.</param>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool ShouldUnselectUnit(Actor actor, Tile tile)
     {
         if (actor == null && tile != null)
@@ -571,6 +625,10 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Determine if an attack was issued this game loop.</summary>
+    /// <param name="actor">The clicked actor within this update loop.</param>
+    /// <param name="tile">The clicked tile within this update loop.</param>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool ShouldAttackUnit(Actor actor, Tile tile)
     {
         // Check if we selected another actor to attack.
@@ -601,6 +659,10 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Determine if a move was issued.</summary>
+    /// <param name="actor">The clicked actor within this update loop.</param>
+    /// <param name="tile">The clicked tile within this update loop.</param>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool IssueMove(Actor actor, Tile tile)
     {
         // See if this was a simple movement click.
@@ -629,6 +691,7 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Handle a human game loop frame.</summary>
     private void UpdateHuman()
     {
         // If we are currently moving a unit.
@@ -671,6 +734,7 @@ public class Mission : MonoBehaviour
         }
     }
 
+    /// <summary>Handle a computer game loop frame.</summary>
     private void UpdateComputer()
     {
         foreach (Actor actor in actors)
@@ -680,6 +744,7 @@ public class Mission : MonoBehaviour
         }
     }
 
+    /// <summary>Unity event representing creation of a mission object.</summary>
     private void Awake()
     {
         // Create the TileMap object.
@@ -707,6 +772,7 @@ public class Mission : MonoBehaviour
         sidebarRect.sizeDelta = new Vector2(128, 0);
     }
 
+    /// <summary>The game loop for a mission.</summary>
     private void Update()
     {
         // We have not fully initialized.
@@ -731,6 +797,9 @@ public class Mission : MonoBehaviour
         }
     }
 
+    /// <summary>Initialize a mission.</summary>
+    /// <param name="roster">The current list of units to add to the mission.</param>
+    /// <param name="missionSchematic">The schematic that represents how to create this mission.</param>
     public void Initialize(List<Unit> roster, MissionSchematic missionSchematic)
     {
         // Clear any previous map information.
