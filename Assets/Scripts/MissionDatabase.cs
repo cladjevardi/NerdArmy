@@ -129,7 +129,7 @@ public class MissionDatabase
                 float.Parse(enemyNode.Attributes["x"].InnerText, CultureInfo.InvariantCulture.NumberFormat),
                 float.Parse(enemyNode.Attributes["y"].InnerText, CultureInfo.InvariantCulture.NumberFormat)
             );
-            enemy.type = (UnitType)int.Parse(enemyNode.Attributes["type"].InnerText);
+            enemy.name = enemyNode.Attributes["name"].InnerText;
             enemies.Add(enemy);
         }
 
@@ -253,8 +253,11 @@ public class MissionEnemy
     /// <summary>The position of the enemy unit in the mission.</summary>
     public Vector2 position;
 
-    /// <summary>The type of enemy unit to place.</summary>
-    public UnitType type;
+    /// <summary>
+    /// The name of the enemy unit to place. This name should
+    /// match up in the unit database.
+    /// </summary>
+    public string name;
 }
 
 /// <summary>

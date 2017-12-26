@@ -7,7 +7,7 @@
     <base_armor>0</base_armor>
     <abilities>grapple</abilities>
     <passives>pull</passives>
-    <material id="0">
+    <material id="0" cell_width="125" cell_height="125">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>6|7|0</north_sequence>
         <south_sequence>6|7|0</south_sequence>
@@ -37,6 +37,46 @@
         <north_sequence>1|2</north_sequence>
         <south_sequence>1|2</south_sequence>
         <east_sequence>1|2</east_sequence>
+      </animation>
+    </material>
+  </unit>
+
+  <unit name="drill" id="1">
+    <base_max_health>4</base_max_health>
+    <base_damage>1</base_damage>
+    <base_range>1</base_range>
+    <base_movement>2</base_movement>
+    <base_armor>0</base_armor>
+    <material id="1" cell_width="128" cell_height="128">
+      <animation name="idle" speed="0.5" loop="true">
+        <north_sequence>0</north_sequence>
+        <south_sequence>0</south_sequence>
+        <east_sequence>0</east_sequence>
+      </animation>
+      <animation name="attack" speed="0.5" on_complete="idle">
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
+      </animation>
+      <animation name="walking" speed="0.5" loop="true">
+        <north_sequence>0</north_sequence>
+        <south_sequence>0</south_sequence>
+        <east_sequence>0</east_sequence>
+      </animation>
+      <animation name="damage" speed="0.5" on_complete="idle">
+        <north_sequence>2</north_sequence>
+        <south_sequence>2</south_sequence>
+        <east_sequence>2</east_sequence>
+      </animation>
+      <animation name="death" speed="0.5" loop="false">
+        <north_sequence>0</north_sequence>
+        <south_sequence>0</south_sequence>
+        <east_sequence>0</east_sequence>
+      </animation>
+      <animation name="victory" speed="0.5" on_complete="idle">
+        <north_sequence>0</north_sequence>
+        <south_sequence>0</south_sequence>
+        <east_sequence>0</east_sequence>
       </animation>
     </material>
   </unit>

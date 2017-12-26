@@ -245,7 +245,8 @@ public class Actor : Mesh2D
     private void SetUnitMaterial()
     {
         SetMaterial(GetCurrentLayer(), unit.materialId, MaterialType.UNIT,
-            125, 125, 0, unit.animations, "idle_east", true);
+            unit.cellWidth, unit.cellHeight, unit.materialId,
+            unit.animations, "idle_east", true);
     }
 
     /// <summary>

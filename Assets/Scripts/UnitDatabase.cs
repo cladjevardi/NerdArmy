@@ -74,6 +74,8 @@ public class UnitDatabase
     {
         UnitMaterial material = new UnitMaterial();
         material.id = int.Parse(materialNode.Attributes["id"].InnerText);
+        material.cellWidth = int.Parse(materialNode.Attributes["cell_width"].InnerText);
+        material.cellHeight = int.Parse(materialNode.Attributes["cell_height"].InnerText);
         foreach (XmlNode animationNode in materialNode)
         {
             UnitAnimation animation = new UnitAnimation();
@@ -141,134 +143,19 @@ public class UnitDatabase
     }
 
     /// <summary>Get the units information from the database.</summary>
-    /// <param name="type">The unit information to acquire.</param>
+    /// <param name="name">The units name to lookup.</param>
     /// <returns>Returns the unit schematic associated with that unit.</returns>
-    public UnitSchematic GetUnit(UnitType type)
+    public UnitSchematic GetUnit(string name)
     {
         // Iterate through each schematic and look for the unit type specified.
         foreach (UnitSchematic schematic in unitData)
         {
-            if (schematic.type == type)
+            if (schematic.name == name)
                 return schematic;
         }
 
         throw new ArgumentException("Invalid unit type", "type");
     }
-}
-
-/// <summary>The type of unit.</summary>
-public enum UnitType
-{
-    NONE = -1,
-
-    // Hero units.
-
-    /// <summary>
-    /// An all-around ranged character that has moderate stats in all
-    /// categories and can generally fufill any role.
-    /// </summary>
-    MAINCHARACTER,
-
-    /// <summary>
-    /// A slow beefy brawler with a linear charge attack. Although his
-    /// attack places him in close-combat with his enemies, he can move
-    /// long distances. A plethora of hidden movement options are available
-    /// depending on context.</summary>
-    CHARGER,
-
-    /// <summary>
-    /// A long range character that cannot fight well in close quarters.
-    /// The Magician restricts enemy movement but does low damage and cannot
-    /// take damage well himself.
-    /// </summary>
-    MAGICIAN,
-
-    /// <summary>
-    /// An all-around ranged character that has moderate stats in all categories
-    /// and can generally fufill any role.
-    /// </summary>
-    ELEMENTALIST,
-
-    /// <summary>
-    /// A ranged character that never attacks directly. Instead she uses delayed,
-    /// high damage, area-of-effect attacks that are placed around the map. Average
-    /// movement and life.
-    /// </summary>
-    BOMBER,
-
-    // Enemy units
-
-    /// <summary>
-    /// The gumball enemy class.
-    /// </summary>
-    GUMBALL,
-
-    /// <summary>
-    /// The eagle enemy class.
-    /// </summary>
-    EAGLE,
-
-    /// <summary>
-    /// The running man enemy class.
-    /// </summary>
-    RUNNINGMAN,
-
-    /// <summary>
-    /// The red archer enemy class.
-    /// </summary>
-    REDARCHER,
-
-    /// <summary>
-    /// The black archer enemy class.
-    /// </summary>
-    BLACKARCHER,
-
-    /// <summary>
-    /// The backpack archer enemy class.
-    /// </summary>
-    BACKPACK,
-
-    /// <summary>
-    /// The shield enemy class.
-    /// </summary>
-    SHIELD,
-
-    /// <summary>
-    /// The ditto enemy class.
-    /// </summary>
-    DITTO,
-
-    /// <summary>
-    /// The lightbulb enemy class.
-    /// </summary>
-    LIGHTBULB,
-
-    /// <summary>
-    /// The hedgehog enemy class.
-    /// </summary>
-    HEDGEHOG,
-
-    // TODO: No stat block
-
-    /// <summary>
-    /// The gust enemy class. No stat block provided.
-    /// </summary>
-    GUST,
-
-    /// <summary>
-    /// The hunter enemy class. No stat block provided.
-    /// </summary>
-    HUNTER,
-
-    /// <summary>
-    /// The bear enemy class. No stat block provided.
-    /// </summary>
-    BEAR,
-
-    /// <summary>
-    /// The ninja enemy class. No stat block provided.
-    /// </summary>
-    NINJA,
 }
 
 public class UnitMaterial
@@ -278,6 +165,12 @@ public class UnitMaterial
     /// as a lookup for the unit materials in GameManager.
     /// </summary>
     public int id;
+
+    /// <summary>The width of each cell in the sprite map.</summary>
+    public int cellWidth;
+
+    /// <summary>The height of each cell in the sprite map.</summary>
+    public int cellHeight;
 
     /// <summary>
     /// The list of animations from this material for a unit.
@@ -345,8 +238,8 @@ public class UnitSchematic
     /// <summary>The list of passives the unit has available.</summary>
     public List<PassiveType> passives;
 
-    /// <summary>The base type of unit.</summary>
-    public UnitType type;
+    /// <summary>The material id of the unit.</summary>
+    public int materialId;
 
     /// <summary>The material animations of the unit.</summary>
     public UnitMaterial material;

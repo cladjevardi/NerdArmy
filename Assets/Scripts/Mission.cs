@@ -77,7 +77,7 @@ public class Mission : MonoBehaviour
 
             // Create the new actor.
             Vector2 position = validSpawnPositions[spawnIndex];
-            string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.type.ToString();
+            string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.name;
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.transform.SetParent(transform);
             actor.transform.position = position;
@@ -101,8 +101,8 @@ public class Mission : MonoBehaviour
         foreach (MissionEnemy enemy in missionEnemies)
         {
             // Create a new actor.
-            Unit unit = new Unit(enemy.type);
-            string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.type.ToString();
+            Unit unit = new Unit(enemy.name);
+            string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.name;
             Actor actor = new GameObject(objectName).AddComponent<Actor>();
             actor.transform.SetParent(transform);
             actor.transform.position = enemy.position;
@@ -829,11 +829,13 @@ public class Mission : MonoBehaviour
             {
                 if (lowest == null)
                     lowest = threatTiles[index];
-                if (threatTiles[index].attackers <= lowest.attackers
-                    && threatTiles[index].threat < lowest.threat)
+                if (threatTiles[index].attackers >= lowest.attackers)
                 {
-                    lowest = threatTiles[index];
-                    lowestIndex = index;
+                    if (threatTiles[index].threat > lowest.threat)
+                    {
+                        lowest = threatTiles[index];
+                        lowestIndex = index;
+                    }
                 }
             }
 
@@ -841,7 +843,7 @@ public class Mission : MonoBehaviour
             threatTiles.RemoveAt(lowestIndex);
         }
 
-        return threatTiles;
+        return threatList;
     }
 
     /// <summary>Handle a human game loop frame.</summary>
@@ -900,6 +902,10 @@ public class Mission : MonoBehaviour
 
         // Select the next actor.
         currentlySelectedActor = GetNextActor();
+        if (currentlySelectedActor == null)
+            return;
+
+        // Display the highlights of the unit.
         DisplayHighlights();
 
         // Calculate the list of attack tiles.
@@ -926,7 +932,7 @@ public class Mission : MonoBehaviour
                 Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
 
                 // Issue a move as close as you can to an enemy without getting surrounded.
-                IssueMove(currentlySelectedActor, tile);
+                IssueMove(null, tile);
             }
         }
         // Stand still and attack only those next to me.
@@ -973,7 +979,7 @@ public class Mission : MonoBehaviour
                 Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
 
                 // Issue a move as close as you can to an enemy without getting surrounded.
-                IssueMove(currentlySelectedActor, tile);
+                IssueMove(null, tile);
             }
         }
     }

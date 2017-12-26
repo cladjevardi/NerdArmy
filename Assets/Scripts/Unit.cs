@@ -75,13 +75,13 @@ public enum PassiveType
 /// </summary>
 public class Unit
 {
-    public Unit(UnitType unitType, int health = 0, int damage = 0,
+    public Unit(string unitName, int health = 0, int damage = 0,
         int range = 0, int movement = 0)
     {
         // Lookup the unit type from the database and fill in
         // the units information appropriately.
         UnitSchematic schematic
-            = GameManager.instance.unitDatabase.GetUnit(unitType);
+            = GameManager.instance.unitDatabase.GetUnit(unitName);
 
         // Update the internals.
         _name = schematic.name;
@@ -94,7 +94,11 @@ public class Unit
         _flying = schematic.flying;
         _abilities = schematic.abilities;
         _passives = schematic.passives;
-        _type = unitType;
+
+        // Material information.
+        _materialId = schematic.material.id;
+        _cellWidth = schematic.material.cellWidth;
+        _cellHeight = schematic.material.cellHeight;
 
         // Update the upgrades.
         _healthUpgradeLevel = health;
@@ -230,13 +234,6 @@ public class Unit
         set { _movementUpgradeLevel = value; }
     }
 
-    /// <summary>The base type of unit.</summary>
-    private UnitType _type;
-    public UnitType type
-    {
-        get { return _type; }
-    }
-
     /// <summary>
     /// The material id for the unit. This id is used as a lookup id for
     /// the unit material in GameManager.
@@ -245,6 +242,20 @@ public class Unit
     public int materialId
     {
         get { return _materialId; }
+    }
+
+    /// <summary>The width of each cell in the sprite map.</summary>
+    private int _cellWidth = 0;
+    public int cellWidth
+    {
+        get { return _cellWidth; }
+    }
+
+    /// <summary>The height of each cell in the sprite map.</summary>
+    private int _cellHeight = 0;
+    public int cellHeight
+    {
+        get { return _cellHeight; }
     }
 
     /// <summary>The animations for the unit.</summary>
