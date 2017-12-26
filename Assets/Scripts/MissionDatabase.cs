@@ -130,6 +130,15 @@ public class MissionDatabase
                 float.Parse(enemyNode.Attributes["y"].InnerText, CultureInfo.InvariantCulture.NumberFormat)
             );
             enemy.name = enemyNode.Attributes["name"].InnerText;
+            string strategy = enemyNode.Attributes["strategy"].InnerText;
+            if (strategy == "charge")
+                enemy.strategy = ActorStrategy.CHARGE_IN;
+            else if (strategy == "cower")
+                enemy.strategy = ActorStrategy.COWERS;
+            else if (strategy == "waits")
+                enemy.strategy = ActorStrategy.WAITS;
+            else if (strategy == "cautious")
+                enemy.strategy = ActorStrategy.CAUTIOUS;
             enemies.Add(enemy);
         }
 
@@ -258,6 +267,9 @@ public class MissionEnemy
     /// match up in the unit database.
     /// </summary>
     public string name;
+
+    /// <summary>The AI strategy to execute</summary>
+    public ActorStrategy strategy = ActorStrategy.NONE;
 }
 
 /// <summary>

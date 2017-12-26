@@ -294,7 +294,7 @@
         </tile>
       </tiles>
       <enemies>
-        <enemy x="6" y="1" name="drill"/>
+        <enemy x="6" y="1" name="drill" strategy="charge"/>
       </enemies>
       <spawns>
         <spawn x="1" y="1"/>

@@ -109,6 +109,7 @@ public class Mission : MonoBehaviour
             actor.unit = unit;
             actor.owner = Owner.PLAYER2;
             actor.health = unit.baseMaxHealth;
+            actor.strategy = enemy.strategy;
 
             // Add the actor to the mission.
             actors.Add(actor);
