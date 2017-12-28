@@ -84,6 +84,7 @@ public class Mission : MonoBehaviour
             actor.unit = unit;
             actor.owner = Owner.PLAYER1;
             actor.health = unit.baseMaxHealth;
+            actor.SetHealthMaterial(true);
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -110,6 +111,7 @@ public class Mission : MonoBehaviour
             actor.owner = Owner.PLAYER2;
             actor.health = unit.baseMaxHealth;
             actor.strategy = enemy.strategy;
+            actor.SetHealthMaterial(false);
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -475,7 +477,7 @@ public class Mission : MonoBehaviour
             // Issue the currently selected actor as finished for this turn.
             currentlySelectedActor.done = true;
             currentlySelectedActor = null;
-            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            RemoveAllHighlights();
             return true;
         }
 
@@ -586,6 +588,21 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Remove all highlights (movement/attack), indicators from map.
+    /// </summary>
+    private void RemoveAllHighlights()
+    {
+        // Remove all movement/attack highlight effects over the tilemap.
+        tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+
+        // Remove any attack indicator currently over an enemy.
+        foreach (Actor actor in actors)
+        {
+            actor.attackIndicator = false;
+        }
+    }
+
     /// <summary>Display the highlights for the currently selected actor.</summary>
     private void DisplayHighlights()
     {
@@ -607,6 +624,14 @@ public class Mission : MonoBehaviour
 
             // Adjust the highlighted tiles images.
             tileMapObject.AdjustHighlightFrameIds();
+
+            // Add attack indicators over all attackable enemy actors.
+            foreach (Vector2 attackTile in attackTiles)
+            {
+                Actor actor = GetActor(attackTile);
+                if (actor != null && actor.owner != currentFaction)
+                    actor.attackIndicator = true;
+            }
         }
         else
         {
@@ -627,7 +652,7 @@ public class Mission : MonoBehaviour
         {
             // Unselect the current actor and hide all highlights.
             currentlySelectedActor = null;
-            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            RemoveAllHighlights();
             return true;
         }
 
@@ -661,7 +686,7 @@ public class Mission : MonoBehaviour
             actorToAttack = actor;
 
             // Deselect our currently selected actor.
-            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            RemoveAllHighlights();
             return true;
         }
 
@@ -694,7 +719,7 @@ public class Mission : MonoBehaviour
 
             // For now issue the unit as done and remove highlights.
             currentlySelectedActor.done = true;
-            tileMap.GetComponent<TileMap>().RemoveAllHighlights();
+            RemoveAllHighlights();
             return true;
         }
         return false;
@@ -901,6 +926,11 @@ public class Mission : MonoBehaviour
         if (ActorCurrentlyAttacking())
             return;
 
+        // We shouldn't select the next computer actor
+        // until we are fully done with pathing.
+        if (currentPathing.Count != 0)
+            return;
+
         // Select the next actor.
         currentlySelectedActor = GetNextActor();
         if (currentlySelectedActor == null)
@@ -917,7 +947,7 @@ public class Mission : MonoBehaviour
         {
             // Sit there.
             currentlySelectedActor.done = true;
-            tileMapObject.RemoveAllHighlights();
+            RemoveAllHighlights();
         }
         // Attack anything in site and move in!
         else if (currentlySelectedActor.strategy == ActorStrategy.CHARGE_IN)
@@ -945,7 +975,7 @@ public class Mission : MonoBehaviour
             if (!IssueAnAttackWithinRange(attackTiles))
             {
                 currentlySelectedActor.done = true;
-                tileMapObject.RemoveAllHighlights();
+                RemoveAllHighlights();
             }
         }
         // Run away as far as possible. If cornered attack.

@@ -133,7 +133,7 @@ public class Actor : Mesh2D
             // Apply the flying trait based on the unit.
             flying = _unit.flying;
 
-            // Assign the units material id.
+            // Assign the units material ids.
             SetUnitMaterial();
         }
     }
@@ -158,7 +158,10 @@ public class Actor : Mesh2D
         get { return _health; }
         set {
             if (value <= 0)
+            {
                 RemoveLayer(GetCurrentLayer());
+                RemoveLayer(Mesh2DLayer.LAYER_HEALTH);
+            }
             _health = value;
         }
     }
@@ -213,6 +216,22 @@ public class Actor : Mesh2D
     }
 
     /// <summary>
+    /// Whether the character has an attack indicator overhead.
+    /// </summary>
+    private bool _attackIndicator = false;
+    public bool attackIndicator
+    {
+        get { return _attackIndicator; }
+        set {
+            if (value)
+                SetAttackIndicator();
+            else
+                RemoveLayer(Mesh2DLayer.LAYER_ATTACK_MARKER);
+            _attackIndicator = value;
+        }
+    }
+
+    /// <summary>
     /// The strategy to use if controlled by an AI.
     /// </summary>
     private ActorStrategy _strategy = ActorStrategy.CHARGE_IN;
@@ -241,12 +260,46 @@ public class Actor : Mesh2D
     /// <summary>
     /// Set the material of the the unit.
     /// </summary>
-    /// <param name="tileId">The GameManager unit identifier of the material.</param>
     private void SetUnitMaterial()
     {
         SetMaterial(GetCurrentLayer(), unit.materialId, MaterialType.UNIT,
             unit.cellWidth, unit.cellHeight, unit.materialId,
             unit.animations, "idle_east", true);
+    }
+
+    private void SetAttackIndicator()
+    {
+        SetMaterial(Mesh2DLayer.LAYER_ATTACK_MARKER, 8, MaterialType.EFFECT);
+    }
+
+    /// <summary>
+    /// Set the material of the health bar
+    /// </summary>
+    public void SetHealthMaterial(bool isOwner)
+    {
+        SetMaterial(Mesh2DLayer.LAYER_HEALTH, 9, MaterialType.EFFECT,
+            160, 16, isOwner ? 4 : 1);
+    }
+
+    private void CreateHealthText()
+    {
+        /*
+        Canvas can = canvas.AddComponent<Canvas>();
+        +can.renderMode = RenderMode.ScreenSpaceOverlay;
+        +
+        // Create a UI.Text object.
+        +transitionText = new GameObject("TransitionText");
+        +transitionText.transform.SetParent(canvas.gameObject.transform);
+        +Text text = transitionText.AddComponent<Text>();
+        +text.text = "";
+        +text.color = new Color(0, 0, 0, 255);
+        +text.transform.localPosition = new Vector2(0, 0);
+        +text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        +text.fontSize = 32;
+        +text.fontStyle = FontStyle.Italic;
+        +RectTransform rect = text.GetComponent<RectTransform>();
+        +rect.sizeDelta = new Vector2(300, 100);
+        */
     }
 
     /// <summary>

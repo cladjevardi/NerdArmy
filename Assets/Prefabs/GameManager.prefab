@@ -63,6 +63,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: df73faa404ec10b4fa4c9e407359ae48, type: 2}
   - {fileID: 2100000, guid: 5a22f64ec6549294b8429ab4a065c215, type: 2}
   - {fileID: 2100000, guid: 354c1dfa7aba6734892d0fedc1f33d59, type: 2}
+  - {fileID: 2100000, guid: 4b297af1ae538b54c902e6001181aa86, type: 2}
+  - {fileID: 2100000, guid: ec1d9295e7f959a499867cee3f1f4f75, type: 2}
+  - {fileID: 2100000, guid: 0567b22177760b942beb18a97bacb171, type: 2}
   unitMaterials:
   - {fileID: 2100000, guid: d63892b42b76ee94d905e48406e8fa4a, type: 2}
   - {fileID: 2100000, guid: c96d3ded5ee6d284c835cd982b3b9d85, type: 2}

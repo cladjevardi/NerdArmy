@@ -142,6 +142,13 @@ public class Tile : Mesh2D
             SetGridMaterial(0, 0);
     }
 
+    /// <summary>
+    /// Take a byte array and return back the movement/attack highlight
+    /// image to use.
+    /// </summary>
+    /// <param name="mask">
+    /// The bitmask that describes directional neibor highlights.</param>
+    /// <returns>Returns the frame id to use.</returns>
     private int GetHighlightFrameId(byte[] mask)
     {
         if (mask[0] == 0x0 && mask[2] == 0x0 && mask[4] == 0x0 && mask[6] == 0x0)
