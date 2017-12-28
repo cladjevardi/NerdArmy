@@ -1,21 +1,16 @@
 fileFormatVersion: 2
-guid: 2d8204c39ab721847b624bcb0af3440f
-timeCreated: 1514356847
+guid: fbd58d58f9752c441b6d7bcddb304452
+timeCreated: 1514435907
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: MainCharacter_0
-    21300002: MainCharacter_1
-    21300004: MainCharacter_2
-    21300006: MainCharacter_3
-    21300008: MainCharacter_4
-    21300010: MainCharacter_5
-    21300012: MainCharacter_6
-    21300014: MainCharacter_7
-    21300016: MainCharacter_8
-    21300018: MainCharacter_9
-    21300020: MainCharacter_10
-    21300022: MainCharacter_11
+    21300000: Monitor_0
+    21300002: Monitor_1
+    21300004: Monitor_2
+    21300006: Monitor_3
+    21300008: Monitor_4
+    21300010: Monitor_5
+    21300012: Monitor_6
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -43,7 +38,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: -1
     aniso: -1
     mipBias: -1
     wrapU: 1
@@ -86,94 +81,11 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MainCharacter_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 512
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: MainCharacter_1
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 512
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: MainCharacter_2
-      rect:
-        serializedVersion: 2
-        x: 512
-        y: 512
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: MainCharacter_3
-      rect:
-        serializedVersion: 2
-        x: 768
-        y: 512
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: MainCharacter_4
+      name: Monitor_0
       rect:
         serializedVersion: 2
         x: 0
@@ -187,7 +99,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_5
+      name: Monitor_1
       rect:
         serializedVersion: 2
         x: 256
@@ -201,7 +113,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_6
+      name: Monitor_2
       rect:
         serializedVersion: 2
         x: 512
@@ -215,7 +127,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_7
+      name: Monitor_3
       rect:
         serializedVersion: 2
         x: 768
@@ -229,7 +141,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_8
+      name: Monitor_4
       rect:
         serializedVersion: 2
         x: 0
@@ -243,7 +155,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_9
+      name: Monitor_5
       rect:
         serializedVersion: 2
         x: 256
@@ -257,7 +169,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_10
+      name: Monitor_6
       rect:
         serializedVersion: 2
         x: 512

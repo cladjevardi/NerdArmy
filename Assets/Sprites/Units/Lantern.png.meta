@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 475c5d958a1f9c34aa0465de99c7a2ad
-timeCreated: 1514435827
+guid: fbfca4baa0753ef4eb8af11995c35e99
+timeCreated: 1514435876
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Drill_0
-    21300002: Drill_1
-    21300004: Drill_2
+    21300000: Lantern_0
+    21300002: Lantern_1
+    21300004: Lantern_2
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -81,7 +81,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drill_0
+      name: Lantern_0
       rect:
         serializedVersion: 2
         x: 0
@@ -95,7 +95,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_1
+      name: Lantern_1
       rect:
         serializedVersion: 2
         x: 256
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_2
+      name: Lantern_2
       rect:
         serializedVersion: 2
         x: 512

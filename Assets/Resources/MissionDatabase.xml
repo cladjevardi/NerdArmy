@@ -298,7 +298,1399 @@
       </enemies>
       <spawns>
         <spawn x="1" y="1"/>
+      </spawns>
+      <dialog>NA</dialog>
+    </mission_schematic>
+    <mission_schematic name="1-2" tile_width="8" tile_height="4">
+      <tiles>
+        <tile x="0" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>0</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>2</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>6</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>8</frame_id>
+            </material>
+          </materials>
+        </tile>
+      </tiles>
+      <enemies>
+        <enemy x="5" y="1" name="vacuum" strategy="charge"/>
+        <enemy x="6" y="1" name="vacuum" strategy="charge"/>
+      </enemies>
+      <spawns>
         <spawn x="2" y="1"/>
+      </spawns>
+      <dialog>NA</dialog>
+    </mission_schematic>
+    <mission_schematic name="1-3" tile_width="8" tile_height="4">
+      <tiles>
+        <tile x="0" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>0</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>2</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>6</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>8</frame_id>
+            </material>
+          </materials>
+        </tile>
+      </tiles>
+      <enemies>
+        <enemy x="5" y="2" name="monitor" strategy="charge"/>
+        <enemy x="6" y="1" name="monitor" strategy="charge"/>
+      </enemies>
+      <spawns>
+        <spawn x="2" y="1"/>
+      </spawns>
+      <dialog>NA</dialog>
+    </mission_schematic>
+    <mission_schematic name="1-4" tile_width="8" tile_height="6">
+      <tiles>
+        <tile x="0" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>0</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>1</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="0">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>2</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="1">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="2">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>3</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>false</ground_collision>
+          <true_collision>false</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>4</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="3">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>5</frame_id>
+            </material>
+          </materials>
+        </tile>
+
+        <tile x="0" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>true</ground_collision>
+        <true_collision>true</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>3</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="1" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="2" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="3" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="4" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="5" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="6" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>false</ground_collision>
+        <true_collision>false</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>4</frame_id>
+          </material>
+        </materials>
+      </tile>
+        <tile x="7" y="4">
+        <movement_cost>1</movement_cost>
+        <ground_collision>true</ground_collision>
+        <true_collision>true</true_collision>
+        <materials>
+          <material>
+            <layer>floor</layer>
+            <material_id>0</material_id>
+            <frame_id>5</frame_id>
+          </material>
+        </materials>
+      </tile>
+
+        <tile x="0" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>6</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="1" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="2" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="3" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="4" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="5" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="6" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>7</frame_id>
+            </material>
+          </materials>
+        </tile>
+        <tile x="7" y="5">
+          <movement_cost>1</movement_cost>
+          <ground_collision>true</ground_collision>
+          <true_collision>true</true_collision>
+          <materials>
+            <material>
+              <layer>floor</layer>
+              <material_id>0</material_id>
+              <frame_id>8</frame_id>
+            </material>
+          </materials>
+        </tile>
+      </tiles>
+      <enemies>
+        <enemy x="4" y="1" name="monitor" strategy="charge"/>
+        <enemy x="4" y="4" name="lantern" strategy="charge"/>
+        <enemy x="6" y="3" name="vacuum" strategy="charge"/>
+      </enemies>
+      <spawns>
+        <spawn x="1" y="1"/>
+        <spawn x="1" y="4"/>
       </spawns>
       <dialog>NA</dialog>
     </mission_schematic>

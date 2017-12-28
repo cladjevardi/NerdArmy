@@ -1,21 +1,23 @@
 fileFormatVersion: 2
-guid: 2d8204c39ab721847b624bcb0af3440f
-timeCreated: 1514356847
+guid: 400e708ed3cb843439cb9aeb013c5366
+timeCreated: 1514435891
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: MainCharacter_0
-    21300002: MainCharacter_1
-    21300004: MainCharacter_2
-    21300006: MainCharacter_3
-    21300008: MainCharacter_4
-    21300010: MainCharacter_5
-    21300012: MainCharacter_6
-    21300014: MainCharacter_7
-    21300016: MainCharacter_8
-    21300018: MainCharacter_9
-    21300020: MainCharacter_10
-    21300022: MainCharacter_11
+    21300000: Magician_0
+    21300002: Magician_1
+    21300004: Magician_2
+    21300006: Magician_3
+    21300008: Magician_4
+    21300010: Magician_5
+    21300012: Magician_6
+    21300014: Magician_7
+    21300016: Magician_8
+    21300018: Magician_9
+    21300020: Magician_10
+    21300022: Magician_11
+    21300024: Magician_12
+    21300026: Magician_13
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -43,7 +45,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: -1
     aniso: -1
     mipBias: -1
     wrapU: 1
@@ -86,38 +88,67 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MainCharacter_0
+      name: Magician_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 768
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Magician_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Magician_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 768
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Magician_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 768
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Magician_4
       rect:
         serializedVersion: 2
         x: 0
@@ -131,7 +162,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_1
+      name: Magician_5
       rect:
         serializedVersion: 2
         x: 256
@@ -145,7 +176,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_2
+      name: Magician_6
       rect:
         serializedVersion: 2
         x: 512
@@ -159,7 +190,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_3
+      name: Magician_7
       rect:
         serializedVersion: 2
         x: 768
@@ -173,7 +204,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_4
+      name: Magician_8
       rect:
         serializedVersion: 2
         x: 0
@@ -187,7 +218,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_5
+      name: Magician_9
       rect:
         serializedVersion: 2
         x: 256
@@ -201,7 +232,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_6
+      name: Magician_10
       rect:
         serializedVersion: 2
         x: 512
@@ -215,7 +246,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_7
+      name: Magician_11
       rect:
         serializedVersion: 2
         x: 768
@@ -229,7 +260,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_8
+      name: Magician_12
       rect:
         serializedVersion: 2
         x: 0
@@ -243,24 +274,10 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_9
+      name: Magician_13
       rect:
         serializedVersion: 2
         x: 256
-        y: 0
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: MainCharacter_10
-      rect:
-        serializedVersion: 2
-        x: 512
         y: 0
         width: 256
         height: 256

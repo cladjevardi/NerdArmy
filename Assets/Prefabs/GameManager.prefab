@@ -66,6 +66,15 @@ MonoBehaviour:
   unitMaterials:
   - {fileID: 2100000, guid: d63892b42b76ee94d905e48406e8fa4a, type: 2}
   - {fileID: 2100000, guid: c96d3ded5ee6d284c835cd982b3b9d85, type: 2}
+  - {fileID: 2100000, guid: c063315454cf4dd4797a2e8bde3699e5, type: 2}
+  - {fileID: 2100000, guid: cf69e7035b4462740b2418922791e0ad, type: 2}
+  - {fileID: 2100000, guid: 28a7736e6054fc44abe00a90aabd6c5b, type: 2}
+  - {fileID: 2100000, guid: 1932695a0caaf8547a22170b1797ef60, type: 2}
+  - {fileID: 2100000, guid: 1730c44f54fbb384a97f5412403cc82d, type: 2}
+  - {fileID: 2100000, guid: c03901f6e2cc69c44a443a85fe240048, type: 2}
+  - {fileID: 2100000, guid: c449c83d9ddff554c85e73612422aa32, type: 2}
+  - {fileID: 2100000, guid: 018c12c82ac1b6c4c95fbce52c0475f7, type: 2}
+  - {fileID: 2100000, guid: c0aea2f849b6f49478c8bfaf9f6cb877, type: 2}
   uiMaterials:
   - {fileID: 2100000, guid: da5c8ddc8bf73734598f0ada7fa0dd37, type: 2}
   gridScale: 1

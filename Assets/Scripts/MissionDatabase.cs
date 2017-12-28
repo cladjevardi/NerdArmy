@@ -135,7 +135,7 @@ public class MissionDatabase
                 enemy.strategy = ActorStrategy.CHARGE_IN;
             else if (strategy == "cower")
                 enemy.strategy = ActorStrategy.COWERS;
-            else if (strategy == "waits")
+            else if (strategy == "wait")
                 enemy.strategy = ActorStrategy.WAITS;
             else if (strategy == "cautious")
                 enemy.strategy = ActorStrategy.CAUTIOUS;

@@ -37,7 +37,7 @@ public class WorldManager : MonoBehaviour
 
         // Start the game off at 1-1.
         world = 1;
-        level = 1;
+        level = 4;
 
         // TODO: Display some sort of world selection.
         LoadLevel();

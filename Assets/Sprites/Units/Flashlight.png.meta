@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 475c5d958a1f9c34aa0465de99c7a2ad
-timeCreated: 1514435827
+guid: 9c39d16338e019d4ca75080883c4286d
+timeCreated: 1514435862
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Drill_0
-    21300002: Drill_1
-    21300004: Drill_2
+    21300000: Flashlight_0
+    21300002: Flashlight_1
+    21300004: Flashlight_2
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -81,7 +81,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drill_0
+      name: Flashlight_0
       rect:
         serializedVersion: 2
         x: 0
@@ -95,7 +95,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_1
+      name: Flashlight_1
       rect:
         serializedVersion: 2
         x: 256
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_2
+      name: Flashlight_2
       rect:
         serializedVersion: 2
         x: 512

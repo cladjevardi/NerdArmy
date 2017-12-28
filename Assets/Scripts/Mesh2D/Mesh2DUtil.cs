@@ -29,6 +29,11 @@ public enum Mesh2DLayer
     LAYER_FLOOR,
 
     /// <summary>
+    /// The layer of the grid. Or special effects.
+    /// </summary>
+    LAYER_GRID,
+
+    /// <summary>
     /// The layer for objects, items, or floor tiles with
     /// transparency.
     /// </summary>
@@ -49,6 +54,26 @@ public enum Mesh2DLayer
     /// </summary>
     LAYER_FLYINGUNITS,
 
+    /// <summary>
+    /// The layer that displays health.
+    /// </summary>
+    LAYER_HEALTH,
+
+    /// <summary>
+    /// The layer that displays the bomb attack used by the bomber.
+    /// </summary>
+    LAYER_EMP,
+
+    /// <summary>
+    /// The layer that buffs are rendered on.
+    /// </summary>
+    LAYER_BUFFS,
+
+    /// <summary>
+    /// The layer that displays damage.
+    /// </summary>
+    LAYER_DAMAGE,
+
     /// <summary>The layer for red tile highlighted effects.</summary>
     LAYER_ATTACK_HIGHLIGHTS,
 
@@ -59,9 +84,9 @@ public enum Mesh2DLayer
     LAYER_ARROW_HIGHLIGHTS,
 
     /// <summary>
-    /// The layer of the grid. Or special effects.
+    /// The layer for the attack marker.
     /// </summary>
-    LAYER_GRID,
+    LAYER_ATTACK_MARKER,
 
     /// <summary>Total count of layers.</summary>
     LAYER_COUNT,

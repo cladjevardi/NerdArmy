@@ -232,10 +232,52 @@ public class Mesh2DRenderer : MonoBehaviour
 
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(x, y, z);
-        verts[1] = new Vector3(x + 1, y, z);
-        verts[2] = new Vector3(x, y + 1, z);
-        verts[3] = new Vector3(x + 1, y + 1, z);
+
+        if (layer == Mesh2DLayer.LAYER_HEALTH)
+        {
+            // The image is 8x8 || W: 160, H: 16
+            // x + 0.03125, y + 0.03125 || H: 0.0625, W: 0.625
+            verts[0] = new Vector3(x + 0.03125f, y + 0.03125f, z);
+            verts[1] = new Vector3(x + 0.65625f, y + 0.03125f, z);
+            verts[2] = new Vector3(x + 0.03125f, y + 0.09375f, z);
+            verts[3] = new Vector3(x + 0.65625f, y + 0.09375f, z);
+        }
+        else if (layer == Mesh2DLayer.LAYER_ATTACK_MARKER)
+        {
+            // The image is 64x224 || W: 128, H: 160
+            // x + 0.25, y + 0.875 || W: 0.5, H: 0.625 
+            verts[0] = new Vector3(x + 0.25f, y + 0.875f, z);
+            verts[1] = new Vector3(x + 0.75f, y + 0.875f, z);
+            verts[2] = new Vector3(x + 0.25f, y + 1.5f, z);
+            verts[3] = new Vector3(x + 0.75f, y + 1.5f, z);
+        }
+        else if (layer == Mesh2DLayer.LAYER_BUFFS)
+        {
+            // The image is 0x196 || W: 60, H: 60
+            // x + 0, y + 0.765625 || W: 0.234375, H: 0.234375
+            verts[0] = new Vector3(x + 0, y + 0.765625f, z);
+            verts[1] = new Vector3(x + 0.234375f, y + 0.765625f, z);
+            verts[2] = new Vector3(x + 0, y + 1, z);
+            verts[3] = new Vector3(x + 0.234375f, y + 1, z);
+        }
+        else if (layer == Mesh2DLayer.LAYER_DAMAGE)
+        {
+            // The image is 126x113 || W: 130, H: 143
+            // 128x128 || W: 128, H: 128
+            // x + 0.5, y + 0.5 || W: 0.5, H: 0.5
+            verts[0] = new Vector3(x + 0.5f, y + 0.5f, z);
+            verts[1] = new Vector3(x + 1, y + 0.5f, z);
+            verts[2] = new Vector3(x + 0.5f, y + 1, z);
+            verts[3] = new Vector3(x + 1, y + 1, z);
+        }
+        // TODO: the rest
+        else
+        {
+            verts[0] = new Vector3(x, y, z);
+            verts[1] = new Vector3(x + 1, y, z);
+            verts[2] = new Vector3(x, y + 1, z);
+            verts[3] = new Vector3(x + 1, y + 1, z);
+        }
 
         // Create the list of uvmap coordinates pull from the texture.
         Vector2[] uv = materials[(int)layer].uv();
@@ -296,22 +338,32 @@ public class Mesh2DRenderer : MonoBehaviour
                 return 0.01f;
             case Mesh2DLayer.LAYER_FLOOR:
                 return 0f;
-            case Mesh2DLayer.LAYER_OBJECT:
-                return -0.01f;
-            case Mesh2DLayer.LAYER_UNITS:
-                return -0.02f;
-            case Mesh2DLayer.LAYER_ROOF:
-                return -0.03f;
-            case Mesh2DLayer.LAYER_FLYINGUNITS:
-                return -0.04f;
-            case Mesh2DLayer.LAYER_ATTACK_HIGHLIGHTS:
-                return -0.05f;
-            case Mesh2DLayer.LAYER_MOVEMENT_HIGHLIGHTS:
-                return -0.06f;
-            case Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS:
-                return -0.07f;
             case Mesh2DLayer.LAYER_GRID:
+                return -0.01f;
+            case Mesh2DLayer.LAYER_OBJECT:
+                return -0.02f;
+            case Mesh2DLayer.LAYER_UNITS:
+                return -0.03f;
+            case Mesh2DLayer.LAYER_ROOF:
+                return -0.04f;
+            case Mesh2DLayer.LAYER_FLYINGUNITS:
+                return -0.05f;
+            case Mesh2DLayer.LAYER_HEALTH:
+                return -0.06f;
+            case Mesh2DLayer.LAYER_EMP:
+                return -0.07f;
+            case Mesh2DLayer.LAYER_BUFFS:
                 return -0.08f;
+            case Mesh2DLayer.LAYER_DAMAGE:
+                return -0.09f;
+            case Mesh2DLayer.LAYER_ATTACK_HIGHLIGHTS:
+                return -0.10f;
+            case Mesh2DLayer.LAYER_MOVEMENT_HIGHLIGHTS:
+                return -0.11f;
+            case Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS:
+                return -0.12f;
+            case Mesh2DLayer.LAYER_ATTACK_MARKER:
+                return -0.13f;
             default:
                 return 0f;
         }

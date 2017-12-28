@@ -1,12 +1,13 @@
 fileFormatVersion: 2
-guid: 475c5d958a1f9c34aa0465de99c7a2ad
-timeCreated: 1514435827
+guid: a4467e9487daa6642a5ff7d1d27642c9
+timeCreated: 1514435938
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Drill_0
-    21300002: Drill_1
-    21300004: Drill_2
+    21300000: Vacuum_0
+    21300002: Vacuum_1
+    21300004: Vacuum_2
+    21300006: Vacuum_3
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -81,7 +82,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drill_0
+      name: Vacuum_0
       rect:
         serializedVersion: 2
         x: 0
@@ -95,7 +96,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_1
+      name: Vacuum_1
       rect:
         serializedVersion: 2
         x: 256
@@ -109,10 +110,24 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Drill_2
+      name: Vacuum_2
       rect:
         serializedVersion: 2
         x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Vacuum_3
+      rect:
+        serializedVersion: 2
+        x: 768
         y: 0
         width: 256
         height: 256

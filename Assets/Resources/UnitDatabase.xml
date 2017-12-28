@@ -7,11 +7,11 @@
     <base_armor>0</base_armor>
     <abilities>grapple</abilities>
     <passives>pull</passives>
-    <material id="0" cell_width="125" cell_height="125">
+    <material id="0" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
-        <north_sequence>6|7|0</north_sequence>
-        <south_sequence>6|7|0</south_sequence>
-        <east_sequence>6|7|0</east_sequence>
+        <north_sequence>0|6|7|6</north_sequence>
+        <south_sequence>0|6|7|6</south_sequence>
+        <east_sequence>0|6|7|6</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
         <north_sequence>8|9</north_sequence>
@@ -40,6 +40,47 @@
       </animation>
     </material>
   </unit>
+  <unit name="bear" id="7">
+    <base_max_health>8|16|24|32|40</base_max_health>
+    <base_damage>2|3|4|5|6</base_damage>
+    <base_range>1-3|1-4|1-5</base_range>
+    <base_movement>1|2|3</base_movement>
+    <base_armor>0</base_armor>
+    <abilities>charge</abilities>
+    <passives></passives>
+    <material id="2" cell_width="256" cell_height="256">
+      <animation name="idle" speed="0.5" loop="true">
+        <north_sequence>11|10|9|10</north_sequence>
+        <south_sequence>11|10|9|10</south_sequence>
+        <east_sequence>11|10|9|10</east_sequence>
+      </animation>
+      <animation name="attack" speed="0.5" on_complete="idle">
+        <north_sequence>2|1|0</north_sequence>
+        <south_sequence>2|1|0</south_sequence>
+        <east_sequence>2|1|0</east_sequence>
+      </animation>
+      <animation name="walking" speed="0.5" loop="true">
+        <north_sequence>2|1|0</north_sequence>
+        <south_sequence>2|1|0</south_sequence>
+        <east_sequence>2|1|0</east_sequence>
+      </animation>
+      <animation name="damage" speed="0.5" on_complete="idle">
+        <north_sequence>7</north_sequence>
+        <south_sequence>7</south_sequence>
+        <east_sequence>7</east_sequence>
+      </animation>
+      <animation name="death" speed="0.5" loop="false">
+        <north_sequence>6|5|4</north_sequence>
+        <south_sequence>6|5|4</south_sequence>
+        <east_sequence>6|5|4</east_sequence>
+      </animation>
+      <animation name="victory" speed="0.5" on_complete="idle">
+        <north_sequence>8</north_sequence>
+        <south_sequence>8</south_sequence>
+        <east_sequence>8</east_sequence>
+      </animation>
+    </material>
+  </unit>
 
   <unit name="drill" id="1">
     <base_max_health>4</base_max_health>
@@ -47,16 +88,16 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <material id="5" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>2</north_sequence>
+        <south_sequence>2</south_sequence>
+        <east_sequence>2</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -64,9 +105,9 @@
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
         <north_sequence>0</north_sequence>
@@ -82,20 +123,20 @@
   </unit>
   <unit name="flashlight" id="2">
     <base_max_health>4</base_max_health>
-    <base_damage>1</base_damage>
-    <base_range>1</base_range>
-    <base_movement>2</base_movement>
+    <base_damage>3</base_damage>
+    <base_range>2</base_range>
+    <base_movement>1</base_movement>
     <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <material id="6" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>2</north_sequence>
+        <south_sequence>2</south_sequence>
+        <east_sequence>2</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -103,9 +144,9 @@
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
         <north_sequence>0</north_sequence>
@@ -120,21 +161,21 @@
     </material>
   </unit>
   <unit name="lantern" id="3">
-    <base_max_health>4</base_max_health>
+    <base_max_health>2</base_max_health>
     <base_damage>1</base_damage>
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <material id="7" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>2</north_sequence>
+        <south_sequence>2</south_sequence>
+        <east_sequence>2</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -142,9 +183,9 @@
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
         <north_sequence>0</north_sequence>
@@ -163,56 +204,56 @@
     <base_damage>1</base_damage>
     <base_range>1</base_range>
     <base_movement>2</base_movement>
-    <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <base_armor>1</base_armor>
+    <material id="8" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
-        <north_sequence>0</north_sequence>
-        <south_sequence>0</south_sequence>
-        <east_sequence>0</east_sequence>
+        <north_sequence>5</north_sequence>
+        <south_sequence>5</south_sequence>
+        <east_sequence>5</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>2|0|7</north_sequence>
+        <south_sequence>2|0|7</south_sequence>
+        <east_sequence>2|0|7</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
-        <north_sequence>0</north_sequence>
-        <south_sequence>0</south_sequence>
-        <east_sequence>0</east_sequence>
+        <north_sequence>5</north_sequence>
+        <south_sequence>5</south_sequence>
+        <east_sequence>5</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>6</north_sequence>
+        <south_sequence>6</south_sequence>
+        <east_sequence>6</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
-        <north_sequence>0</north_sequence>
-        <south_sequence>0</south_sequence>
-        <east_sequence>0</east_sequence>
+        <north_sequence>5</north_sequence>
+        <south_sequence>5</south_sequence>
+        <east_sequence>5</east_sequence>
       </animation>
       <animation name="victory" speed="0.5" on_complete="idle">
-        <north_sequence>0</north_sequence>
-        <south_sequence>0</south_sequence>
-        <east_sequence>0</east_sequence>
+        <north_sequence>5</north_sequence>
+        <south_sequence>5</south_sequence>
+        <east_sequence>5</east_sequence>
       </animation>
     </material>
   </unit>
   <unit name="scooter" id="5">
-    <base_max_health>4</base_max_health>
-    <base_damage>1</base_damage>
+    <base_max_health>6</base_max_health>
+    <base_damage>2</base_damage>
     <base_range>1</base_range>
-    <base_movement>2</base_movement>
+    <base_movement>4</base_movement>
     <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <material id="9" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>2</north_sequence>
+        <south_sequence>2</south_sequence>
+        <east_sequence>2</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -220,9 +261,9 @@
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
         <north_sequence>0</north_sequence>
@@ -242,16 +283,16 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
-    <material id="1" cell_width="128" cell_height="128">
+    <material id="10" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="attack" speed="0.5" on_complete="idle">
-        <north_sequence>1</north_sequence>
-        <south_sequence>1</south_sequence>
-        <east_sequence>1</east_sequence>
+        <north_sequence>3|2</north_sequence>
+        <south_sequence>3|2</south_sequence>
+        <east_sequence>3|2</east_sequence>
       </animation>
       <animation name="walking" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -259,9 +300,9 @@
         <east_sequence>0</east_sequence>
       </animation>
       <animation name="damage" speed="0.5" on_complete="idle">
-        <north_sequence>2</north_sequence>
-        <south_sequence>2</south_sequence>
-        <east_sequence>2</east_sequence>
+        <north_sequence>1</north_sequence>
+        <south_sequence>1</south_sequence>
+        <east_sequence>1</east_sequence>
       </animation>
       <animation name="death" speed="0.5" loop="false">
         <north_sequence>0</north_sequence>

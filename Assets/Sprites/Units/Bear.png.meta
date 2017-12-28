@@ -1,21 +1,20 @@
 fileFormatVersion: 2
-guid: 2d8204c39ab721847b624bcb0af3440f
-timeCreated: 1514356847
+guid: 2b90f35d89cce5c4d9a7dd8a2036bf1c
+timeCreated: 1514400817
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: MainCharacter_0
-    21300002: MainCharacter_1
-    21300004: MainCharacter_2
-    21300006: MainCharacter_3
-    21300008: MainCharacter_4
-    21300010: MainCharacter_5
-    21300012: MainCharacter_6
-    21300014: MainCharacter_7
-    21300016: MainCharacter_8
-    21300018: MainCharacter_9
-    21300020: MainCharacter_10
-    21300022: MainCharacter_11
+    21300000: Bear_0
+    21300002: Bear_1
+    21300004: Bear_2
+    21300006: Bear_3
+    21300008: Bear_4
+    21300010: Bear_5
+    21300012: Bear_6
+    21300014: Bear_7
+    21300016: Bear_8
+    21300018: Bear_9
+    21300020: Bear_10
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -43,7 +42,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: -1
     aniso: -1
     mipBias: -1
     wrapU: 1
@@ -86,38 +85,11 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MainCharacter_0
+      name: Bear_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,7 +103,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_1
+      name: Bear_1
       rect:
         serializedVersion: 2
         x: 256
@@ -145,7 +117,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_2
+      name: Bear_2
       rect:
         serializedVersion: 2
         x: 512
@@ -159,7 +131,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_3
+      name: Bear_3
       rect:
         serializedVersion: 2
         x: 768
@@ -173,7 +145,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_4
+      name: Bear_4
       rect:
         serializedVersion: 2
         x: 0
@@ -187,7 +159,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_5
+      name: Bear_5
       rect:
         serializedVersion: 2
         x: 256
@@ -201,7 +173,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_6
+      name: Bear_6
       rect:
         serializedVersion: 2
         x: 512
@@ -215,7 +187,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_7
+      name: Bear_7
       rect:
         serializedVersion: 2
         x: 768
@@ -229,7 +201,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_8
+      name: Bear_8
       rect:
         serializedVersion: 2
         x: 0
@@ -243,7 +215,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_9
+      name: Bear_9
       rect:
         serializedVersion: 2
         x: 256
@@ -257,7 +229,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MainCharacter_10
+      name: Bear_10
       rect:
         serializedVersion: 2
         x: 512
