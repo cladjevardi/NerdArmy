@@ -85,9 +85,9 @@ public class UnitDatabase
                 animation.onComplete = animationNode.Attributes["on_complete"].InnerText;
             if (animationNode.Attributes["loop"] != null)
                 animation.loop = bool.Parse(animationNode.Attributes["loop"].InnerText);
-            animation.northSequence = GetIntList(materialNode.SelectSingleNode(".//north_sequence").InnerText);
-            animation.eastSequence = GetIntList(materialNode.SelectSingleNode(".//east_sequence").InnerText);
-            animation.southSequence = GetIntList(materialNode.SelectSingleNode(".//south_sequence").InnerText);
+            animation.northSequence = GetIntList(animationNode.SelectSingleNode(".//north_sequence").InnerText);
+            animation.eastSequence = GetIntList(animationNode.SelectSingleNode(".//east_sequence").InnerText);
+            animation.southSequence = GetIntList(animationNode.SelectSingleNode(".//south_sequence").InnerText);
             material.animations.Add(animation);
         }
         return material;

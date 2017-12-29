@@ -68,15 +68,45 @@ public abstract class Mesh2D : MonoBehaviour
     protected void SetMaterial(Mesh2DLayer layer, int id,
         MaterialType type, int cellWidth = -1, int cellHeight = -1,
         int frameId = 0, List<Mesh2DAnimation> animations = null,
-        string defaultAnimation = "", bool playImmediately = false)
+        string defaultAnimation = "", bool playImmediately = false,
+        GameObject listener = null)
     {
         if (animations == null)
             animations = new List<Mesh2DAnimation>();
 
-        // Assign the material to the unit.
+        // Assign the material to the mesh.
         mesh.SetMaterial(layer, new Mesh2DMaterial(id,
             type, cellWidth, cellHeight, frameId, animations,
-            defaultAnimation, playImmediately));
+            defaultAnimation, playImmediately, listener));
+    }
+
+    /// <summary>
+    /// Set the material of the mesh.
+    /// </summary>
+    /// <param name="layer">The layer to render the 2d mesh on.</param>
+    /// <param name="id">
+    /// The identifier for the material specified by GameManager.
+    /// </param>
+    /// <param name="type">The material lookup table from GameManager.</param>
+    /// <param name="cellWidth">
+    /// The width of each cell in the material sprite.
+    /// </param>
+    /// <param name="cellHeight">
+    /// The height of each cell in the material sprite.
+    /// </param>
+    /// <param name="frameId">
+    /// The frame index within the sprite to default to.
+    /// </param>
+    /// <param name="percent">
+    /// The percent of the image drawn from left to right.
+    /// </param>
+    protected void SetMaterial(Mesh2DLayer layer, int id,
+        MaterialType type, int cellWidth = -1, int cellHeight = -1,
+        int frameId = 0, double percent = 1.0f)
+    {
+        // Assign the material to the mesh.
+        mesh.SetMaterial(layer, new Mesh2DMaterial(id,
+            type, cellWidth, cellHeight, frameId, percent));
     }
 
     /// <summary>

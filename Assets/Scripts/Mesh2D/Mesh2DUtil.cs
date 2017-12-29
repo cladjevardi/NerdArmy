@@ -55,9 +55,11 @@ public enum Mesh2DLayer
     LAYER_FLYINGUNITS,
 
     /// <summary>
-    /// The layer that displays health.
+    /// The layers that displays health.
     /// </summary>
-    LAYER_HEALTH,
+    LAYER_HEALTH_BASE,
+    LAYER_HEALTH_DAMAGED,
+    LAYER_HEALTH_REMAINING,
 
     /// <summary>
     /// The layer that displays the bomb attack used by the bomber.
@@ -131,6 +133,17 @@ public class Mesh2DMaterial
     {
         get { return _cellHeight; }
         set { _cellHeight = value; }
+    }
+
+    /// <summary>
+    /// From the 0 to 1, left to right, how much of the image is drawn.
+    /// Utilized primarily for progress bars.
+    /// </summary>
+    private double _percent = 1.0;
+    public double percent
+    {
+        get { return _percent; }
+        set { _percent = value; }
     }
 
     /// <summary>
@@ -222,7 +235,7 @@ public class Mesh2DMaterial
     }
     
     /// <summary>
-    /// Constructor for a MaterialId.
+    /// Optional constructor for a MaterialId.
     /// </summary>
     /// <param name="id">The identifier for the material from GameManager.</param>
     /// <param name="type">The material lookup table to pick from.</param>
@@ -248,13 +261,15 @@ public class Mesh2DMaterial
     public Mesh2DMaterial(int id, MaterialType type = MaterialType.TILE,
         int cellWidth = -1, int cellHeight = -1, int frameId = 0,
         List<Mesh2DAnimation> animations = null,
-        string defaultAnimation = "", bool playImmediately = false)
+        string defaultAnimation = "", bool playImmediately = false,
+        GameObject listener = null)
     {
         this.id = id;
         this.type = type;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.frameId = frameId;
+        SetAnimationListener(listener);
 
         if (animations != null)
         {
@@ -274,6 +289,35 @@ public class Mesh2DMaterial
                     _animator.PlayAnimation();
             }
         }
+    }
+
+    /// <summary>
+    /// Optional constructor for a MaterialId.
+    /// </summary>
+    /// <param name="id">The identifier for the material from GameManager.</param>
+    /// <param name="type">The material lookup table to pick from.</param>
+    /// <param name="cellWidth">
+    /// The sprite cell width size. Leaving as -1 means to use the
+    /// entire width of the file.
+    /// </param>
+    /// <param name="cellHeight">
+    /// The sprite cell height size. Leaving as -1 means to use the
+    /// entire height of the file.
+    /// </param>
+    /// <param name="frameId">The sprite frame inside the image.</param>
+    /// <param name="percent">
+    /// The percent of the animation drawn from left to right.
+    /// </param>
+    public Mesh2DMaterial(int id, MaterialType type = MaterialType.TILE,
+        int cellWidth = -1, int cellHeight = -1, int frameId = 0,
+        double percent = 1.0f)
+    {
+        this.id = id;
+        this.type = type;
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
+        this.frameId = frameId;
+        this.percent = percent;
     }
 
     /// <summary>Set the current animation.</summary>
@@ -304,6 +348,15 @@ public class Mesh2DMaterial
     public void SetAnimationLoop(bool shouldLoop)
     {
         _animator.SetAnimationLoop(shouldLoop);
+    }
+
+    /// <summary>
+    /// Set the listener for animation triggers.
+    /// </summary>
+    /// <param name="listener">The game object to send events to.</param>
+    public void SetAnimationListener(GameObject listener)
+    {
+        _animator.listener = listener;
     }
 
     /// <summary>

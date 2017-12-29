@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>The list of unit animations.</summary>
@@ -19,6 +19,12 @@ public enum ActorFacing
     EAST,
     SOUTH,
     WEST,
+}
+
+public enum ActorHealthColor
+{
+    GREEN,
+    RED,
 }
 
 public enum ActorStrategy
@@ -74,7 +80,18 @@ public class Actor : Mesh2D
                     "Invalid actor animation specified", "animation");
         }
 
+        Debug.Log("Actor: " + name + " Animation Started: " + animationName);
         SetAnimation(GetCurrentLayer(), animationName);
+    }
+
+    /// <summary>
+    /// Helper function for animating taking damage.
+    /// </summary>
+    /// <param name="damage">The amount of damage taken.</param>
+    public void TakeDamage(int damage)
+    {
+        // Calculate the health % for damage 
+        StartCoroutine(SmoothHealth(health, health - damage));
     }
 
     /// <summary>Internal facing value to handle flips.</summary>
@@ -114,7 +131,7 @@ public class Actor : Mesh2D
             case ActorFacing.SOUTH:
                 return "south";
             case ActorFacing.WEST:
-                return "west";
+                return "east"; // We use transform to flip the sprite
         }
 
         return "";
@@ -156,14 +173,7 @@ public class Actor : Mesh2D
     public int health
     {
         get { return _health; }
-        set {
-            if (value <= 0)
-            {
-                RemoveLayer(GetCurrentLayer());
-                RemoveLayer(Mesh2DLayer.LAYER_HEALTH);
-            }
-            _health = value;
-        }
+        internal set { _health = value; }
     }
 
     /// <summary>
@@ -242,6 +252,30 @@ public class Actor : Mesh2D
     }
 
     /// <summary>
+    /// The color of the health bars to use for this actor. Red
+    /// typically being enemy units. Green being friendly units.
+    /// </summary>
+    private ActorHealthColor _healthBarColor = ActorHealthColor.GREEN;
+    public ActorHealthColor healthBarColor
+    {
+        get { return _healthBarColor; }
+        set {
+            _healthBarColor = value;
+            SetHealthMaterial(1.0f, 1.0f);
+        }
+    }
+
+    /// <summary>
+    /// Whether the actor is animating damage currently.
+    /// </summary>
+    private bool _animatingDamage = false;
+    public bool animatingDamage
+    {
+        get { return _animatingDamage; }
+        internal set { _animatingDamage = value; }
+    }
+
+    /// <summary>
     /// Get the current visual layer the unit is residing on.
     /// </summary>
     /// <returns>Returns the current layer of the unit.</returns>
@@ -264,23 +298,36 @@ public class Actor : Mesh2D
     {
         SetMaterial(GetCurrentLayer(), unit.materialId, MaterialType.UNIT,
             unit.cellWidth, unit.cellHeight, unit.materialId,
-            unit.animations, "idle_east", true);
+            unit.animations, "idle_east", true, gameObject);
     }
 
+    /// <summary>
+    /// Create the material for the attack indicator.
+    /// </summary>
     private void SetAttackIndicator()
     {
-        SetMaterial(Mesh2DLayer.LAYER_ATTACK_MARKER, 8, MaterialType.EFFECT);
+        SetMaterial(Mesh2DLayer.LAYER_ATTACK_MARKER, 8, MaterialType.EFFECT, -1, -1, 0, null);
     }
 
     /// <summary>
     /// Set the material of the health bar
     /// </summary>
-    public void SetHealthMaterial(bool isOwner)
+    private void SetHealthMaterial(double percentDamaged, double percentRemaining)
     {
-        SetMaterial(Mesh2DLayer.LAYER_HEALTH, 9, MaterialType.EFFECT,
-            160, 16, isOwner ? 4 : 1);
+        int damagedFrameId = healthBarColor == ActorHealthColor.GREEN ? 2 : 0;
+        int remainingFrameId = healthBarColor == ActorHealthColor.GREEN ? 4 : 1;
+
+        SetMaterial(Mesh2DLayer.LAYER_HEALTH_BASE, 9, MaterialType.EFFECT,
+            160, 16, 3, 1.0);
+        SetMaterial(Mesh2DLayer.LAYER_HEALTH_DAMAGED, 9, MaterialType.EFFECT,
+            160, 16, damagedFrameId, percentDamaged);
+        SetMaterial(Mesh2DLayer.LAYER_HEALTH_REMAINING, 9, MaterialType.EFFECT,
+            160, 16, remainingFrameId, percentRemaining);
     }
 
+    /// <summary>
+    /// Wtf am I doing.
+    /// </summary>
     private void CreateHealthText()
     {
         /*
@@ -303,6 +350,51 @@ public class Actor : Mesh2D
     }
 
     /// <summary>
+    /// Animate health bar decreasing.
+    /// </summary>
+    /// <param name="startHealth">Starting health value.</param>
+    /// <param name="endHealth">Ending health value.</param>
+    /// <returns>Unity coruitine.</returns>
+    private IEnumerator SmoothHealth(int startHealth, int endHealth)
+    {
+        // Taking damage.
+        SetAnimation(ActorAnimation.DAMAGE);
+
+        // Tell anyone who wants to know that we're animating.
+        animatingDamage = true;
+        Vector2 healthVector = new Vector2(startHealth, 0);
+        Vector2 healthEndVector = new Vector2(endHealth, 0);
+
+        // While that distance is greater than a very small amount (Epsilon, almost zero):
+        while (healthVector != healthEndVector)
+        {
+            // Find a new position proportionally closer to the end, based on the moveTime
+            healthVector = Vector2.MoveTowards(
+                healthVector, healthEndVector, (1f / .5f) * Time.deltaTime);
+
+            double percentageDamaged = (double)((double)healthVector.x / (double)unit.baseMaxHealth);
+            double percentageRemaining = (double)((double)healthEndVector.x / (double)unit.baseMaxHealth);
+            SetHealthMaterial(percentageDamaged, percentageRemaining);
+            yield return null;
+        }
+
+        health = endHealth;
+        if (health <= 0)
+        {
+            // Play death animation.
+            SetAnimation(ActorAnimation.DEATH);
+
+            // Postpone telling everyone attacking is complete until
+            // the death animation finishes.
+        }
+        else
+        {
+            // Tell everyone that moving is complete.
+            animatingDamage = false;
+        }
+    }
+
+    /// <summary>
     /// Called via SendMessage from Mesh2DAnimation when an animation is complete.
     /// Should not be invoked from anywhere else.
     /// </summary>
@@ -312,21 +404,45 @@ public class Actor : Mesh2D
         // The object passed into the method is type string.
         string animationName = name as String;
 
-        // On completion of an attack set the animation back to idle.
-        if (animationName == "attack_north"
-            || animationName == "attack_east"
-            || animationName == "attack_south"
-            || animationName == "attack_west"
-            || animationName == "damage_north"
+        Debug.Log("Actor: " + this.name + " Animation Complete: " + animationName);
+
+        if (animationName == "damage_north"
             || animationName == "damage_east"
             || animationName == "damage_south"
-            || animationName == "damage_west"
-            || animationName == "victory_north"
+            || animationName == "damage_west")
+        {
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+        }
+
+        if (animationName == "victory_north"
             || animationName == "victory_east"
             || animationName == "victory_south"
             || animationName == "victory_west")
         {
             SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+        }
+
+        // On completion of an attack set the animation back to idle.
+        if (animationName == "attack_north"
+            || animationName == "attack_east"
+            || animationName == "attack_south"
+            || animationName == "attack_west")
+        {
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+        }
+
+        // On death we destroy ourself.
+        if (animationName == "death_north"
+            || animationName == "death_east"
+            || animationName == "death_south"
+            || animationName == "death_west")
+        {
+            animatingDamage = false;
+            RemoveLayer(GetCurrentLayer());
+            RemoveLayer(Mesh2DLayer.LAYER_HEALTH_BASE);
+            RemoveLayer(Mesh2DLayer.LAYER_HEALTH_DAMAGED);
+            RemoveLayer(Mesh2DLayer.LAYER_HEALTH_REMAINING);
+            DestroyObject(this);
         }
     }
 }

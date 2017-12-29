@@ -13,7 +13,7 @@
         <south_sequence>0|6|7|6</south_sequence>
         <east_sequence>0|6|7|6</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>8|9</north_sequence>
         <south_sequence>8|9</south_sequence>
         <east_sequence>8|9</east_sequence>
@@ -28,10 +28,10 @@
         <south_sequence>10</south_sequence>
         <east_sequence>10</east_sequence>
       </animation>
-      <animation name="death" speed="0.5" loop="false">
-        <north_sequence>11|4|5</north_sequence>
-        <south_sequence>11|4|5</south_sequence>
-        <east_sequence>11|4|5</east_sequence>
+      <animation name="death" speed="0.25" loop="false">
+        <north_sequence>11|4|5|5|5|5|5|5</north_sequence>
+        <south_sequence>11|4|5|5|5|5|5|5</south_sequence>
+        <east_sequence>11|4|5|5|5|5|5|5</east_sequence>
       </animation>
       <animation name="victory" speed="0.5" on_complete="idle">
         <north_sequence>1|2</north_sequence>
@@ -54,7 +54,7 @@
         <south_sequence>11|10|9|10</south_sequence>
         <east_sequence>11|10|9|10</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2|1|0</north_sequence>
         <south_sequence>2|1|0</south_sequence>
         <east_sequence>2|1|0</east_sequence>
@@ -94,7 +94,7 @@
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2</north_sequence>
         <south_sequence>2</south_sequence>
         <east_sequence>2</east_sequence>
@@ -133,7 +133,7 @@
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2</north_sequence>
         <south_sequence>2</south_sequence>
         <east_sequence>2</east_sequence>
@@ -172,7 +172,7 @@
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2</north_sequence>
         <south_sequence>2</south_sequence>
         <east_sequence>2</east_sequence>
@@ -211,7 +211,7 @@
         <south_sequence>5</south_sequence>
         <east_sequence>5</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2|0|7</north_sequence>
         <south_sequence>2|0|7</south_sequence>
         <east_sequence>2|0|7</east_sequence>
@@ -250,7 +250,7 @@
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>2</north_sequence>
         <south_sequence>2</south_sequence>
         <east_sequence>2</east_sequence>
@@ -289,7 +289,7 @@
         <south_sequence>0</south_sequence>
         <east_sequence>0</east_sequence>
       </animation>
-      <animation name="attack" speed="0.5" on_complete="idle">
+      <animation name="attack" speed="0.25" on_complete="idle">
         <north_sequence>3|2</north_sequence>
         <south_sequence>3|2</south_sequence>
         <east_sequence>3|2</east_sequence>

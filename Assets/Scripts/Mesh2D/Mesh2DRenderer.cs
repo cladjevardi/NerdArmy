@@ -69,39 +69,6 @@ public class Mesh2DRenderer : MonoBehaviour
         colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f, alpha);
     }
 
-    /// <summary>
-    /// Helper function for setting a tile specific material.
-    /// </summary>
-    /// <param name="layer">The layer of the material you want to set.</param>
-    /// <param name="id">The id of the tile material.</param>
-    /// <returns>The previously assigned material.</returns>
-    public Mesh2DMaterial SetTileMaterial(Mesh2DLayer layer, int id)
-    {
-        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.TILE));
-    }
-
-    /// <summary>
-    /// Helper function for setting a unit specific material.
-    /// </summary>
-    /// <param name="layer">The layer of the material you want to set.</param>
-    /// <param name="id">The id of the tile material.</param>
-    /// <returns>The previously assigned material.</returns>
-    public Mesh2DMaterial SetUnitMaterial(Mesh2DLayer layer, int id)
-    {
-        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.UNIT));
-    }
-
-    /// <summary>
-    /// Helper function for setting a effect specific material.
-    /// </summary>
-    /// <param name="layer">The layer of the material you want to set.</param>
-    /// <param name="id">The id of the tile material.</param>
-    /// <returns>The previously assigned material.</returns>
-    public Mesh2DMaterial SetEffectMaterial(Mesh2DLayer layer, int id)
-    {
-        return SetMaterial(layer, new Mesh2DMaterial(id, MaterialType.EFFECT));
-    }
-
     /// <summary>Sets the material of the specified layer.</summary>
     /// <param name="layer">The layer of the material you want to set.</param>
     /// <param name="material">The material you want to set the tile to.</param>
@@ -204,6 +171,21 @@ public class Mesh2DRenderer : MonoBehaviour
         }
     }
 
+    private Vector3[] GetVertices(Rect percentOfTile, float z)
+    {
+        // Create the list of vertices.
+        Vector3[] verts = new Vector3[4];
+        verts[0] = new Vector3(percentOfTile.x,
+            percentOfTile.y, z);
+        verts[1] = new Vector3(percentOfTile.x + percentOfTile.width,
+            percentOfTile.y, z);
+        verts[2] = new Vector3(percentOfTile.x,
+            percentOfTile.y + percentOfTile.height, z);
+        verts[3] = new Vector3(percentOfTile.x + percentOfTile.width,
+            percentOfTile.y + percentOfTile.height, z);
+        return verts;
+    }
+
     /// <summary>
     /// Generates the mesh for the current cooridnate and material. This
     /// function is safe to call again
@@ -224,60 +206,10 @@ public class Mesh2DRenderer : MonoBehaviour
         // Apply the tile specific color highlight.
         renderer.material.color = colors[(int)layer];
 
-        // Get positional information.
-        // Get the z order from the layer.
-        float x = 0;
-        float y = 0;
-        float z = GetZOrder(layer);
-
         // Create the list of vertices.
-        Vector3[] verts = new Vector3[4];
-
-        if (layer == Mesh2DLayer.LAYER_HEALTH)
-        {
-            // The image is 8x8 || W: 160, H: 16
-            // x + 0.03125, y + 0.03125 || H: 0.0625, W: 0.625
-            verts[0] = new Vector3(x + 0.03125f, y + 0.03125f, z);
-            verts[1] = new Vector3(x + 0.65625f, y + 0.03125f, z);
-            verts[2] = new Vector3(x + 0.03125f, y + 0.09375f, z);
-            verts[3] = new Vector3(x + 0.65625f, y + 0.09375f, z);
-        }
-        else if (layer == Mesh2DLayer.LAYER_ATTACK_MARKER)
-        {
-            // The image is 64x224 || W: 128, H: 160
-            // x + 0.25, y + 0.875 || W: 0.5, H: 0.625 
-            verts[0] = new Vector3(x + 0.25f, y + 0.875f, z);
-            verts[1] = new Vector3(x + 0.75f, y + 0.875f, z);
-            verts[2] = new Vector3(x + 0.25f, y + 1.5f, z);
-            verts[3] = new Vector3(x + 0.75f, y + 1.5f, z);
-        }
-        else if (layer == Mesh2DLayer.LAYER_BUFFS)
-        {
-            // The image is 0x196 || W: 60, H: 60
-            // x + 0, y + 0.765625 || W: 0.234375, H: 0.234375
-            verts[0] = new Vector3(x + 0, y + 0.765625f, z);
-            verts[1] = new Vector3(x + 0.234375f, y + 0.765625f, z);
-            verts[2] = new Vector3(x + 0, y + 1, z);
-            verts[3] = new Vector3(x + 0.234375f, y + 1, z);
-        }
-        else if (layer == Mesh2DLayer.LAYER_DAMAGE)
-        {
-            // The image is 126x113 || W: 130, H: 143
-            // 128x128 || W: 128, H: 128
-            // x + 0.5, y + 0.5 || W: 0.5, H: 0.5
-            verts[0] = new Vector3(x + 0.5f, y + 0.5f, z);
-            verts[1] = new Vector3(x + 1, y + 0.5f, z);
-            verts[2] = new Vector3(x + 0.5f, y + 1, z);
-            verts[3] = new Vector3(x + 1, y + 1, z);
-        }
-        // TODO: the rest
-        else
-        {
-            verts[0] = new Vector3(x, y, z);
-            verts[1] = new Vector3(x + 1, y, z);
-            verts[2] = new Vector3(x, y + 1, z);
-            verts[3] = new Vector3(x + 1, y + 1, z);
-        }
+        Vector3[] verts = GetVertices(
+            GetDisplayRect(layer, materials[(int)layer].percent),
+            GetZOrder(layer));
 
         // Create the list of uvmap coordinates pull from the texture.
         Vector2[] uv = materials[(int)layer].uv();
@@ -335,37 +267,75 @@ public class Mesh2DRenderer : MonoBehaviour
             case Mesh2DLayer.LAYER_INVISIBLE:
                 return -1f;
             case Mesh2DLayer.LAYER_BURROWED:
-                return 0.01f;
+                return 0.001f;
             case Mesh2DLayer.LAYER_FLOOR:
                 return 0f;
             case Mesh2DLayer.LAYER_GRID:
-                return -0.01f;
+                return -0.001f;
             case Mesh2DLayer.LAYER_OBJECT:
-                return -0.02f;
+                return -0.002f;
             case Mesh2DLayer.LAYER_UNITS:
-                return -0.03f;
+                return -0.003f;
             case Mesh2DLayer.LAYER_ROOF:
-                return -0.04f;
+                return -0.004f;
             case Mesh2DLayer.LAYER_FLYINGUNITS:
-                return -0.05f;
-            case Mesh2DLayer.LAYER_HEALTH:
-                return -0.06f;
+                return -0.005f;
+            case Mesh2DLayer.LAYER_HEALTH_BASE:
+                return -0.006f;
+            case Mesh2DLayer.LAYER_HEALTH_DAMAGED:
+                return -0.007f;
+            case Mesh2DLayer.LAYER_HEALTH_REMAINING:
+                return -0.008f;
             case Mesh2DLayer.LAYER_EMP:
-                return -0.07f;
+                return -0.009f;
             case Mesh2DLayer.LAYER_BUFFS:
-                return -0.08f;
+                return -0.010f;
             case Mesh2DLayer.LAYER_DAMAGE:
-                return -0.09f;
+                return -0.011f;
             case Mesh2DLayer.LAYER_ATTACK_HIGHLIGHTS:
-                return -0.10f;
+                return -0.012f;
             case Mesh2DLayer.LAYER_MOVEMENT_HIGHLIGHTS:
-                return -0.11f;
+                return -0.013f;
             case Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS:
-                return -0.12f;
+                return -0.014f;
             case Mesh2DLayer.LAYER_ATTACK_MARKER:
-                return -0.13f;
+                return -0.015f;
             default:
                 return 0f;
+        }
+    }
+
+    private Rect GetDisplayRect(Mesh2DLayer layer, double percent = 1.0f)
+    {
+        // NOTE: We only use the percentage value for progress
+        // bars at this moment.
+        switch (layer)
+        {
+            case Mesh2DLayer.LAYER_HEALTH_BASE:
+            case Mesh2DLayer.LAYER_HEALTH_DAMAGED:
+            case Mesh2DLayer.LAYER_HEALTH_REMAINING:
+                // The image is 8x8 || W: 160, H: 16
+                // x + 0.03125, y + 0.03125 || H: 0.0625, W: 0.625
+                return new Rect(0.03125f, 0.03125f, 0.625f * (float)percent, 0.0625f);
+
+            case Mesh2DLayer.LAYER_ATTACK_MARKER:
+                // The image is 64x224 || W: 128, H: 160
+                // x + 0.25, y + 0.875 || W: 0.5, H: 0.625 
+                return new Rect(0.25f, 0.875f, 0.5f, 0.625f);
+
+            case Mesh2DLayer.LAYER_BUFFS:
+                // The image is 0x196 || W: 60, H: 60
+                // x + 0, y + 0.765625 || W: 0.234375, H: 0.234375
+                return new Rect(0, 0.765625f, 0.234375f, 0.234375f);
+
+            case Mesh2DLayer.LAYER_DAMAGE:
+                // The image is 128x128 || W: 128, H: 128
+                // x + 0.5, y + 0.5 || W: 0.5, H: 0.5
+                return new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+
+            // By default we assume a tile scale is from 0 to 1.
+            default:
+                return new Rect(0, 0, 1, 1);
         }
     }
 

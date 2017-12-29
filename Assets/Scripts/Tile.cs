@@ -32,7 +32,7 @@ public class Tile : Mesh2D
     /// <param name="frameId">The sprite index to display inside the material.</param>
     public void SetFloorMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 128, 128, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 128, 128, frameId, null);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class Tile : Mesh2D
     /// <param name="frameId">The sprite index to display inside the material.</param>
     public void SetObjectMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_OBJECT, tileId, MaterialType.TILE, 128, 128, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_OBJECT, tileId, MaterialType.TILE, 128, 128, frameId, null);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class Tile : Mesh2D
         // If the acting faction can see under this roof tile.
         mesh.SetColor(Mesh2DLayer.LAYER_ROOF, 
             new Color(1.0f, 1.0f, 1.0f, _canSeeUnder ? 0.2f : 1.0f));
-        SetMaterial(Mesh2DLayer.LAYER_ROOF, tileId, MaterialType.TILE, 128, 128, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_ROOF, tileId, MaterialType.TILE, 128, 128, frameId, null);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class Tile : Mesh2D
     public void SetAttackHighlightMaterial(int tileId, byte[] mask)
     {
         SetMaterial(Mesh2DLayer.LAYER_ATTACK_HIGHLIGHTS, tileId, MaterialType.EFFECT,
-            128, 128, GetHighlightFrameId(mask));
+            128, 128, GetHighlightFrameId(mask), null);
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public class Tile : Mesh2D
     public void SetMovementHighlightMaterial(int tileId, byte[] mask)
     {
         SetMaterial(Mesh2DLayer.LAYER_MOVEMENT_HIGHLIGHTS, tileId, MaterialType.EFFECT,
-            128, 128, GetHighlightFrameId(mask));
+            128, 128, GetHighlightFrameId(mask), null);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class Tile : Mesh2D
     /// <param name="frameId">The frame id inside the effect tile to use.</param>
     public void SetGridMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 128, 128, frameId);
+        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 128, 128, frameId, null);
     }
 
     /// <summary>

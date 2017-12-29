@@ -84,7 +84,7 @@ public class Mission : MonoBehaviour
             actor.unit = unit;
             actor.owner = Owner.PLAYER1;
             actor.health = unit.baseMaxHealth;
-            actor.SetHealthMaterial(true);
+            actor.healthBarColor = ActorHealthColor.GREEN;
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -111,7 +111,7 @@ public class Mission : MonoBehaviour
             actor.owner = Owner.PLAYER2;
             actor.health = unit.baseMaxHealth;
             actor.strategy = enemy.strategy;
-            actor.SetHealthMaterial(false);
+            actor.healthBarColor = ActorHealthColor.RED;
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -440,18 +440,20 @@ public class Mission : MonoBehaviour
             0, float.MaxValue);
 
         // Apply damage to unit.
-        attacked.health -= damage;
+        attacked.TakeDamage(damage);
         Debug.LogFormat("Damage dealt: {0}", damage);
 
-        // Check if the unit is dead.
-        if (attacked.health <= 0)
+        // Check if the unit will be dead. Damage is truely dealt
+        // after the damage animation is complete.
+        if (attacked.health - damage <= 0)
         {
             // Find the actor within the list and remove it.
             for (int index = 0; index < actors.Count; ++index)
             {
                 if (actors[index] == attacked)
                 {
-                    DestroyObject(actors[index]);
+                    // Object will destroy itself once it animates.
+                    // Remove reference to it.
                     actors.RemoveAt(index);
                     break;
                 }
@@ -725,6 +727,20 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Determine if anyone is moving.
+    /// </summary>
+    /// <returns>Returns whether any actor is moving.</returns>
+    private bool IsAnyoneMoving()
+    {
+        foreach (Actor actor in actors)
+        {
+            if (actor.moving || actor.animatingDamage)
+                return true;
+        }
+        return false;
+    }
+
     /// <summary>Get the next available actor that hasn't moved.</summary>
     /// <returns>Returns the next available actor of the current player.</returns>
     private Actor GetNextActor()
@@ -883,6 +899,11 @@ public class Mission : MonoBehaviour
         if (ActorCurrentlyAttacking())
             return;
 
+        // Actors could still be moving by this point. Stop until they
+        // are done done.
+        if (IsAnyoneMoving())
+            return;
+
         // Figure out if we're clicking on an actor.
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
@@ -926,9 +947,9 @@ public class Mission : MonoBehaviour
         if (ActorCurrentlyAttacking())
             return;
 
-        // We shouldn't select the next computer actor
-        // until we are fully done with pathing.
-        if (currentPathing.Count != 0)
+        // Actors could still be moving by this point. Stop until they
+        // are done done.
+        if (IsAnyoneMoving())
             return;
 
         // Select the next actor.
