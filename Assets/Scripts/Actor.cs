@@ -100,16 +100,13 @@ public class Actor : Mesh2D
     {
         get { return _facing; }
         set {
-            if (value != _facing)
-            {
-                // Flip the scale
-                Vector3 scale = mesh.transform.localScale;
-                scale.x *= -1;
-                mesh.transform.localScale = scale;
-            }
-
-            // Adjust the center.
-            mesh.transform.localPosition = (value == ActorFacing.WEST) ? new Vector2(0, 0) : new Vector2(1, 0);
+            Mesh2DLayer layer = GetCurrentLayer();
+            Mesh2DMaterial material = mesh.GetMaterial(layer);
+            if (value == ActorFacing.EAST)
+                material.flipX = false;
+            if (value == ActorFacing.WEST)
+                material.flipX = true;
+            mesh.SetMaterial(layer, material);
             _facing = value;
         }
     }
@@ -131,7 +128,7 @@ public class Actor : Mesh2D
             case ActorFacing.SOUTH:
                 return "south";
             case ActorFacing.WEST:
-                return "east"; // We use transform to flip the sprite
+                return "east"; // We reuse 'east' for 'west' but flip sprite.
         }
 
         return "";

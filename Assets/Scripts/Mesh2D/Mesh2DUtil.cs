@@ -157,6 +157,26 @@ public class Mesh2DMaterial
     }
 
     /// <summary>
+    /// Flip the material horizontally.
+    /// </summary>
+    private bool _flipX = false;
+    public bool flipX
+    {
+        get { return _flipX; }
+        set { _flipX = value; }
+    }
+
+    /// <summary>
+    /// Flip the material vertically.
+    /// </summary>
+    private bool _flipY = false;
+    public bool flipY
+    {
+        get { return _flipY; }
+        set { _flipY = value; }
+    }
+
+    /// <summary>
     /// The animation manager that handles a given sequence of material
     /// frames by animation names.
     /// </summary>
@@ -194,12 +214,18 @@ public class Mesh2DMaterial
         float xStride = 1.0f / frameWidthCount;
         float yStride = 1.0f / frameHeightCount;
 
+        // Determine uv map facing.
+        float x1 = !flipX ? frameX * xStride : (frameX + 1) * xStride;
+        float x2 = !flipX ? (frameX + 1) * xStride : frameX * xStride;
+        float y1 = !flipY ? frameY * yStride : (frameY + 1) * yStride;
+        float y2 = !flipY ? (frameY + 1) * yStride : frameY * yStride;
+
         // We can now generate our list of uv vectors.
         Vector2[] uv = new Vector2[4];
-        uv[0] = new Vector2(frameX * xStride, frameY * yStride); // (0.0f, 0.0f)
-        uv[1] = new Vector2((frameX + 1) * xStride, frameY * yStride); // (1.0f, 0.0f)
-        uv[2] = new Vector2(frameX * xStride, (frameY + 1) * yStride); // (0.0f, 1.0f)
-        uv[3] = new Vector2((frameX + 1) * xStride, (frameY + 1) * yStride); // (1.0f, 1.0f)
+        uv[0] = new Vector2(x1, y1); // (0.0f, 0.0f)
+        uv[1] = new Vector2(x2, y1); // (1.0f, 0.0f)
+        uv[2] = new Vector2(x1, y2); // (0.0f, 1.0f)
+        uv[3] = new Vector2(x2, y2); // (1.0f, 1.0f)
         return uv;
     }
 

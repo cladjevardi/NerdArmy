@@ -171,18 +171,24 @@ public class Mesh2DRenderer : MonoBehaviour
         }
     }
 
-    private Vector3[] GetVertices(Rect percentOfTile, float z)
+    /// <summary>
+    /// Get the list of vertices from a display rect. 
+    /// </summary>
+    /// <param name="displayRect">The display rect for a tile.</param>
+    /// <param name="z">The z coordinate to use.</param>
+    /// <returns>Returns the list of vertices to use for a custom mesh.</returns>
+    private Vector3[] GetVertices(Rect displayRect, float z)
     {
         // Create the list of vertices.
         Vector3[] verts = new Vector3[4];
-        verts[0] = new Vector3(percentOfTile.x,
-            percentOfTile.y, z);
-        verts[1] = new Vector3(percentOfTile.x + percentOfTile.width,
-            percentOfTile.y, z);
-        verts[2] = new Vector3(percentOfTile.x,
-            percentOfTile.y + percentOfTile.height, z);
-        verts[3] = new Vector3(percentOfTile.x + percentOfTile.width,
-            percentOfTile.y + percentOfTile.height, z);
+        verts[0] = new Vector3(displayRect.x,
+            displayRect.y, z);
+        verts[1] = new Vector3(displayRect.x + displayRect.width,
+            displayRect.y, z);
+        verts[2] = new Vector3(displayRect.x,
+            displayRect.y + displayRect.height, z);
+        verts[3] = new Vector3(displayRect.x + displayRect.width,
+            displayRect.y + displayRect.height, z);
         return verts;
     }
 
@@ -304,7 +310,16 @@ public class Mesh2DRenderer : MonoBehaviour
                 return 0f;
         }
     }
-
+    
+    /// <summary>
+    /// Get the vertices rect of the tile.
+    /// </summary>
+    /// <param name="layer">Which layer to get the display rect for.</param>
+    /// <param name="percent">
+    /// From 0 to 1, left to right, how much
+    /// of the image to show. Used strictly for the health bar.
+    /// </param>
+    /// <returns>Returns the display rect.</returns>
     private Rect GetDisplayRect(Mesh2DLayer layer, double percent = 1.0f)
     {
         // NOTE: We only use the percentage value for progress

@@ -85,6 +85,7 @@ public class Mission : MonoBehaviour
             actor.owner = Owner.PLAYER1;
             actor.health = unit.baseMaxHealth;
             actor.healthBarColor = ActorHealthColor.GREEN;
+            actor.facing = ActorFacing.EAST;
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -112,6 +113,7 @@ public class Mission : MonoBehaviour
             actor.health = unit.baseMaxHealth;
             actor.strategy = enemy.strategy;
             actor.healthBarColor = ActorHealthColor.RED;
+            actor.facing = ActorFacing.WEST;
 
             // Add the actor to the mission.
             actors.Add(actor);
@@ -419,9 +421,9 @@ public class Mission : MonoBehaviour
         // Iterate through all of the current players actors for their done state.
         foreach (Actor actor in actors)
         {
-            if (actor.moving || currentPathing.Count != 0)
+            // Do not move to transition screen before animations are finished.
+            if (actor.moving || actor.animatingDamage || currentPathing.Count != 0)
                 return false;
-
             if (actor.owner == currentFaction && !actor.done)
                 return false;
         }
