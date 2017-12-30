@@ -67,6 +67,9 @@ public class Mesh2DRenderer : MonoBehaviour
 
         // Highlight layer automatically receives an alpha channel.
         colors[(int)layer] = new Color(1.0f, 1.0f, 1.0f, alpha);
+
+        if (materials[(int)layer] != null)
+            GenerateMesh(layer);
     }
 
     /// <summary>Sets the material of the specified layer.</summary>

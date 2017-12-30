@@ -2,11 +2,20 @@
 using System;
 using System.Collections.Generic;
 
+public class ThreatTile
+{
+    public Vector2 position = Vector2.zero;
+    public double threat = 0f;
+    public int attackers = 0;
+}
+
 public class TileMap : MonoBehaviour
 {
     /// <summary>In-memory data of each tile.</summary>
-    [HideInInspector]
     public List<List<Tile>> tiles = new List<List<Tile>>();
+
+    /// <summary>The list of units in the mission.</summary>
+    public List<Actor> actors = new List<Actor>();
 
     /// <summary>The height of the tilemap.</summary>
     private int _height;
@@ -22,6 +31,143 @@ public class TileMap : MonoBehaviour
     {
         get { return _width; }
         internal set { _width = value; }
+    }
+
+    /// <summary>Whether we are already displaying highlights.</summary>
+    private bool _displayingHighlights = false;
+    public bool displayingHighlights
+    {
+        get { return _displayingHighlights; }
+        internal set { _displayingHighlights = value; }
+    }
+
+    /// <summary>Populate the list of tiles of the tilemap.</summary>
+    /// <param name="width">The width of the tilemap.</param>
+    /// <param name="height">The height of the tilemap</param>
+    /// <param name="tiles">The list of tilemeta data to convert to real tiles.</param>
+    private void AddTiles(int width, int height, List<MissionTile> tiles)
+    {
+        // Set the base tilemap information.
+        this.width = width;
+        this.height = height;
+
+        // Clear any previous map information.
+        this.tiles.Clear();
+
+        // Allocate the map
+        this.tiles = new List<List<Tile>>();
+        for (int i = 0; i < width; i++)
+        {
+            List<Tile> row = new List<Tile>();
+            for (int j = 0; j < height; j++)
+            {
+                // Find the mission tile that represents this tile.
+                MissionTile missionTile = null;
+                foreach (MissionTile mTile in tiles)
+                {
+                    if (mTile.position.x == i && mTile.position.y == j)
+                    {
+                        missionTile = mTile;
+                        break;
+                    }
+                }
+
+                // Basic tile information.
+                Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
+                tile.transform.SetParent(transform);
+                tile.transform.position = new Vector2(i, j);
+
+                // Tile found in mission tile list. Construct it.
+                if (missionTile != null)
+                {
+                    tile.movementCost = missionTile.movementCost;
+                    tile.trueCollision = missionTile.trueCollision;
+                    tile.groundCollision = missionTile.groundCollision;
+
+                    foreach (MissionMaterial material in missionTile.materials)
+                    {
+                        if (material.layer == MissionMaterial.Layer.FLOOR)
+                            tile.SetFloorMaterial(material.materialId, material.frameId);
+                        if (material.layer == MissionMaterial.Layer.OBJECT)
+                            tile.SetObjectMaterial(material.materialId, material.frameId);
+                        if (material.layer == MissionMaterial.Layer.ROOF)
+                            tile.SetRoofMaterial(material.materialId, material.frameId);
+                    }
+                }
+                else
+                {
+                    // Basic floor tile without mission information.
+                    tile.groundCollision = true;
+                    tile.trueCollision = true;
+                    tile.SetFloorMaterial(0);
+                }
+
+                // Add the tile to the map.
+                row.Add(tile);
+            }
+
+            // Add the row to the entire map.
+            this.tiles.Add(row);
+        }
+    }
+
+    /// <summary>Add loadout roster of actors to the map.</summary>
+    /// <param name="roster">The list of player controlled units.</param>
+    /// <param name="validSpawnPositions">The list of valid rost spawn locations.</param>
+    private void AddRoster(List<Unit> roster, List<Vector2> validSpawnPositions)
+    {
+        int spawnIndex = 0;
+
+        // Iterate through each member of the roster and add units.
+        foreach (Unit unit in roster)
+        {
+            // We can only spawn as many actors as available spawns.
+            if (spawnIndex >= validSpawnPositions.Count)
+                break;
+
+            // Create the new actor.
+            Vector2 position = validSpawnPositions[spawnIndex];
+            string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.name;
+            Actor actor = new GameObject(objectName).AddComponent<Actor>();
+            actor.transform.SetParent(transform);
+            actor.transform.position = position;
+            actor.unit = unit;
+            actor.owner = Owner.PLAYER1;
+            actor.health = unit.baseMaxHealth;
+            actor.healthBarColor = ActorHealthColor.GREEN;
+            actor.facing = ActorFacing.EAST;
+
+            // Add the actor to the mission.
+            actors.Add(actor);
+
+            // Increment the spawn location to prevent collision.
+            spawnIndex++;
+        }
+    }
+
+    /// <summary>Add enemy actors to the map.</summary>
+    /// <param name="missionEnemies">The list of enemies.</param>
+    private void AddEnemies(List<MissionEnemy> missionEnemies)
+    {
+        // For each enemy unit within the mission schematic, add a new Actor.
+        foreach (MissionEnemy enemy in missionEnemies)
+        {
+            // Create a new actor.
+            Unit unit = new Unit(enemy.name);
+            string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.name;
+            Actor actor = new GameObject(objectName).AddComponent<Actor>();
+            actor.transform.SetParent(transform);
+            actor.transform.position = enemy.position;
+            actor.unit = unit;
+            actor.owner = Owner.PLAYER2;
+            actor.health = unit.baseMaxHealth;
+            actor.strategy = enemy.strategy;
+            actor.healthBarColor = ActorHealthColor.RED;
+            actor.facing = ActorFacing.WEST;
+
+            // Add the actor to the mission.
+            actors.Add(actor);
+        }
     }
 
     /// <summary>
@@ -47,34 +193,6 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
-    /// Get the actor that matches the coordinate specified.
-    /// </summary>
-    /// <param name="coord">The coordinate to look for an actor.</param>
-    /// <param name="actors">The list of actors to check against.</param>
-    /// <returns></returns>
-    private Actor GetSelectedActor(Vector2 coord, List<Actor> actors)
-    {
-        // Are we within bounds of the map.
-        if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
-            return null;
-
-        // Get the actor of the position, if any.
-        foreach (Actor actor in actors)
-        {
-            if (actor.transform.position.x == coord.x
-                && actor.transform.position.y == coord.y)
-            {
-                // This may be an enemies actor or a players actor.
-                // Display their current highlights.
-                return actor;
-            }
-        }
-
-        // No actor found at that location.
-        return null;
-    }
-
-    /// <summary>
     /// Check if the cooridnate specified should be added to the list of
     /// potential visitors.
     /// </summary>
@@ -90,8 +208,8 @@ public class TileMap : MonoBehaviour
         if (coord.x < 0 || coord.y < 0 || coord.x >= width || coord.y >= height)
             return false;
 
-        Tile tile = tiles[(int)coord.x][(int)coord.y];
-        Actor actor = GetSelectedActor(coord, actors);
+        Tile tile = GetTile(coord);
+        Actor actor = GetActor(coord);
 
         bool actorCheck = owner == Owner.NONE ?
             (actor == null || (actor != null && actor.owner != owner)) :
@@ -186,12 +304,162 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
+    /// Take a list of coordinates and highlight all those tiles the color specified.
+    /// </summary>
+    /// <param name="coordinates">The list of tile coordinates to highlight.</param>
+    /// <param name="color">The color the tiles should be highlighted.</param>
+    private void HighlightTiles(List<Vector2> coordinates, TileHighlightColor color)
+    {
+        foreach (Vector2 coordinate in coordinates)
+        {
+            Tile tile = GetTile(coordinate);
+            if (color == TileHighlightColor.HIGHLIGHT_BLUE)
+                tile.movementHighlight = true;
+            else
+                tile.attackHighlight = true;
+        }
+    }
+
+    /// <summary>
+    /// When the highlighted tiles are finalized. Update the image of the highlights to match what
+    /// images they should be showing depending on their neighbors.
+    /// </summary>
+    private void AdjustHighlightFrameIds()
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                Tile tile = tiles[x][y];
+                if (tile.movementHighlight)
+                    tile.SetMovementHighlightMaterial(2, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_BLUE));
+                if (tile.attackHighlight)
+                    tile.SetAttackHighlightMaterial(3, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_RED));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Display attack indicators over all other factions within attack range.
+    /// </summary>
+    /// <param name="attackTiles">The tiles that are available to attack.</param>
+    /// <param name="currentFaction">The faction of the current player.</param>
+    private void DisplayAttackIndicators(List<Vector2> attackTiles, Owner currentFaction)
+    {
+        // Iterate through all attack tiles and look for any actors.
+        foreach (Vector2 attackTile in attackTiles)
+        {
+            Actor actor = GetActor(attackTile);
+
+            // Detect if an enemy is within attack range. Place an indicator
+            // over their head to indicate they can be attacked by the
+            // current player.
+            if (actor != null && actor.owner != currentFaction)
+                actor.attackIndicator = true;
+        }
+    }
+
+    /// <summary>
+    /// Determine if an actor can attack a given position.
+    /// </summary>
+    /// <param name="actor">The actor to check.</param>
+    /// <param name="position">The position to check against.</param>
+    /// <returns>
+    /// Returns whether the actor is within attack range of a given position.
+    /// </returns>
+    private bool CanActorAttackPosition(Actor actor, Vector2 position)
+    {
+        // Determine if the enemy is within attack range of a position.
+        List<Vector2> movementTiles = GetMovementTiles(actor);
+        List<Vector2> attackTiles = GetAttackTiles(actor, movementTiles);
+        foreach (Vector2 attackTile in attackTiles)
+        {
+            if (position.x == attackTile.x && position.y == attackTile.y)
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>Get the actor at the given coordinate.</summary>
+    /// <param name="position">The coordinate to check.</param>
+    /// <returns>Returns the actor at the given coordinate if found or null if not.</returns>
+    public Actor GetActor(Vector2 position)
+    {
+        // Are we within bounds of the map.
+        if (position.x < 0 || position.y < 0 || position.x >= width || position.y >= height)
+            return null;
+
+        // Get the actor of the position, if any.
+        foreach (Actor actor in actors)
+        {
+            if (actor.transform.position.x == position.x
+                && actor.transform.position.y == position.y)
+            {
+                return actor;
+            }
+        }
+
+        // No actor found at that location.
+        return null;
+    }
+
+    /// <summary>
+    /// Get the Tile of the position given.
+    /// </summary>
+    /// <param name="position">The coordinate of the tile.</param>
+    /// <returns>
+    /// Returns the Tile associated with the given position (rounded down).
+    /// </returns>
+    public Tile GetTile(Vector2 position)
+    {
+        // Round down to the nearest int.
+        Vector2Int coordinate = new Vector2Int(
+            (int)Math.Floor(position.x),
+            (int)Math.Floor(position.y));
+        // Validate the tile position.
+        if (!IsValidTile(coordinate.x, coordinate.y))
+            return null;
+        return tiles[coordinate.x][coordinate.y];
+    }
+
+    /// <summary>
+    /// Remove a specific actor from the list of tileMap actors.
+    /// </summary>
+    /// <param name="actor">The actor to remove.</param>
+    public void RemoveActor(Actor actor)
+    {
+        // Find the actor within the list and remove it.
+        for (int index = 0; index < actors.Count; ++index)
+        {
+            if (actors[index] == actor)
+            {
+                actors.RemoveAt(index);
+                break;
+            }
+        }
+    }
+
+    /// <summary>Returns whether a given faction exists on the battlefield.</summary>
+    /// <param name="faction">The faction to check.</param>
+    /// <returns>Returns whether the faction is still active.</returns>
+    public bool IsFactionActive(Owner faction)
+    {
+        foreach (Actor actor in actors)
+        {
+            if (actor.owner == faction)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Get the list of tile positions that should be highlighted for movement for an actor.
     /// </summary>
     /// <param name="actor">The actor that needs its movement highlights displayed.</param>
     /// <param name="actors">The list of actors on the field.</param>
     /// <returns>Returns a list of Tiles that need to be</returns>
-    public List<Vector2> GetMovementTiles(Actor actor, List<Actor> actors)
+    public List<Vector2> GetMovementTiles(Actor actor)
     {
         int movement = actor.unit.baseMovement;
 
@@ -255,8 +523,23 @@ public class TileMap : MonoBehaviour
         return visited;
     }
 
-    public List<Vector2> GetAttackTiles(List<Vector2> validMovementTiles, Actor actor, List<Actor> actors)
+    /// <summary>
+    /// Get the list of tiles that the actor can issue an attack on.
+    /// </summary>
+    /// <param name="validMovementTiles">The list of movement tiles to check.</param>
+    /// <param name="actor">The current actor to get the list of attack tiles for.</param>
+    /// <param name="actors">The full list of actors on the board.</param>
+    /// <returns></returns>
+    public List<Vector2> GetAttackTiles(Actor actor, List<Vector2> validMovementTiles = null)
     {
+        // If no tiles were passed. Use current actors position as
+        // the only tile to get attack information from.
+        if (validMovementTiles == null)
+        {
+            validMovementTiles = new List<Vector2>();
+            validMovementTiles.Add(new Vector2(actor.transform.position.x, actor.transform.position.y));
+        }
+
         // The full list of attack tiles to highlight.
         List<Vector2> attackTiles = new List<Vector2>();
 
@@ -326,39 +609,38 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
-    /// Take a list of coordinates and highlight all those tiles the color specified.
+    /// Highlight an actors attack and movement tiles. Display attack
+    /// indicators over all other attackable actors.
     /// </summary>
-    /// <param name="coordinates">The list of tile coordinates to highlight.</param>
-    /// <param name="color">The color the tiles should be highlighted.</param>
-    public void HighlightTiles(List<Vector2> coordinates, TileHighlightColor color)
+    /// <param name="actor">The actor to focus highlights for.</param>
+    public void HighlightActor(Actor actor)
     {
-        foreach (Vector2 coordinate in coordinates)
-        {
-            Tile tile = tiles[(int)coordinate.x][(int)coordinate.y];
-            if (color == TileHighlightColor.HIGHLIGHT_BLUE)
-                tile.movementHighlight = true;
-            else
-                tile.attackHighlight = true;
-        }
-    }
+        // Determine if movement has been completed.
+        List<Vector2> movementTiles = new List<Vector2>();
+        if (!actor.done && actor.movementDone)
+            movementTiles.Add(actor.transform.position);
+        else
+            movementTiles = GetMovementTiles(actor);
 
-    /// <summary>
-    /// When the highlighted tiles are finalized. Update the image of the highlights to match what
-    /// images they should be showing depending on their neighbors.
-    /// </summary>
-    public void AdjustHighlightFrameIds()
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                Tile tile = tiles[x][y];
-                if (tile.movementHighlight)
-                    tile.SetMovementHighlightMaterial(2, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_BLUE));
-                if (tile.attackHighlight)
-                    tile.SetAttackHighlightMaterial(3, GetTileHighlightMask(x, y, TileHighlightColor.HIGHLIGHT_RED));
-            }
-        }
+        // Display the actors movement and attack highlights.
+        List<Vector2> attackTiles = GetAttackTiles(actor, movementTiles);
+
+        // First display all attack tiles.
+        HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
+
+        // Display all movement tiles OVER the attack tiles. This takes into account enemies on tiles.
+        if (!actor.movementDone)
+            HighlightTiles(movementTiles, TileHighlightColor.HIGHLIGHT_BLUE);
+
+        // Adjust the highlighted tiles images.
+        AdjustHighlightFrameIds();
+
+        // Add attack indicators over all attackable enemy actors.
+        DisplayAttackIndicators(attackTiles, actor.owner);
+
+        // Inform anyone interested if we are already displaying
+        // highlights.
+        displayingHighlights = true;
     }
 
     /// <summary>
@@ -366,6 +648,7 @@ public class TileMap : MonoBehaviour
     /// </summary>
     public void RemoveAllHighlights()
     {
+        // Remove any highlight states.
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
@@ -374,6 +657,15 @@ public class TileMap : MonoBehaviour
                 tiles[x][y].attackHighlight = false;
             }
         }
+
+        // Remove any attack indicator currently over any actor.
+        foreach (Actor actor in actors)
+        {
+            actor.attackIndicator = false;
+        }
+
+        // Reset internal state for detection. 
+        displayingHighlights = false;
     }
 
     /// <summary>
@@ -390,7 +682,7 @@ public class TileMap : MonoBehaviour
         bool start = true;
         foreach (AStarVector vector in pathing.result)
         {
-            Tile tile = tiles[(int)vector.position.x][(int)vector.position.y];
+            Tile tile = GetTile(vector.position);
             string mask = BitConverter.ToString(vector.mask, 0);
             Debug.Log("ShowPath mask: " + mask);
 
@@ -399,74 +691,87 @@ public class TileMap : MonoBehaviour
         }
     }
 
-    /// <summary>Initialize the list of Tiles for a tilemap.</summary>
-    /// <param name="missionSchematic">The schematic that makes up a tilemap.</param>
-    public void Initialize(MissionSchematic missionSchematic)
+    /// <summary>
+    /// Reset the done state of all actors.
+    /// </summary>
+    public void ResetActorsDone()
     {
-        // Just incase, clear whatever tiles might be left.
-        tiles.Clear();
-
-        // Set the base tilemap information.
-        width = missionSchematic.tileWidth;
-        height = missionSchematic.tileHeight;
-
-        // Clear any previous map information.
-        tiles.Clear();
-
-        // Allocate the map
-        tiles = new List<List<Tile>>();
-        for (int i = 0; i < missionSchematic.tileWidth; i++)
+        foreach (Actor actor in actors)
         {
-            List<Tile> row = new List<Tile>();
-            for (int j = 0; j < missionSchematic.tileHeight; j++)
+            actor.done = false;
+            actor.movementDone = false;
+        }
+    }
+
+    /// <summary>Convert movement tiles to a list of threat ordered tiles for AI calculations.</summary>
+    /// <param name="movementTiles">The list of tiles available.</param>
+    /// <returns>Returns an ordered list of tiles and their threat.</returns>
+    public List<ThreatTile> CalculateThreat(List<Vector2> movementTiles, Owner currentFaction)
+    {
+        List<ThreatTile> threatTiles = new List<ThreatTile>();
+
+        // Iterate through all the movement possibilities and assign data.
+        foreach (Vector2 movementTile in movementTiles)
+        {
+            ThreatTile threatTile = new ThreatTile();
+            threatTile.position = movementTile;
+            foreach (Actor actor in actors)
             {
-                // Find the mission tile that represents this tile.
-                MissionTile missionTile = null;
-                foreach (MissionTile mTile in missionSchematic.tiles)
+                if (actor.owner != currentFaction)
                 {
-                    if (mTile.position.x == i && mTile.position.y == j)
+                    // Use manhatten algorithm to determine threat
+                    threatTile.threat += Math.Abs(movementTile.x - actor.transform.position.x)
+                        + Math.Abs(movementTile.y - actor.transform.position.y);
+
+                    // Determine if the enemy is within attack range of a position.
+                    if (CanActorAttackPosition(actor, movementTile))
+                        threatTile.attackers++;
+                }
+            }
+            threatTiles.Add(threatTile);
+        }
+
+        // Order the list by lowest attackers then lowest threat.
+        // Unfortunately I need to create a new list for this and remove
+        // each entry from the old list.
+        List<ThreatTile> threatList = new List<ThreatTile>();
+        while (threatTiles.Count != 0)
+        {
+            int lowestIndex = 0;
+            ThreatTile lowest = null;
+            for (int index = 0; index < threatTiles.Count; ++index)
+            {
+                if (lowest == null)
+                    lowest = threatTiles[index];
+                if (threatTiles[index].attackers >= lowest.attackers)
+                {
+                    if (threatTiles[index].threat > lowest.threat)
                     {
-                        missionTile = mTile;
-                        break;
+                        lowest = threatTiles[index];
+                        lowestIndex = index;
                     }
                 }
-
-                // Basic tile information.
-                Tile tile = new GameObject("Tile_" + i + "_" + j).AddComponent<Tile>();
-                tile.transform.SetParent(transform);
-                tile.transform.position = new Vector2(i, j);
-
-                // Tile found in mission tile list. Construct it.
-                if (missionTile != null)
-                {
-                    tile.movementCost = missionTile.movementCost;
-                    tile.trueCollision = missionTile.trueCollision;
-                    tile.groundCollision = missionTile.groundCollision;
-
-                    foreach (MissionMaterial material in missionTile.materials)
-                    {
-                        if (material.layer == MissionMaterial.Layer.FLOOR)
-                            tile.SetFloorMaterial(material.materialId, material.frameId);
-                        if (material.layer == MissionMaterial.Layer.OBJECT)
-                            tile.SetObjectMaterial(material.materialId, material.frameId);
-                        if (material.layer == MissionMaterial.Layer.ROOF)
-                            tile.SetRoofMaterial(material.materialId, material.frameId);
-                    }
-                }
-                else
-                {
-                    // Basic floor tile without mission information.
-                    tile.groundCollision = true;
-                    tile.trueCollision = true;
-                    tile.SetFloorMaterial(0);
-                }
-
-                // Add the tile to the map.
-                row.Add(tile);
             }
 
-            // Add the row to the entire map.
-            tiles.Add(row);
+            threatList.Add(lowest);
+            threatTiles.RemoveAt(lowestIndex);
         }
+
+        return threatList;
+    }
+
+    /// <summary>Initialize the list of Tiles for a tilemap.</summary>
+    /// <param name="missionSchematic">The schematic that makes up a tilemap.</param>
+    public void Initialize(MissionSchematic missionSchematic, List<Unit> roster)
+    {
+        // Just incase, clear whatever tile and actors might be left.
+        tiles.Clear();
+        actors.Clear();
+
+        // Generate the tilemap.
+        AddTiles(missionSchematic.tileWidth, missionSchematic.tileHeight,
+            missionSchematic.tiles);
+        AddRoster(roster, missionSchematic.rosterSpawns);
+        AddEnemies(missionSchematic.enemies);
     }
 }

@@ -59,6 +59,7 @@ public class Actor : Mesh2D
                 animationName = "idle_" + GetFacingString();
                 break;
             case ActorAnimation.ATTACK:
+                animatingAttacking = true;
                 animationName = "attack_" + GetFacingString();
                 break;
             case ActorAnimation.DAMAGE:
@@ -219,7 +220,23 @@ public class Actor : Mesh2D
     public bool done
     {
         get { return _done; }
-        set { _done = value; }
+        set {
+            if (value)
+                mesh.SetColor(GetCurrentLayer(), Color.gray);
+            else
+                mesh.ResetColor(GetCurrentLayer());
+            _done = value;
+        }
+    }
+
+    /// <summary>
+    /// Whether the character has already completed their movement phase.
+    /// </summary>
+    private bool _movementDone = false;
+    public bool movementDone
+    {
+        get { return _movementDone; }
+        set { _movementDone = value; }
     }
 
     /// <summary>
@@ -270,6 +287,16 @@ public class Actor : Mesh2D
     {
         get { return _animatingDamage; }
         internal set { _animatingDamage = value; }
+    }
+
+    /// <summary>
+    /// Whether the actor is animating attacking.
+    /// </summary>
+    private bool _animatingAttacking = false;
+    public bool animatingAttacking
+    {
+        get { return _animatingAttacking; }
+        set { _animatingAttacking = value; }
     }
 
     /// <summary>
@@ -425,7 +452,9 @@ public class Actor : Mesh2D
             || animationName == "attack_south"
             || animationName == "attack_west")
         {
+            animatingAttacking = false;
             SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+            done = true;
         }
 
         // On death we destroy ourself.

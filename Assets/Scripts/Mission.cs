@@ -3,18 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Mission : MonoBehaviour
 {
-    public class ThreatTile
-    {
-        public Vector2 position = Vector2.zero;
-        public double threat = 0f;
-        public int attackers = 0;
-    }
+    /// <summary>The game object of the tileMap.</summary>
+    private GameObject tileMapObject = null;
 
     /// <summary>The entire map and list of units and enemies.</summary>
-    private GameObject tileMap = null;
+    private TileMap tileMap = null;
 
     /// <summary>The canvas for UI.</summary>
     private GameObject canvas = null;
@@ -24,9 +21,6 @@ public class Mission : MonoBehaviour
 
     /// <summary>Whether the mission is transitioning between factions.</summary>
     private bool transitioning = false;
-
-    /// <summary>The list of units in the mission.</summary>
-    private List<Actor> actors = new List<Actor>();
 
     /// <summary>Movement not yet done.</summary>
     private List<AStarVector> currentPathing = new List<AStarVector>();
@@ -60,65 +54,6 @@ public class Mission : MonoBehaviour
 
     /// <summary>Keeps track of if the mouse has been dragged.</summary>
     private bool mouseDrag = false;
-
-    /// <summary>Add loadout roster of actors to the map.</summary>
-    /// <param name="roster">The list of player controlled units.</param>
-    /// <param name="validSpawnPositions">The list of valid rost spawn locations.</param>
-    private void AddRoster(List<Unit> roster, List<Vector2> validSpawnPositions)
-    {
-        int spawnIndex = 0;
-
-        // Iterate through each member of the roster and add units.
-        foreach (Unit unit in roster)
-        {
-            // We can only spawn as many actors as available spawns.
-            if (spawnIndex >= validSpawnPositions.Count)
-                break;
-
-            // Create the new actor.
-            Vector2 position = validSpawnPositions[spawnIndex];
-            string objectName = "Actor_" + Owner.PLAYER1 + "_" + unit.name;
-            Actor actor = new GameObject(objectName).AddComponent<Actor>();
-            actor.transform.SetParent(transform);
-            actor.transform.position = position;
-            actor.unit = unit;
-            actor.owner = Owner.PLAYER1;
-            actor.health = unit.baseMaxHealth;
-            actor.healthBarColor = ActorHealthColor.GREEN;
-            actor.facing = ActorFacing.EAST;
-
-            // Add the actor to the mission.
-            actors.Add(actor);
-
-            // Increment the spawn location to prevent collision.
-            spawnIndex++;
-        }
-    }
-
-    /// <summary>Add enemy actors to the map.</summary>
-    /// <param name="missionEnemies">The list of enemies.</param>
-    private void AddEnemies(List<MissionEnemy> missionEnemies)
-    {
-        // For each enemy unit within the mission schematic, add a new Actor.
-        foreach (MissionEnemy enemy in missionEnemies)
-        {
-            // Create a new actor.
-            Unit unit = new Unit(enemy.name);
-            string objectName = "Actor_" + Owner.PLAYER2 + "_" + unit.name;
-            Actor actor = new GameObject(objectName).AddComponent<Actor>();
-            actor.transform.SetParent(transform);
-            actor.transform.position = enemy.position;
-            actor.unit = unit;
-            actor.owner = Owner.PLAYER2;
-            actor.health = unit.baseMaxHealth;
-            actor.strategy = enemy.strategy;
-            actor.healthBarColor = ActorHealthColor.RED;
-            actor.facing = ActorFacing.WEST;
-
-            // Add the actor to the mission.
-            actors.Add(actor);
-        }
-    }
 
     /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
     /// <param name="actor">The actor to move.</param>
@@ -163,6 +98,10 @@ public class Mission : MonoBehaviour
     private IEnumerator TransitionTurns()
     {
         transitioning = true;
+
+        // Add a small bit of wait to let the player process what
+        // happened in the turn.
+        yield return new WaitForSeconds(.75f);
 
         // Reset any dragging effects while transitioning.
         mouseDown = false;
@@ -266,20 +205,6 @@ public class Mission : MonoBehaviour
         return transitionTextImage;
     }
 
-    /// <summary>Returns whether a given faction exists on the battlefield.</summary>
-    /// <param name="faction">The faction to check.</param>
-    /// <returns>Returns whether the faction is still active.</returns>
-    private bool IsFactionActive(Owner faction)
-    {
-        foreach (Actor actor in actors)
-        {
-            if (actor.owner == faction)
-                return true;
-        }
-
-        return false;
-    }
-
     /// <summary>Get the player of the faction specified.</summary>
     /// <param name="currentFaction">The faction to check.</param>
     /// <returns>Returns the player of the faction.</returns>
@@ -346,34 +271,12 @@ public class Mission : MonoBehaviour
 
                 return false;
             }
-        } while (!IsFactionActive(currentFaction));
+        } while (!tileMap.IsFactionActive(currentFaction));
 
         // Reset all actors before initiating the next factions turn.
-        foreach (Actor actor in actors)
-        {
-            actor.done = false;
-        }
+        tileMap.ResetActorsDone();
 
         return true;
-    }
-
-    /// <summary>Get the actor at the given coordinate.</summary>
-    /// <param name="position">The coordinate to check.</param>
-    /// <returns>Returns the actor at the given coordinate if found or null if not.</returns>
-    private Actor GetActor(Vector2 position)
-    {
-        foreach (Actor actor in actors)
-        {
-            if (actor.transform.position.x == position.x
-                && actor.transform.position.y == position.y)
-            {
-                // This may be an enemies actor or a players actor.
-                // Display their current highlights.
-                return actor;
-            }
-        }
-
-        return null;
     }
 
     /// <summary>Get the selected actor from the position within Tile.</summary>
@@ -387,7 +290,7 @@ public class Mission : MonoBehaviour
 
         // Get the position of the tile selected and look for any actors currently
         // positioned on that tile.
-        return GetActor(tile.transform.position);
+        return tileMap.GetActor(tile.transform.position);
     }
 
     /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
@@ -419,7 +322,7 @@ public class Mission : MonoBehaviour
     private bool CheckIfDone()
     {
         // Iterate through all of the current players actors for their done state.
-        foreach (Actor actor in actors)
+        foreach (Actor actor in tileMap.actors)
         {
             // Do not move to transition screen before animations are finished.
             if (actor.moving || actor.animatingDamage || currentPathing.Count != 0)
@@ -448,19 +351,7 @@ public class Mission : MonoBehaviour
         // Check if the unit will be dead. Damage is truely dealt
         // after the damage animation is complete.
         if (attacked.health - damage <= 0)
-        {
-            // Find the actor within the list and remove it.
-            for (int index = 0; index < actors.Count; ++index)
-            {
-                if (actors[index] == attacked)
-                {
-                    // Object will destroy itself once it animates.
-                    // Remove reference to it.
-                    actors.RemoveAt(index);
-                    break;
-                }
-            }
-        }
+            tileMap.RemoveActor(attacked);
     }
 
     /// <summary>Check the update state to determine if an move and attack was issued.</summary>
@@ -478,10 +369,12 @@ public class Mission : MonoBehaviour
             // Unselect the attacked unit.
             actorToAttack = null;
 
-            // Issue the currently selected actor as finished for this turn.
-            currentlySelectedActor.done = true;
+            // Issue the currently selected actor as finished for this
+            // turn. On animation complete of the attack, the actor
+            // will be set to done.
+            //currentlySelectedActor.done = true;
             currentlySelectedActor = null;
-            RemoveAllHighlights();
+            tileMap.RemoveAllHighlights();
             return true;
         }
 
@@ -514,7 +407,9 @@ public class Mission : MonoBehaviour
                 if (actorToAttack != null)
                 {
                     // Check and see if we can stop here!
-                    Actor actor = GetActor(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
+                    Actor actor = tileMap.GetActor(new Vector2(
+                        currentlySelectedActor.transform.position.x,
+                        currentlySelectedActor.transform.position.y));
                     if (currentPathing.Count <= currentlySelectedActor.unit.baseMaxRange
                         && currentPathing.Count >= currentlySelectedActor.unit.baseMinRange
                         && actor != null)
@@ -581,8 +476,8 @@ public class Mission : MonoBehaviour
 
             // Clamp the camera position to the bounds of the tilemap.
             Camera.main.transform.position = new Vector3(
-                Mathf.Clamp(Camera.main.transform.position.x, 1, tileMap.GetComponent<TileMap>().width),
-                Mathf.Clamp(Camera.main.transform.position.y, 0, tileMap.GetComponent<TileMap>().height),
+                Mathf.Clamp(Camera.main.transform.position.x, 1, tileMap.width),
+                Mathf.Clamp(Camera.main.transform.position.y, 0, tileMap.height),
                 Camera.main.transform.position.z);
 
             // We handle the drag event.
@@ -592,57 +487,39 @@ public class Mission : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// Remove all highlights (movement/attack), indicators from map.
-    /// </summary>
-    private void RemoveAllHighlights()
+    /// <summary>Check the update state to determine an actor selection.</summary>
+    /// <param name="actor">The clicked actor (could be null)</param>
+    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
+    private bool ActorSelected(Actor actor)
     {
-        // Remove all movement/attack highlight effects over the tilemap.
-        tileMap.GetComponent<TileMap>().RemoveAllHighlights();
-
-        // Remove any attack indicator currently over an enemy.
-        foreach (Actor actor in actors)
+        if (currentlySelectedActor == null && actor != null)
         {
-            actor.attackIndicator = false;
+            currentlySelectedActor = actor;
+            return true;
         }
+        return false;
     }
 
     /// <summary>Display the highlights for the currently selected actor.</summary>
     private void DisplayHighlights()
     {
-        TileMap tileMapObject = tileMap.GetComponent<TileMap>();
-
+        // The currently selected actor can be either the owners or any
+        // other faction. We allow selecting non-owned units to see their
+        // movements/attacks to base decisions from.
         if (currentlySelectedActor != null
-            && currentFaction == currentlySelectedActor.owner
+            && !tileMap.displayingHighlights
             && !currentlySelectedActor.done)
         {
             // Display the actors movement and attack highlights.
-            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
-            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
-
-            // First display all attack tiles.
-            tileMapObject.HighlightTiles(attackTiles, TileHighlightColor.HIGHLIGHT_RED);
-
-            // Display all movement tiles OVER the attack tiles. This takes into account enemies on tiles.
-            tileMapObject.HighlightTiles(movementTiles, TileHighlightColor.HIGHLIGHT_BLUE);
-
-            // Adjust the highlighted tiles images.
-            tileMapObject.AdjustHighlightFrameIds();
-
-            // Add attack indicators over all attackable enemy actors.
-            foreach (Vector2 attackTile in attackTiles)
-            {
-                Actor actor = GetActor(attackTile);
-                if (actor != null && actor.owner != currentFaction)
-                    actor.attackIndicator = true;
-            }
+            tileMap.HighlightActor(currentlySelectedActor);
         }
-        else
+
+        // TODO: REMOVE ME WHEN ADDING END TURN BUTTON.
+        if (currentlySelectedActor != null
+            && Input.GetMouseButtonUp(1))
         {
-            // The actor is not owned by the current players. Display only the actors movement.
-            tileMapObject.HighlightTiles(
-                tileMapObject.GetMovementTiles(currentlySelectedActor, actors),
-                TileHighlightColor.HIGHLIGHT_BLUE);
+            currentlySelectedActor.done = true;
+            tileMap.RemoveAllHighlights();
         }
     }
 
@@ -652,11 +529,13 @@ public class Mission : MonoBehaviour
     /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool ShouldUnselectUnit(Actor actor, Tile tile)
     {
-        if (actor == null && tile != null)
+        if (currentlySelectedActor != null
+            && actor == null
+            && tile != null)
         {
             // Unselect the current actor and hide all highlights.
             currentlySelectedActor = null;
-            RemoveAllHighlights();
+            tileMap.RemoveAllHighlights();
             return true;
         }
 
@@ -670,7 +549,8 @@ public class Mission : MonoBehaviour
     private bool ShouldAttackUnit(Actor actor, Tile tile)
     {
         // Check if we selected another actor to attack.
-        if (!currentlySelectedActor.done
+        if (currentlySelectedActor != null
+            && !currentlySelectedActor.done
             && actor != null
             && currentlySelectedActor.owner == currentFaction
             && actor.owner != currentlySelectedActor.owner
@@ -678,8 +558,9 @@ public class Mission : MonoBehaviour
             && tile.attackHighlight)
         {
             // Find the nearest path to the unit you want to attack.
-            Astar pathing = new Astar(tileMap.GetComponent<TileMap>(),
-                currentlySelectedActor.transform.position, actor.transform.position, currentlySelectedActor.flying);
+            Astar pathing = new Astar(tileMap,
+                currentlySelectedActor.transform.position,
+                actor.transform.position, currentlySelectedActor.flying);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.
@@ -690,7 +571,7 @@ public class Mission : MonoBehaviour
             actorToAttack = actor;
 
             // Deselect our currently selected actor.
-            RemoveAllHighlights();
+            tileMap.RemoveAllHighlights();
             return true;
         }
 
@@ -704,13 +585,15 @@ public class Mission : MonoBehaviour
     private bool IssueMove(Actor actor, Tile tile)
     {
         // See if this was a simple movement click.
-        if (tile != null
+        if (currentlySelectedActor != null
+            && tile != null
             && tile.movementHighlight
             && actor == null)
         {
             // Find the nearest path to the tile selected.
-            Astar pathing = new Astar(tileMap.GetComponent<TileMap>(),
-                currentlySelectedActor.transform.position, tile.transform.position,
+            Astar pathing = new Astar(tileMap,
+                currentlySelectedActor.transform.position,
+                tile.transform.position,
                 currentlySelectedActor.flying);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
@@ -719,11 +602,12 @@ public class Mission : MonoBehaviour
                 currentPathing = pathing.result;
 
             // TODO: Show attack highlights only.
-            //tileMap.GetComponent<TileMap>().ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
+            //tileMap.ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
 
-            // For now issue the unit as done and remove highlights.
-            currentlySelectedActor.done = true;
-            RemoveAllHighlights();
+            // Movement is complete. Remove all current highlights until
+            // we reach our destination.
+            currentlySelectedActor.movementDone = true;
+            tileMap.RemoveAllHighlights();
             return true;
         }
         return false;
@@ -735,10 +619,29 @@ public class Mission : MonoBehaviour
     /// <returns>Returns whether any actor is moving.</returns>
     private bool IsAnyoneMoving()
     {
-        foreach (Actor actor in actors)
+        foreach (Actor actor in tileMap.actors)
         {
-            if (actor.moving || actor.animatingDamage)
+            if (actor.moving
+                || actor.animatingDamage
+                || actor.animatingAttacking)
                 return true;
+        }
+        return false;
+    }
+
+    /// <summary>If the AI should select the next actor.</summary>
+    /// <returns>Whether a new actor was selected.</returns>
+    private bool SelectingActor()
+    {
+        if (currentlySelectedActor == null
+            || (currentlySelectedActor != null
+                && currentlySelectedActor.done))
+        {
+            currentlySelectedActor = GetNextActor();
+
+            // TODO: Determine if we need to move the camera
+            // to the location of the selected unit.
+            return true;
         }
         return false;
     }
@@ -750,7 +653,7 @@ public class Mission : MonoBehaviour
         // Iterate through actors for all actors from the current players
         // turn and return the first available actor that hasn't already
         // moved.
-        foreach (Actor actor in actors)
+        foreach (Actor actor in tileMap.actors)
         {
             if (actor.owner == currentFaction
                 && !actor.done)
@@ -761,6 +664,31 @@ public class Mission : MonoBehaviour
 
         // No available actor left.
         return null;
+    }
+
+    /// <summary>Check if the computer should pass immediately.</summary>
+    /// <returns>Whether the computer passed.</returns>
+    private bool ShouldPass()
+    {
+        if (currentlySelectedActor != null
+            && currentlySelectedActor.strategy == ActorStrategy.NONE)
+        {
+            currentlySelectedActor.done = true;
+            tileMap.RemoveAllHighlights();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>Issue an attack from current tile.</summary>
+    /// <returns>Returns whether an attack from current range was issued.</returns>
+    private bool CanIssueAttackFromCurrentRange()
+    {
+        if (currentlySelectedActor != null)
+        {
+            return IssueAnAttackWithinRange(tileMap.GetAttackTiles(currentlySelectedActor));
+        }
+        return false;
     }
 
     /// <summary>
@@ -777,8 +705,8 @@ public class Mission : MonoBehaviour
     {
         foreach (Vector2 position in attackTiles)
         {
-            Actor actor = GetActor(position);
-            Tile tile = tileMap.GetComponent<TileMap>().tiles[(int)position.x][(int)position.y];
+            Actor actor = tileMap.GetActor(position);
+            Tile tile = tileMap.GetTile(position);
             if (actor != null
                 && actor.owner != currentFaction)
             {
@@ -790,122 +718,81 @@ public class Mission : MonoBehaviour
         return false;
     }
 
-    /// <summary>Return least threatening tile based on enemies position.</summary>
-    /// <param name="movementTiles">The list of available movement tiles.</param>
-    /// <returns>Returns the least threatening position.</returns>
-    private Vector2 GetLeastThreateningMovementTile(List<Vector2> movementTiles)
+    /// <summary>Check if we can execute an AI strategy.</summary>
+    /// <returns>Returns whether we took an action.</returns>
+    private bool CanExecuteStrategy()
     {
-        double leastThreat = 0;
-        Vector2 leastThreateningPosition = Vector2.zero;
-        foreach (Vector2 movementTile in movementTiles)
+        if (currentlySelectedActor != null
+            && !currentlySelectedActor.movementDone)
         {
-            double currentThreat = 0;
+            // By this point we've already checked for attacks within our range. Pass.
+            if (currentlySelectedActor.strategy == ActorStrategy.WAITS)
+                currentlySelectedActor.movementDone = true;
 
-            // Iterate through all the enemies and calculate their threat sum.
-            foreach (Actor actor in actors)
+            // Check if within our movement range we can issue an attack.
+            List<Vector2> movementTiles = tileMap.GetMovementTiles(currentlySelectedActor);
+            if (currentlySelectedActor.strategy != ActorStrategy.COWERS
+                && IssueAnAttackWithinRange(tileMap.GetAttackTiles(
+                    currentlySelectedActor, movementTiles)))
             {
-                if (actor.owner != currentFaction)
-                {
-                    // Use manhatten algorithm to determine threat
-                    currentThreat += Math.Abs(movementTile.x - actor.transform.position.x)
-                        + Math.Abs(movementTile.y - actor.transform.position.y);
-                }
+                return true;
             }
 
-            // Keep track of the best tile.
-            if (currentThreat > leastThreat)
-            {
-                leastThreat = currentThreat;
-                leastThreateningPosition = movementTile;
-            }
+            // Issue a move. Choose the tile that best suits our AI strategy.
+            Tile tile = GetBestMovementTileBasedOnStrategy(movementTiles);
+
+            // We're an archer or something that's boxed in/cannot move. Pass.
+            if (tile == null)
+                currentlySelectedActor.movementDone = true;
+
+            // Issue the movement.
+            IssueMove(null, tile);
+            return true;
         }
-
-        return leastThreateningPosition;
+        return false;
     }
 
-    /// <summary>Convert movement tiles to a list of threat ordered tiles for AI calculations.</summary>
-    /// <param name="movementTiles">The list of tiles available.</param>
-    /// <returns>Returns an ordered list of tiles and their threat.</returns>
-    private List<ThreatTile> CalculateThreat(List<Vector2> movementTiles)
+    /// <summary>Determine the best tile to move to based on AI strategy.</summary>
+    /// <param name="movementTiles">The list of movement tiles to choose from.</param>
+    /// <returns>The tile that best suits the AI's playstyle.</returns>
+    private Tile GetBestMovementTileBasedOnStrategy(List<Vector2> movementTiles)
     {
-        List<ThreatTile> threatTiles = new List<ThreatTile>();
+        // Convert a list of movement tiles to a list of potential movement
+        // tiles based on some threat/attacker calculations.
+        List<ThreatTile> possibilities = tileMap.CalculateThreat(movementTiles, currentFaction);
+        if (possibilities.Count == 0)
+            return null;
 
-        // Iterate through all the movement possibilities and assign data.
-        foreach (Vector2 movementTile in movementTiles)
+        // Get our selected movement tile based on the strategy applied.
+        if (currentlySelectedActor.strategy == ActorStrategy.CHARGE_IN)
         {
-            ThreatTile threatTile = new ThreatTile();
-            threatTile.position = movementTile;
-            foreach (Actor actor in actors)
-            {
-                if (actor.owner != currentFaction)
-                {
-                    // Use manhatten algorithm to determine threat
-                    threatTile.threat += Math.Abs(movementTile.x - actor.transform.position.x)
-                        + Math.Abs(movementTile.y - actor.transform.position.y);
-
-                    // Determine if the enemy is within attack range of a position.
-                    List<Vector2> enemyMovementTiles = tileMap.GetComponent<TileMap>().GetMovementTiles(actor, actors);
-                    List<Vector2> enemyAttackTiles = tileMap.GetComponent<TileMap>().GetAttackTiles(enemyMovementTiles, actor, actors);
-                    foreach (Vector2 enemyAttackTile in enemyMovementTiles)
-                    {
-                        if (movementTile.x == enemyAttackTile.x
-                            && movementTile.y == enemyAttackTile.y)
-                        {
-                            // Increment the amount of attackers for a location.
-                            threatTile.attackers++;
-                            break;
-                        }
-                    }
-                }
-            }
-            threatTiles.Add(threatTile);
+            // Choose the tile with the highest threat. Get close
+            // to the enemy.
+            possibilities.Reverse();
+            return tileMap.GetTile(possibilities[0].position);
         }
-
-        // Order the list by lowest attackers then lowest threat.
-        // Unfortunately I need to create a new list for this and remove
-        // each entry from the old list.
-        List<ThreatTile> threatList = new List<ThreatTile>();
-        while(threatTiles.Count != 0)
+        else if (currentlySelectedActor.strategy == ActorStrategy.COWERS)
         {
-            int lowestIndex = 0;
-            ThreatTile lowest = null;
-            for(int index = 0; index < threatTiles.Count; ++index)
-            {
-                if (lowest == null)
-                    lowest = threatTiles[index];
-                if (threatTiles[index].attackers >= lowest.attackers)
-                {
-                    if (threatTiles[index].threat > lowest.threat)
-                    {
-                        lowest = threatTiles[index];
-                        lowestIndex = index;
-                    }
-                }
-            }
-
-            threatList.Add(lowest);
-            threatTiles.RemoveAt(lowestIndex);
+            // Choose the tile that has the least threat and attackers always.
+            return tileMap.GetTile(possibilities[0].position);
         }
-
-        return threatList;
+        else if (currentlySelectedActor.strategy == ActorStrategy.CAUTIOUS)
+        {
+            // Choose a tile that is as close as possible without invoking
+            // as many attackers.
+            return tileMap.GetTile(possibilities[0].position);
+        }
+        else
+        {
+            // Choose a random tile to move to.
+            int value = Random.Range(0, possibilities.Count);
+            return tileMap.GetTile(possibilities[value].position);
+        }
     }
 
     /// <summary>Handle a human game loop frame.</summary>
     private void UpdateHuman()
     {
-        // If we are currently moving a unit.
-        if (ActorCurrentlyMoving())
-            return;
-
-        // If we've queued up an attack.
-        if (ActorCurrentlyAttacking())
-            return;
-
-        // Actors could still be moving by this point. Stop until they
-        // are done done.
-        if (IsAnyoneMoving())
-            return;
-
         // Figure out if we're clicking on an actor.
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
@@ -914,127 +801,55 @@ public class Mission : MonoBehaviour
         if (DragDetection())
             return;
 
-        // If we do not have an actor check the tile for an actor.
-        if (currentlySelectedActor == null
-            && actor != null)
-        {
-            // An actor was selected.
-            currentlySelectedActor = actor;
-            DisplayHighlights();
+        // Detect if an actor was selected (assuming no actor is selected
+        // currently).
+        if (ActorSelected(actor))
             return;
-        }
-        else if (currentlySelectedActor != null)
-        {
-            // While actor was selected, another actor was selected.
-            if (ShouldAttackUnit(actor, tile))
-                return;
 
-            // We clicked on a valid movement tile for the selected actor.
-            if (IssueMove(actor, tile))
-                return;
+        // Detect if we need to display highlights.
+        DisplayHighlights();
 
-            // We clicked off the highlights. Unselect.
-            ShouldUnselectUnit(actor, tile);
-        }
+        // While actor was selected, another actor was selected.
+        if (ShouldAttackUnit(actor, tile))
+            return;
+
+        // We clicked on a valid movement tile for the selected actor.
+        if (IssueMove(actor, tile))
+            return;
+
+        // We clicked off the highlights. Unselect.
+        if (ShouldUnselectUnit(actor, tile))
+            return;
     }
 
     /// <summary>Handle a computer game loop frame.</summary>
     private void UpdateComputer()
     {
-        // If we are currently moving a unit.
-        if (ActorCurrentlyMoving())
-            return;
-
-        // If we've queued up an attack.
-        if (ActorCurrentlyAttacking())
-            return;
-
-        // Actors could still be moving by this point. Stop until they
-        // are done done.
-        if (IsAnyoneMoving())
-            return;
-
         // Select the next actor.
-        currentlySelectedActor = GetNextActor();
-        if (currentlySelectedActor == null)
+        if (SelectingActor())
             return;
 
         // Display the highlights of the unit.
         DisplayHighlights();
 
-        // Calculate the list of attack tiles.
-        TileMap tileMapObject = tileMap.GetComponent<TileMap>();
+        // Check if we should do anything.
+        if (ShouldPass())
+            return;
 
-        // Do nothing
-        if (currentlySelectedActor.strategy == ActorStrategy.NONE)
+        // If we can attack from where we currently are, do it.
+        if (CanIssueAttackFromCurrentRange())
+            return;
+
+        // Issue a move based on the strategy if can.
+        if (CanExecuteStrategy())
+            return;
+
+        // A movement was issued and no one is withen attack range.
+        // Just pass.
+        if (currentlySelectedActor != null)
         {
-            // Sit there.
             currentlySelectedActor.done = true;
-            RemoveAllHighlights();
-        }
-        // Attack anything in site and move in!
-        else if (currentlySelectedActor.strategy == ActorStrategy.CHARGE_IN)
-        {
-            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
-            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
-
-            if (!IssueAnAttackWithinRange(attackTiles))
-            {
-                // Calculate worst possible move.
-                List<ThreatTile> possibilities = CalculateThreat(movementTiles);
-                possibilities.Reverse(); // Reverse the order to get worst move in front.
-                Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
-
-                // Issue a move as close as you can to an enemy without getting surrounded.
-                IssueMove(null, tile);
-            }
-        }
-        // Stand still and attack only those next to me.
-        else if (currentlySelectedActor.strategy == ActorStrategy.WAITS)
-        {
-            List<Vector2> movementTiles = new List<Vector2>();
-            movementTiles.Add(new Vector2(currentlySelectedActor.transform.position.x, currentlySelectedActor.transform.position.y));
-            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
-            if (!IssueAnAttackWithinRange(attackTiles))
-            {
-                currentlySelectedActor.done = true;
-                RemoveAllHighlights();
-            }
-        }
-        // Run away as far as possible. If cornered attack.
-        else if (currentlySelectedActor.strategy == ActorStrategy.COWERS)
-        {
-            Vector2 leastThreateningPosition = GetLeastThreateningMovementTile(
-                tileMapObject.GetMovementTiles(currentlySelectedActor, actors));
-
-            // Check if cornered and issue an attack there.
-            Tile tile = tileMapObject.tiles[(int)leastThreateningPosition.x][(int)leastThreateningPosition.y];
-            List<Vector2> movementTiles = new List<Vector2>();
-            movementTiles.Add(new Vector2(leastThreateningPosition.x, leastThreateningPosition.y));
-            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
-            if (!IssueAnAttackWithinRange(attackTiles))
-            {
-                IssueMove(null, tile);
-            }
-        }
-        // Move as close as can get with least threat. Make them come to you.
-        else if (currentlySelectedActor.strategy == ActorStrategy.CAUTIOUS)
-        {
-            List<Vector2> movementTiles = tileMapObject.GetMovementTiles(currentlySelectedActor, actors);
-            List<Vector2> attackTiles = tileMapObject.GetAttackTiles(movementTiles, currentlySelectedActor, actors);
-
-            // TODO: Ideally we would want to calculate threat first and attack
-            // from the best spot or against the highest value target or lowerest HP enemy.
-            if (!IssueAnAttackWithinRange(attackTiles))
-            {
-                // Calculate best move that is just out of the range of most
-                // attackers, and close enough to strike within the next round.
-                List<ThreatTile> possibilities = CalculateThreat(movementTiles);
-                Tile tile = tileMapObject.tiles[(int)possibilities[0].position.x][(int)possibilities[0].position.y];
-
-                // Issue a move as close as you can to an enemy without getting surrounded.
-                IssueMove(null, tile);
-            }
+            tileMap.RemoveAllHighlights();
         }
     }
 
@@ -1042,9 +857,9 @@ public class Mission : MonoBehaviour
     private void Awake()
     {
         // Create the TileMap object.
-        tileMap = new GameObject("TileMap");
-        tileMap.transform.SetParent(transform);
-        tileMap.AddComponent<TileMap>();
+        tileMapObject = new GameObject("TileMap");
+        tileMapObject.transform.SetParent(transform);
+        tileMap = tileMapObject.AddComponent<TileMap>();
 
         // Setup the Canvas for drawing UI elements.
         canvas = new GameObject("Canvas");
@@ -1077,18 +892,32 @@ public class Mission : MonoBehaviour
         if (transitioning)
             return;
 
-        if (IsFactionActive(currentFaction))
-        {
-            Player turn = GetTurn(currentFaction);
-            if (turn == Player.HUMAN)
-                UpdateHuman();
-            if (turn == Player.COMPUTER)
-                UpdateComputer();
+        // Check if the current faction exists on the battlefield.
+        if (!tileMap.IsFactionActive(currentFaction))
+            return;
 
-            // Check if there are no actors left to move;
-            if (CheckIfDone())
-                StartCoroutine(TransitionTurns());
-        }
+        // Check if there are no actors left to move;
+        if (CheckIfDone())
+            StartCoroutine(TransitionTurns());
+
+        // If we are currently moving a unit.
+        if (ActorCurrentlyMoving())
+            return;
+
+        // If we've queued up an attack.
+        if (ActorCurrentlyAttacking())
+            return;
+
+        // Actors could still be moving by this point.
+        // Stop until they are done done.
+        if (IsAnyoneMoving())
+            return;
+
+        Player turn = GetTurn(currentFaction);
+        if (turn == Player.HUMAN)
+            UpdateHuman();
+        if (turn == Player.COMPUTER)
+            UpdateComputer();
     }
 
     /// <summary>Initialize a mission.</summary>
@@ -1096,18 +925,9 @@ public class Mission : MonoBehaviour
     /// <param name="missionSchematic">The schematic that represents how to create this mission.</param>
     public void Initialize(List<Unit> roster, MissionSchematic missionSchematic)
     {
-        // Clear any previous map information.
-        actors.Clear();
-
         // Setup and draw the tilemap according to the mission.
-        tileMap.GetComponent<TileMap>().Initialize(missionSchematic);
-
-        // Add the players units.
-        AddRoster(roster, missionSchematic.rosterSpawns);
-
-        // Add the enemy units.
-        AddEnemies(missionSchematic.enemies);
-
+        tileMap.Initialize(missionSchematic, roster);
+        
         // Set the current player.
         currentFaction = missionSchematic.startingPlayer;
     }
