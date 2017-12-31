@@ -491,7 +491,7 @@ public class Mission : MonoBehaviour
             if (tile)
             {
                 Actor actor = tileMap.GetActor(tile.transform.position);
-                if (actor.owner == currentFaction && !actor.done)
+                if (actor != null && actor.owner == currentFaction && !actor.done)
                     draggedActor = tileMap.GetActor(tile.transform.position);
             }
         }
@@ -529,7 +529,8 @@ public class Mission : MonoBehaviour
 
                     // Display arrows
                     tileMap.ShowPath(draggedActor.transform.position,
-                        tile.transform.position, draggedActor.flying);
+                        tile.transform.position, currentFaction,
+                        draggedActor.flying);
                 }
             }
 
@@ -638,7 +639,8 @@ public class Mission : MonoBehaviour
             // Find the nearest path to the unit you want to attack.
             Astar pathing = new Astar(tileMap,
                 currentlySelectedActor.transform.position,
-                actor.transform.position, currentlySelectedActor.flying);
+                actor.transform.position, currentFaction,
+                currentlySelectedActor.flying);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.
@@ -672,15 +674,13 @@ public class Mission : MonoBehaviour
             Astar pathing = new Astar(tileMap,
                 currentlySelectedActor.transform.position,
                 tile.transform.position,
+                currentFaction,
                 currentlySelectedActor.flying);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.
             if (pathing.result.Count != 0)
                 currentPathing = pathing.result;
-
-            // TODO: Show attack highlights only.
-            //tileMap.ShowPath(currentlySelectedActor.transform.position, tile.transform.position);
 
             // Movement is complete. Remove all current highlights until
             // we reach our destination.

@@ -403,6 +403,26 @@ public class TileMap : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Whether the actor at this positon is an enemy unit.
+    /// </summary>
+    /// <param name="postion">The position to check.</param>
+    /// <param name="owner">The owner to check against.</param>
+    /// <returns>Returns whether the position has an enemy unit.</returns>
+    public bool IsEnemyActor(Vector2 postion, Owner owner)
+    {
+        if (!IsValidTile((int)postion.x, (int)postion.y))
+            return false;
+
+        // If no actor is there, no collision
+        Actor actor = GetActor(postion);
+        if (actor == null)
+            return false;
+
+        // Check against the owner.
+        return actor.owner != owner;
+    }
+
     /// <summary>Get the actor at the given coordinate.</summary>
     /// <param name="position">The coordinate to check.</param>
     /// <returns>Returns the actor at the given coordinate if found or null if not.</returns>
@@ -698,7 +718,7 @@ public class TileMap : MonoBehaviour
     /// <param name="toPosition">Where the arrow ends.</param>
     /// <param name="canFly">Whether pathing ignores ground collision.</param>
     public void ShowPath(Vector2 fromPosition, Vector2 toPosition,
-        bool canFly = false)
+        Owner owner = Owner.NONE, bool canFly = false)
     {
         // If we are pointing at ourself, ignore.
         if (fromPosition.x == toPosition.x && fromPosition.y == toPosition.y)
@@ -721,13 +741,18 @@ public class TileMap : MonoBehaviour
         // Determine if a red arrow should be displayed.
         TileArrowHighlightColor color = TileArrowHighlightColor.ARROWHIGHLIGHT_BLUE;
         Actor toActor = GetActor(fromPosition);
-        if (toActor != null && fromActor.owner != toActor.owner)
-            color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
-        if (tile.attackHighlight && !tile.movementHighlight)
+        if ((toActor != null && fromActor.owner != toActor.owner)
+            || tile.attackHighlight && !tile.movementHighlight)
+        {
             color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
 
+            // We don't care about enemy collision so much for attack drags.
+            // TODO: Discuss this.
+            owner = Owner.NONE;
+        }
+
         // Find the best path to the destination.
-        Astar pathing = new Astar(this, fromPosition, toPosition, canFly);
+        Astar pathing = new Astar(this, fromPosition, toPosition, owner, canFly);
 
         // Keep track of pathing for future cleanup.
         currentArrowPathing = pathing.result;

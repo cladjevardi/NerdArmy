@@ -171,7 +171,7 @@ public class Astar
     /// Returns list of up to 4 potential neighbors to process as candidates
     /// for pathing.
     /// </returns>
-    private AStarTile[] Successors(Vector2 position, TileMap tileMap, bool canFly = false)
+    private AStarTile[] Successors(Vector2 position, TileMap tileMap, Vector2 end, Owner owner = Owner.NONE, bool canFly = false)
     {
         int x = (int)position.x;
         int y = (int)position.y;
@@ -182,13 +182,21 @@ public class Astar
 
         int i = 0;
         AStarTile[] result = new AStarTile[4];
-        if (N < tileMap.height && (canFly ? !tileMap.tiles[x][N].trueCollision : !tileMap.tiles[x][N].groundCollision))
+        if (N < tileMap.height
+            && (canFly ? !tileMap.tiles[x][N].trueCollision : !tileMap.tiles[x][N].groundCollision)
+            && (owner == Owner.NONE ? true : (end.x == x && end.y == N) || !tileMap.IsEnemyActor(new Vector2(x, N), owner)))
             result[i++] = new AStarTile(new Vector2(x, N));
-        if (E < tileMap.width && (canFly ? !tileMap.tiles[E][y].trueCollision : !tileMap.tiles[E][y].groundCollision))
+        if (E < tileMap.width
+            && (canFly ? !tileMap.tiles[E][y].trueCollision : !tileMap.tiles[E][y].groundCollision)
+            && (owner == Owner.NONE ? true : (end.x == E && end.y == y) || !tileMap.IsEnemyActor(new Vector2(E, y), owner)))
             result[i++] = new AStarTile(new Vector2(E, y));
-        if (S > -1  && (canFly ? !tileMap.tiles[x][S].trueCollision : !tileMap.tiles[x][S].groundCollision))
+        if (S > -1 
+            && (canFly ? !tileMap.tiles[x][S].trueCollision : !tileMap.tiles[x][S].groundCollision)
+            && (owner == Owner.NONE ? true : (end.x == x && end.y == S) || !tileMap.IsEnemyActor(new Vector2(x, S), owner)))
             result[i++] = new AStarTile(new Vector2(x, S));
-        if (W > -1 && (canFly ? !tileMap.tiles[W][y].trueCollision : !tileMap.tiles[W][y].groundCollision))
+        if (W > -1
+            && (canFly ? !tileMap.tiles[W][y].trueCollision : !tileMap.tiles[W][y].groundCollision)
+            && (owner == Owner.NONE ? true : (end.x == W && end.y == y) || !tileMap.IsEnemyActor(new Vector2(W, y), owner)))
             result[i++] = new AStarTile(new Vector2(W, y));
         return result;
     }
@@ -349,7 +357,7 @@ public class Astar
     /// <param name="canFly">
     /// Whether or not the unit can ignore ground collision.
     /// </param>
-    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end, bool canFly = false)
+    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end, Owner owner = Owner.NONE, bool canFly = false)
     {
         // Create our destination tile.
         AStarTile end = new AStarTile(_end, GetIndex(_end, tileMap.width), 0, 0);
@@ -390,7 +398,7 @@ public class Astar
             {
                 // We are not the destination tile.
                 // Get the list of the current tiles neighbors.
-                AStarTile[] next = Successors(current.position, tileMap, canFly);
+                AStarTile[] next = Successors(current.position, tileMap, _end, owner, canFly);
 
                 // Iterate through the neighbors found.
                 for (int i = 0; i < next.Length; ++i)
