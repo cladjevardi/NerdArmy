@@ -94,15 +94,17 @@ public class MissionDatabase
         foreach (XmlNode materialNode in materialsNode)
         {
             MissionMaterial material = new MissionMaterial();
-            string layer = materialNode.SelectSingleNode(".//layer").InnerText;
+            string layer = materialNode.Attributes["layer"].InnerText;
             if (layer == "floor")
                 material.layer = MissionMaterial.Layer.FLOOR;
             if (layer == "object")
                 material.layer = MissionMaterial.Layer.OBJECT;
             if (layer == "roof")
                 material.layer = MissionMaterial.Layer.ROOF;
-            material.materialId = int.Parse(materialNode.SelectSingleNode(".//material_id").InnerText);
-            material.frameId = int.Parse(materialNode.SelectSingleNode(".//frame_id").InnerText);
+            material.materialId = int.Parse(materialNode.Attributes["id"].InnerText);
+            material.frameId = int.Parse(materialNode.Attributes["frame_id"].InnerText);
+            material.cellWidth = int.Parse(materialNode.Attributes["cell_width"].InnerText);
+            material.cellHeight = int.Parse(materialNode.Attributes["cell_height"].InnerText);
             materials.Add(material);
         }
 
@@ -225,6 +227,12 @@ public class MissionMaterial
 
     /// <summary>The initial frame id from the tile material to use.</summary>
     public int frameId;
+
+    /// <summary>The width of a cell inside a sprite map.</summary>
+    public int cellWidth = 0;
+
+    /// <summary>The height of a cell inside a sprite map.</summary>
+    public int cellHeight = 0;
 
     /// <summary>
     /// The animation associated with this tile. Used for tiles like

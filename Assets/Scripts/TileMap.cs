@@ -41,6 +41,9 @@ public class TileMap : MonoBehaviour
         internal set { _displayingHighlights = value; }
     }
 
+    /// <summary>The pathing arrow being displayed.</summary>
+    private List<AStarVector> currentArrowPathing = new List<AStarVector>();
+
     /// <summary>Populate the list of tiles of the tilemap.</summary>
     /// <param name="width">The width of the tilemap.</param>
     /// <param name="height">The height of the tilemap</param>
@@ -87,11 +90,31 @@ public class TileMap : MonoBehaviour
                     foreach (MissionMaterial material in missionTile.materials)
                     {
                         if (material.layer == MissionMaterial.Layer.FLOOR)
-                            tile.SetFloorMaterial(material.materialId, material.frameId);
+                            tile.SetFloorMaterial(material.materialId, material.frameId, material.cellWidth, material.cellHeight);
                         if (material.layer == MissionMaterial.Layer.OBJECT)
-                            tile.SetObjectMaterial(material.materialId, material.frameId);
+                            tile.SetObjectMaterial(material.materialId, material.frameId, material.cellWidth, material.cellHeight);
                         if (material.layer == MissionMaterial.Layer.ROOF)
-                            tile.SetRoofMaterial(material.materialId, material.frameId);
+                            tile.SetRoofMaterial(material.materialId, material.frameId, material.cellWidth, material.cellHeight);
+
+                        // Determine with tile for grid to use.
+                        if (i == 0 && j == 0)
+                            tile.SetGridMaterial(0, 0);
+                        else if (i == 0 && j != height - 1)
+                            tile.SetGridMaterial(0, 3);
+                        else if (i == 0 && j == height - 1)
+                            tile.SetGridMaterial(0, 6);
+                        else if (i != width - 1 && j == 0)
+                            tile.SetGridMaterial(0, 1);
+                        else if (i != width - 1 && j != height - 1)
+                            tile.SetGridMaterial(0, 4);
+                        else if (i != width - 1 && j == height - 1)
+                            tile.SetGridMaterial(0, 7);
+                        else if (i == width - 1 && j == 0)
+                            tile.SetGridMaterial(0, 2);
+                        else if (i == width - 1 && j != height - 1)
+                            tile.SetGridMaterial(0, 5);
+                        else if (i == width - 1 && j == height - 1)
+                            tile.SetGridMaterial(0, 8);
                     }
                 }
                 else
@@ -677,17 +700,56 @@ public class TileMap : MonoBehaviour
     public void ShowPath(Vector2 fromPosition, Vector2 toPosition,
         bool canFly = false)
     {
+        // If we are pointing at ourself, ignore.
+        if (fromPosition.x == toPosition.x && fromPosition.y == toPosition.y)
+            return;
+
+        // If we are not facing a valid movement tile or attack tile, ignore.
+        Tile tile = GetTile(toPosition);
+        if (tile == null)
+            return;
+
+        // Clear any previous path drawn currently.
+        if (currentArrowPathing.Count >= 1)
+            ClearCurrentPath();
+
+        // If we don't have an actor in our from position, ignore. Shouldn't happen.
+        Actor fromActor = GetActor(fromPosition);
+        if (fromActor == null || (!tile.movementHighlight && !tile.attackHighlight))
+            return;
+
+        // Determine if a red arrow should be displayed.
+        TileArrowHighlightColor color = TileArrowHighlightColor.ARROWHIGHLIGHT_BLUE;
+        Actor toActor = GetActor(fromPosition);
+        if (toActor != null && fromActor.owner != toActor.owner)
+            color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
+        if (tile.attackHighlight && !tile.movementHighlight)
+            color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
+
+        // Find the best path to the destination.
         Astar pathing = new Astar(this, fromPosition, toPosition, canFly);
 
+        // Keep track of pathing for future cleanup.
+        currentArrowPathing = pathing.result;
+
+        // Begin drawing arrow.
         bool start = true;
         foreach (AStarVector vector in pathing.result)
         {
-            Tile tile = GetTile(vector.position);
+            Tile aStarTile = GetTile(vector.position);
             string mask = BitConverter.ToString(vector.mask, 0);
-            Debug.Log("ShowPath mask: " + mask);
-
-            tile.SetGridArrowMask(start, mask);
+            aStarTile.SetGridArrowMask(start, mask, color);
             start = false;
+        }
+    }
+
+    /// <summary>Clear any arrow pathing being displayed currently.</summary>
+    public void ClearCurrentPath()
+    {
+        foreach (AStarVector vector in currentArrowPathing)
+        {
+            Tile tile = GetTile(vector.position);
+            tile.RemoveArrowHighlightMaterial();
         }
     }
 

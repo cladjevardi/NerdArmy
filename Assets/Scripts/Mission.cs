@@ -31,6 +31,9 @@ public class Mission : MonoBehaviour
     /// <summary>The actor to attack after applying movement.</summary>
     private Actor actorToAttack = null;
 
+    /// <summary>The actor that is being dragged.</summary>
+    private Actor draggedActor = null;
+
     /// <summary>Current players turn.</summary>
     private Owner currentFaction = Owner.NONE;
 
@@ -293,25 +296,41 @@ public class Mission : MonoBehaviour
         return tileMap.GetActor(tile.transform.position);
     }
 
+    /// <summary>
+    /// Convert world mouse coordinate to Tile.
+    /// </summary>
+    /// <param name="mousePosition">The world coordinate to lookup.</param>
+    /// <returns>
+    /// Returns the Tile at the given location. Returns null if
+    /// no Tile is found.
+    /// </returns>
+    private Tile WorldCoordinateToTile(Vector3 mousePos)
+    {
+        // Convert to vector2.
+        Vector2 mousePosition = new Vector2(mousePos.x, mousePos.y);
+
+        // Initiate a raycast for any colliders.
+        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+
+        // Return the Tile of the collider found.
+        // TODO: Check if the UI buttons have been pressed.
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.collider.name);
+            return hit.collider.gameObject.GetComponent<Tile>();
+        }
+
+        return null;
+    }
+
     /// <summary>Get the Tile selected when clicking on the tilemap.</summary>
     /// <returns>Returns the Tile selected.</returns>
     private Tile GetTileSelected()
     {
         if (Input.GetMouseButtonUp(0) && !mouseDrag)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-
-            // Initiate a raycast for any colliders.
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-
-            // Return the Tile of the collider found.
-            // TODO: Check if the UI buttons have been pressed.
-            if (hit.collider != null)
-            {
-                Debug.Log(hit.collider.name);
-                return hit.collider.gameObject.GetComponent<Tile>();
-            }
+            return WorldCoordinateToTile(
+                Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
 
         return null;
@@ -447,6 +466,7 @@ public class Mission : MonoBehaviour
             mouseDown = false;
             mouseDrag = false;
             mouseOriginalPosition = Vector3.zero;
+            tileMap.ClearCurrentPath();
             return false;
         }
         // Check if the mouse button was pressed this frame.
@@ -465,23 +485,81 @@ public class Mission : MonoBehaviour
             && Vector3.Distance(mousePosition, mouseOriginalPosition) >= .15f)
         {
             mouseDrag = true;
+
+            // Detect if the mouse is being dragged from an actor we can move.
+            Tile tile = WorldCoordinateToTile(mouseOriginalPosition);
+            if (tile)
+            {
+                Actor actor = tileMap.GetActor(tile.transform.position);
+                if (actor.owner == currentFaction && !actor.done)
+                    draggedActor = tileMap.GetActor(tile.transform.position);
+            }
         }
 
         // Perform dragging of camera position.
         if (mouseDrag)
         {
-            // Find the difference of the mouse movement and adjust the camera.
-            Vector3 difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
-            Camera.main.transform.position = mouseOriginalPosition - difference;
+            if (draggedActor == null)
+            {
+                // Find the difference of the mouse movement and adjust the camera.
+                Vector3 difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
+                Camera.main.transform.position = mouseOriginalPosition - difference;
 
-            // Clamp the camera position to the bounds of the tilemap.
-            Camera.main.transform.position = new Vector3(
-                Mathf.Clamp(Camera.main.transform.position.x, 1, tileMap.width),
-                Mathf.Clamp(Camera.main.transform.position.y, 0, tileMap.height),
-                Camera.main.transform.position.z);
+                // Clamp the camera position to the bounds of the tilemap.
+                Camera.main.transform.position = new Vector3(
+                    Mathf.Clamp(Camera.main.transform.position.x, 1, tileMap.width),
+                    Mathf.Clamp(Camera.main.transform.position.y, 0, tileMap.height),
+                    Camera.main.transform.position.z);
+            }
+            else
+            {
+                // Handle screen movement when hovering over edge of the
+                // visible play area.
+                Tile tile = WorldCoordinateToTile(mousePosition);
+                if (tile != null)
+                {
+                    // This auto-selects the dragged actor as the
+                    // current actor.
+                    if (currentlySelectedActor != draggedActor)
+                    {
+                        tileMap.RemoveAllHighlights();
+                        currentlySelectedActor = draggedActor;
+                        DisplayHighlights();
+                    }
+
+                    // Display arrows
+                    tileMap.ShowPath(draggedActor.transform.position,
+                        tile.transform.position, draggedActor.flying);
+                }
+            }
 
             // We handle the drag event.
             return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Determine if we need to issue the mouse up event at the end of a
+    /// dragged actor.
+    /// </summary>
+    /// <param name="tile">The new tile that was mouse released on.</param>
+    /// <param name="actor">The new actor that was mouse released on.</param>
+    private bool DraggedActorMouseUp(ref Tile tile, ref Actor actor)
+    {
+        // We let go of the mouse button with a dragged actor, reassign tile.
+        if (draggedActor != null)
+        {
+            tile = GetTileSelected();
+            actor = GetSelectedActor(tile);
+            draggedActor = null;
+
+            // Ignore the mouse up when mouse up is issued on an attack tile
+            // with no one on it. We do not want to issue a deselect of the
+            // currently selected unit.
+            if (!tile.movementHighlight && actor == null)
+                return true;
         }
 
         return false;
@@ -799,6 +877,11 @@ public class Mission : MonoBehaviour
 
         // Detect mouse drag inputs. Move the camera.
         if (DragDetection())
+            return;
+
+        // We let go of the mouse button with a dragged actor.
+        // This will reassign tile and actor underneath.
+        if (DraggedActorMouseUp(ref tile, ref actor))
             return;
 
         // Detect if an actor was selected (assuming no actor is selected

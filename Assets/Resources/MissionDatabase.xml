@@ -7,11 +7,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>0</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="0">
@@ -19,11 +15,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="0">
@@ -31,11 +23,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="0">
@@ -43,11 +31,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="0">
@@ -55,11 +39,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="0">
@@ -67,11 +47,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="0">
@@ -79,11 +55,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="0">
@@ -91,11 +63,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>2</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -104,11 +72,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="1">
@@ -116,11 +80,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="1">
@@ -128,11 +88,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="1">
@@ -140,11 +96,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="1">
@@ -152,11 +104,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="1">
@@ -164,11 +112,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="1">
@@ -176,11 +120,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="1">
@@ -188,11 +128,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -201,11 +137,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>6</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="2">
@@ -213,11 +145,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="2">
@@ -225,11 +153,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="2">
@@ -237,11 +161,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="2">
@@ -249,11 +169,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="2">
@@ -261,11 +177,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="2">
@@ -273,11 +185,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="2">
@@ -285,11 +193,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>8</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
       </tiles>
@@ -308,11 +212,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>0</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="0">
@@ -320,11 +220,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="0">
@@ -332,11 +228,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="0">
@@ -344,11 +236,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="0">
@@ -356,11 +244,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="0">
@@ -368,11 +252,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="0">
@@ -380,11 +260,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="0">
@@ -392,11 +268,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>2</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -405,11 +277,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="1">
@@ -417,11 +285,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="1">
@@ -429,11 +293,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="1">
@@ -441,11 +301,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="1">
@@ -453,11 +309,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="23" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="1">
@@ -465,11 +317,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="1">
@@ -477,11 +325,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="1">
@@ -489,11 +333,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -502,11 +342,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="2">
@@ -514,11 +350,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="2">
@@ -526,11 +358,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="2">
@@ -538,11 +366,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="2">
@@ -550,11 +374,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="2">
@@ -562,11 +382,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="2">
@@ -574,11 +390,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="2">
@@ -586,11 +398,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -599,11 +407,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>6</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="3">
@@ -611,11 +415,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="3">
@@ -623,11 +423,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="3">
@@ -635,11 +431,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="3">
@@ -647,11 +439,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="3">
@@ -659,11 +447,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="3">
@@ -671,11 +455,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="3">
@@ -683,11 +463,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>8</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
       </tiles>
@@ -707,11 +483,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>0</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="0">
@@ -719,11 +491,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="0">
@@ -731,11 +499,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="0">
@@ -743,11 +507,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="0">
@@ -755,11 +515,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="0">
@@ -767,11 +523,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="0">
@@ -779,11 +531,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="0">
@@ -791,11 +539,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>2</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -804,11 +548,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="1">
@@ -816,11 +556,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="1">
@@ -828,11 +564,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="1">
@@ -840,11 +572,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="1">
@@ -852,11 +580,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="23" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="1">
@@ -864,11 +588,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="1">
@@ -876,11 +596,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="1">
@@ -888,11 +604,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -901,11 +613,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="2">
@@ -913,11 +621,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="2">
@@ -925,11 +629,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="2">
@@ -937,11 +637,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="2">
@@ -949,11 +645,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="2">
@@ -961,11 +653,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="2">
@@ -973,11 +661,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="2">
@@ -985,11 +669,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -998,11 +678,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>6</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="3">
@@ -1010,11 +686,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="3">
@@ -1022,11 +694,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="3">
@@ -1034,11 +702,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="3">
@@ -1046,11 +710,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="3">
@@ -1058,11 +718,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="3">
@@ -1070,11 +726,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="3">
@@ -1082,11 +734,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>8</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
       </tiles>
@@ -1106,11 +754,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>0</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="0">
@@ -1118,11 +762,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="0">
@@ -1130,11 +770,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="0">
@@ -1142,11 +778,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="0">
@@ -1154,11 +786,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="0">
@@ -1166,11 +794,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="0">
@@ -1178,11 +802,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>1</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="0">
@@ -1190,11 +810,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>2</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -1203,11 +819,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="1">
@@ -1215,11 +827,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="1">
@@ -1227,11 +835,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="1">
@@ -1239,11 +843,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="23" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="1">
@@ -1251,11 +851,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="1">
@@ -1263,11 +859,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="1">
@@ -1275,11 +867,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="1">
@@ -1287,11 +875,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -1300,11 +884,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="2">
@@ -1312,11 +892,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="2">
@@ -1324,11 +900,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="2">
@@ -1336,11 +908,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="2">
@@ -1348,11 +916,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="2">
@@ -1360,11 +924,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="2">
@@ -1372,11 +932,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="2">
@@ -1384,11 +940,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -1397,11 +949,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="3">
@@ -1409,11 +957,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="3">
@@ -1421,11 +965,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="3">
@@ -1433,11 +973,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="3">
@@ -1445,11 +981,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="23" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="3">
@@ -1457,11 +989,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="3">
@@ -1469,11 +997,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="3">
@@ -1481,11 +1005,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -1494,11 +1014,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>3</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="4">
@@ -1506,11 +1022,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="4">
@@ -1518,11 +1030,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="4">
@@ -1530,11 +1038,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="4">
@@ -1542,11 +1046,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="4">
@@ -1554,11 +1054,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="4">
@@ -1566,11 +1062,7 @@
           <ground_collision>false</ground_collision>
           <true_collision>false</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>4</frame_id>
-            </material>
+            <material id="1" frame_id="24" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="4">
@@ -1578,11 +1070,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>5</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
 
@@ -1591,11 +1079,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>6</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="1" y="5">
@@ -1603,11 +1087,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="2" y="5">
@@ -1615,11 +1095,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="3" y="5">
@@ -1627,11 +1103,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="4" y="5">
@@ -1639,11 +1111,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="5" y="5">
@@ -1651,11 +1119,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="6" y="5">
@@ -1663,11 +1127,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>7</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
         <tile x="7" y="5">
@@ -1675,11 +1135,7 @@
           <ground_collision>true</ground_collision>
           <true_collision>true</true_collision>
           <materials>
-            <material>
-              <layer>floor</layer>
-              <material_id>0</material_id>
-              <frame_id>8</frame_id>
-            </material>
+            <material id="1" frame_id="15" cell_width="32" cell_height="32" layer="floor"/>
           </materials>
         </tile>
       </tiles>

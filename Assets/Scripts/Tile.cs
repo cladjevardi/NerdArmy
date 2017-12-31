@@ -9,7 +9,15 @@ public enum TileHighlightColor
     HIGHLIGHT_BLUE,
     HIGHLIGHT_RED,
     HIGHLIGHT_GREEN,
+    HIGHLIGHT_PURPLE,
     HIGHLIGHT_COUNT,
+}
+
+public enum TileArrowHighlightColor
+{
+    ARROWHIGHLIGHT_NONE = -1,
+    ARROWHIGHLIGHT_BLUE = 0, // The id for the blue highlight
+    ARROWHIGHLIGHT_RED = 1, // The id for the red highlight
 }
 
 public class Tile : Mesh2D
@@ -30,9 +38,9 @@ public class Tile : Mesh2D
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
     /// <param name="frameId">The sprite index to display inside the material.</param>
-    public void SetFloorMaterial(int tileId, int frameId = 0)
+    public void SetFloorMaterial(int tileId, int frameId = 0, int cellWidth = -1, int cellHeight = -1)
     {
-        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, 128, 128, frameId, null);
+        SetMaterial(Mesh2DLayer.LAYER_FLOOR, tileId, MaterialType.TILE, cellWidth, cellHeight, frameId, null);
     }
 
     /// <summary>
@@ -42,9 +50,9 @@ public class Tile : Mesh2D
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
     /// <param name="frameId">The sprite index to display inside the material.</param>
-    public void SetObjectMaterial(int tileId, int frameId = 0)
+    public void SetObjectMaterial(int tileId, int frameId = 0, int cellWidth = -1, int cellHeight = -1)
     {
-        SetMaterial(Mesh2DLayer.LAYER_OBJECT, tileId, MaterialType.TILE, 128, 128, frameId, null);
+        SetMaterial(Mesh2DLayer.LAYER_OBJECT, tileId, MaterialType.TILE, cellWidth, cellHeight, frameId, null);
     }
 
     /// <summary>
@@ -54,12 +62,12 @@ public class Tile : Mesh2D
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
     /// <param name="frameId">The sprite index to display inside the material.</param>
-    public void SetRoofMaterial(int tileId, int frameId = 0)
+    public void SetRoofMaterial(int tileId, int frameId = 0, int cellWidth = -1, int cellHeight = -1)
     {
         // If the acting faction can see under this roof tile.
         mesh.SetColor(Mesh2DLayer.LAYER_ROOF, 
             new Color(1.0f, 1.0f, 1.0f, _canSeeUnder ? 0.2f : 1.0f));
-        SetMaterial(Mesh2DLayer.LAYER_ROOF, tileId, MaterialType.TILE, 128, 128, frameId, null);
+        SetMaterial(Mesh2DLayer.LAYER_ROOF, tileId, MaterialType.TILE, cellWidth, cellHeight, frameId, null);
     }
 
     /// <summary>
@@ -91,7 +99,25 @@ public class Tile : Mesh2D
     /// <param name="frameId">The frame id inside the effect tile to use.</param>
     public void SetGridMaterial(int tileId, int frameId = 0)
     {
-        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.EFFECT, 128, 128, frameId, null);
+        SetMaterial(Mesh2DLayer.LAYER_GRID, tileId, MaterialType.TILE, 128, 128, frameId, null);
+    }
+
+    /// <summary>
+    /// Set the material for the arrow highlight effect.
+    /// </summary>
+    /// <param name="tileId">The effect tile id to use.</param>
+    /// <param name="frameId">The frame id inside the effect tile to use.</param>
+    public void SetArrowHighlightMaterial(int tileId, int frameId = 0)
+    {
+        SetMaterial(Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS, tileId, MaterialType.EFFECT, 128, 128, frameId, null);
+    }
+
+    /// <summary>
+    /// Clear the arrow highlight effect.
+    /// </summary>
+    public void RemoveArrowHighlightMaterial()
+    {
+        RemoveLayer(Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS);
     }
 
     /// <summary>
@@ -101,45 +127,46 @@ public class Tile : Mesh2D
     /// Whether to draw the beginning of the path or the end of the path image.
     /// </param>
     /// <param name="mask">The arrow image mask to convert to a frame id.</param>
-    public void SetGridArrowMask(bool start, string mask)
+    public void SetGridArrowMask(bool start, string mask,
+        TileArrowHighlightColor color = TileArrowHighlightColor.ARROWHIGHLIGHT_BLUE)
     {
         if (start)
         {
             // Use the arrow begin frame over the arrow point.
             if (mask == "01-00-00-00")
-                SetGridMaterial(0, 5);
+                SetArrowHighlightMaterial((int)color, 5);
             if (mask == "00-01-00-00")
-                SetGridMaterial(0, 4);
+                SetArrowHighlightMaterial((int)color, 4);
             if (mask == "00-00-01-00")
-                SetGridMaterial(0, 7);
+                SetArrowHighlightMaterial((int)color, 7);
             if (mask == "00-00-00-01")
-                SetGridMaterial(0, 6);
+                SetArrowHighlightMaterial((int)color, 6);
         }
         else
         {
             // Draw the direction based arrow sprites.
             if (mask == "01-00-00-00")
-                SetGridMaterial(0, 9);
+                SetArrowHighlightMaterial((int)color, 9);
             if (mask == "00-01-00-00")
-                SetGridMaterial(0, 8);
+                SetArrowHighlightMaterial((int)color, 8);
             if (mask == "00-00-01-00")
-                SetGridMaterial(0, 11);
+                SetArrowHighlightMaterial((int)color, 11);
             if (mask == "00-00-00-01")
-                SetGridMaterial(0, 10);
+                SetArrowHighlightMaterial((int)color, 10);
         }
                 
         if (mask == "01-01-00-00")
-            SetGridMaterial(0, 2);
+            SetArrowHighlightMaterial((int)color, 2);
         if (mask == "01-00-01-00")
-            SetGridMaterial(0, 19);
+            SetArrowHighlightMaterial((int)color, 19);
         if (mask == "01-00-00-01")
-            SetGridMaterial(0, 1);
+            SetArrowHighlightMaterial((int)color, 1);
         if (mask == "00-01-01-00")
-            SetGridMaterial(0, 3);
+            SetArrowHighlightMaterial((int)color, 3);
         if (mask == "00-01-00-01")
-            SetGridMaterial(0, 18);
+            SetArrowHighlightMaterial((int)color, 18);
         if (mask == "00-00-01-01")
-            SetGridMaterial(0, 0);
+            SetArrowHighlightMaterial((int)color, 0);
     }
 
     /// <summary>
