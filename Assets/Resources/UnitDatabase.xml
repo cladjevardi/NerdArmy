@@ -88,6 +88,8 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
+    <abilities>burrow</abilities>
+    <passives></passives>
     <material id="5" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -127,6 +129,8 @@
     <base_range>2</base_range>
     <base_movement>1</base_movement>
     <base_armor>0</base_armor>
+    <abilities></abilities>
+    <passives></passives>
     <material id="6" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -166,6 +170,8 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
+    <abilities>flying</abilities>
+    <passives></passives>
     <material id="7" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -205,6 +211,8 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>1</base_armor>
+    <abilities></abilities>
+    <passives></passives>
     <material id="8" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>5</north_sequence>
@@ -244,6 +252,8 @@
     <base_range>1</base_range>
     <base_movement>4</base_movement>
     <base_armor>0</base_armor>
+    <abilities></abilities>
+    <passives></passives>
     <material id="9" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>
@@ -283,6 +293,8 @@
     <base_range>1</base_range>
     <base_movement>2</base_movement>
     <base_armor>0</base_armor>
+    <abilities></abilities>
+    <passives></passives>
     <material id="10" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>0</north_sequence>

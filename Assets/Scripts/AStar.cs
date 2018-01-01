@@ -47,6 +47,16 @@ public class AStarVector
         get { return _direction; }
         set { _direction = value; }
     }
+
+    /// <summary>
+    /// The tile to stop if attacking.
+    /// </summary>
+    private bool _withinRange = false;
+    public bool withinRange
+    {
+        get { return _withinRange; }
+        set { _withinRange = value; }
+    }
 }
 
 public class Astar
@@ -131,6 +141,16 @@ public class Astar
             set { _parent = value; }
         }
 
+        /// <summary>
+        /// Keep track of if we are within (ignore collision) range.
+        /// </summary>
+        private bool _withinRange = false;
+        public bool withinRange
+        {
+            get { return _withinRange; }
+            set { _withinRange = value; }
+        }
+
         /// <summary>Constructor for an AStartTile.</summary>
         /// <param name="position">The index position of the tile.</param>
         public AStarTile(Vector2 position)
@@ -154,6 +174,41 @@ public class Astar
     }
 
     /// <summary>
+    /// Whether or not a tile should count as traversable
+    /// </summary>
+    /// <param name="position">Position to check.</param>
+    /// <param name="tileMap">The tilemap of tiles.</param>
+    /// <param name="end">The end position</param>
+    /// <param name="owner">The owner to check collision against.</param>
+    /// <param name="canFly">Wether we should ignore ground collision.</param>
+    /// <returns>Returns whether we should add this tile as a successor.</returns>
+    private bool ShouldAdd(Vector2 position, TileMap tileMap,
+        bool withinRange, Owner owner = Owner.NONE, bool canFly = false)
+    {
+        // Check if out of bounds.
+        if (!(position.x >= 0 && position.x < tileMap.width
+            && position.y >= 0 && position.y < tileMap.height))
+            return false;
+
+        Tile tile = tileMap.GetTile(position);
+
+        // Check against ground or true collision based on situation.
+        if (canFly || withinRange ? tile.trueCollision : tile.groundCollision)
+            return false;
+
+        // Beyond this point we only check for enemy actors. Exit
+        // early if we know we can.
+        if (owner == Owner.NONE || withinRange)
+            return true;
+
+        // Check if the owner can navigate through/to this tile.
+        if (tileMap.IsEnemyActor(position, owner))
+            return false;
+        
+        return true;
+    }
+
+    /// <summary>
     /// Get a list of open neighbor tiles from a given position. By open the
     /// tile must have ground collision for ground units or air collision for
     /// air units.
@@ -171,33 +226,26 @@ public class Astar
     /// Returns list of up to 4 potential neighbors to process as candidates
     /// for pathing.
     /// </returns>
-    private AStarTile[] Successors(Vector2 position, TileMap tileMap, Vector2 end, Owner owner = Owner.NONE, bool canFly = false)
+    private AStarTile[] Successors(Vector2 position, TileMap tileMap,
+        bool withinRange, Owner owner = Owner.NONE, bool canFly = false)
     {
         int x = (int)position.x;
         int y = (int)position.y;
-        int N = y + 1;
-        int S = y - 1;
-        int E = x + 1;
-        int W = x - 1;
+        Vector2 north = new Vector2(x, y + 1);
+        Vector2 east = new Vector2(x + 1, y);
+        Vector2 south = new Vector2(x, y - 1);
+        Vector2 west = new Vector2(x - 1, y);
 
         int i = 0;
         AStarTile[] result = new AStarTile[4];
-        if (N < tileMap.height
-            && (canFly ? !tileMap.tiles[x][N].trueCollision : !tileMap.tiles[x][N].groundCollision)
-            && (owner == Owner.NONE ? true : (end.x == x && end.y == N) || !tileMap.IsEnemyActor(new Vector2(x, N), owner)))
-            result[i++] = new AStarTile(new Vector2(x, N));
-        if (E < tileMap.width
-            && (canFly ? !tileMap.tiles[E][y].trueCollision : !tileMap.tiles[E][y].groundCollision)
-            && (owner == Owner.NONE ? true : (end.x == E && end.y == y) || !tileMap.IsEnemyActor(new Vector2(E, y), owner)))
-            result[i++] = new AStarTile(new Vector2(E, y));
-        if (S > -1 
-            && (canFly ? !tileMap.tiles[x][S].trueCollision : !tileMap.tiles[x][S].groundCollision)
-            && (owner == Owner.NONE ? true : (end.x == x && end.y == S) || !tileMap.IsEnemyActor(new Vector2(x, S), owner)))
-            result[i++] = new AStarTile(new Vector2(x, S));
-        if (W > -1
-            && (canFly ? !tileMap.tiles[W][y].trueCollision : !tileMap.tiles[W][y].groundCollision)
-            && (owner == Owner.NONE ? true : (end.x == W && end.y == y) || !tileMap.IsEnemyActor(new Vector2(W, y), owner)))
-            result[i++] = new AStarTile(new Vector2(W, y));
+        if (ShouldAdd(north, tileMap, withinRange, owner, canFly))
+            result[i++] = new AStarTile(north);
+        if (ShouldAdd(east, tileMap, withinRange, owner, canFly))
+            result[i++] = new AStarTile(east);
+        if (ShouldAdd(south, tileMap, withinRange, owner, canFly))
+            result[i++] = new AStarTile(south);
+        if (ShouldAdd(west, tileMap, withinRange, owner, canFly))
+            result[i++] = new AStarTile(west);
         return result;
     }
 
@@ -283,6 +331,7 @@ public class Astar
     {
         AStarVector aStarVector = new AStarVector();
         aStarVector.position = current.position;
+        aStarVector.withinRange = current.withinRange;
 
         // Zero out the position mask and direction.
         aStarVector.direction = AStarDirection.NONE;
@@ -357,10 +406,14 @@ public class Astar
     /// <param name="canFly">
     /// Whether or not the unit can ignore ground collision.
     /// </param>
-    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end, Owner owner = Owner.NONE, bool canFly = false)
+    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end)
     {
         // Create our destination tile.
         AStarTile end = new AStarTile(_end, GetIndex(_end, tileMap.width), 0, 0);
+
+        // Check if this pathing request to attack an actor.
+        Actor startActor = tileMap.GetActor(_start);
+        Actor endActor = tileMap.GetActor(_end);
 
         // Keep track of all tiles that need to be traversed.
         List<AStarTile> open = new List<AStarTile>();
@@ -370,6 +423,12 @@ public class Astar
 
         // Start the algorithm off by placing in the start position.
         open.Add(new AStarTile(_start, GetIndex(_start, tileMap.width), 0.0f, 0.0f));
+
+        // Assign within range value based on unit range.
+        open[0].withinRange = (startActor != null
+            && endActor != null
+            && (int)Manhattan(open[0], end) <= startActor.unit.baseMaxRange
+            && (int)Manhattan(open[0], end) >= startActor.unit.baseMinRange);
 
         // As long as we still have tiles to check for the destination, continue.
         while (open.Count > 0)
@@ -393,12 +452,24 @@ public class Astar
             AStarTile current = open[min];
             open.RemoveAt(min);
 
-            // Check if we are the destination tile.
+            // Check distance of destination tile and if this is a move/attack.
+            int distance = (int)Manhattan(current, end);
+
+            // Assign within range value based on unit range.
+            current.withinRange = (startActor != null
+                && endActor != null
+                && distance <= startActor.unit.baseMaxRange
+                && distance >= startActor.unit.baseMinRange);
+
+            // Check if we are the destination tile OR within attack range.
             if (current.index != end.index)
             {
                 // We are not the destination tile.
                 // Get the list of the current tiles neighbors.
-                AStarTile[] next = Successors(current.position, tileMap, _end, owner, canFly);
+                AStarTile[] next = Successors(current.position, tileMap,
+                    current.withinRange,
+                    startActor ? startActor.owner : Owner.NONE,
+                    startActor ? startActor.flying : false);
 
                 // Iterate through the neighbors found.
                 for (int i = 0; i < next.Length; ++i)

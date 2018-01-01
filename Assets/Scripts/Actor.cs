@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>The list of unit animations.</summary>
@@ -47,32 +48,30 @@ public enum ActorStrategy
 /// </summary>
 public class Actor : Mesh2D
 {
-    /// <summary>Set the actor animation.</summary>
-    /// <param name="ActorAnimation">The animation to play.</param>
-    public void SetAnimation(ActorAnimation animation)
+    private string GetAnimationName(ActorAnimation animation, ActorFacing actorFacing)
     {
         // Get the string animation name.
         string animationName = "";
         switch (animation)
         {
             case ActorAnimation.IDLE:
-                animationName = "idle_" + GetFacingString();
+                animationName = "idle_" + GetFacingString(actorFacing);
                 break;
             case ActorAnimation.ATTACK:
                 animatingAttacking = true;
-                animationName = "attack_" + GetFacingString();
+                animationName = "attack_" + GetFacingString(actorFacing);
                 break;
             case ActorAnimation.DAMAGE:
-                animationName = "damage_" + GetFacingString();
+                animationName = "damage_" + GetFacingString(actorFacing);
                 break;
             case ActorAnimation.DEATH:
-                animationName = "death_" + GetFacingString();
+                animationName = "death_" + GetFacingString(actorFacing);
                 break;
             case ActorAnimation.WALKING:
-                animationName = "walking_" + GetFacingString();
+                animationName = "walking_" + GetFacingString(actorFacing);
                 break;
             case ActorAnimation.VICTORY:
-                animationName = "victory_" + GetFacingString();
+                animationName = "victory_" + GetFacingString(actorFacing);
                 break;
 
             // Not implemente
@@ -81,6 +80,15 @@ public class Actor : Mesh2D
                     "Invalid actor animation specified", "animation");
         }
 
+        return animationName;
+    }
+
+    /// <summary>Set the actor animation.</summary>
+    /// <param name="ActorAnimation">The animation to play.</param>
+    public void SetAnimation(ActorAnimation animation)
+    {
+        // Get the string animation name.
+        string animationName = GetAnimationName(animation, facing);
         Debug.Log("Actor: " + name + " Animation Started: " + animationName);
         SetAnimation(GetCurrentLayer(), animationName);
     }
@@ -93,6 +101,18 @@ public class Actor : Mesh2D
     {
         // Calculate the health % for damage 
         StartCoroutine(SmoothHealth(health, health - damage));
+    }
+
+    /// <summary>
+    /// Get the frame sequence of a units animation.
+    /// </summary>
+    /// <param name="animation">The animation frame sequence to request.</param>
+    /// <param name="actorFacing">The directional based frame sequence.</param>
+    /// <returns>Returns the frame sequence for an animation and direction.</returns>
+    public List<int> GetFrameSequence(ActorAnimation animation, ActorFacing actorFacing)
+    {
+        string animationName = GetAnimationName(animation, actorFacing);
+        return mesh.GetMaterial(GetCurrentLayer()).GetFrameSequence(animationName);
     }
 
     /// <summary>Internal facing value to handle flips.</summary>
@@ -118,9 +138,9 @@ public class Actor : Mesh2D
     /// <returns>
     /// Returns the string of the direction the actor is facing.
     /// </returns>
-    private string GetFacingString()
+    private string GetFacingString(ActorFacing actorFacing)
     {
-        switch (facing)
+        switch (actorFacing)
         {
             case ActorFacing.NORTH:
                 return "north";
@@ -435,7 +455,7 @@ public class Actor : Mesh2D
             || animationName == "damage_south"
             || animationName == "damage_west")
         {
-            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString(facing));
         }
 
         if (animationName == "victory_north"
@@ -443,7 +463,7 @@ public class Actor : Mesh2D
             || animationName == "victory_south"
             || animationName == "victory_west")
         {
-            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString(facing));
         }
 
         // On completion of an attack set the animation back to idle.
@@ -453,7 +473,7 @@ public class Actor : Mesh2D
             || animationName == "attack_west")
         {
             animatingAttacking = false;
-            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString());
+            SetAnimation(GetCurrentLayer(), "idle_" + GetFacingString(facing));
             done = true;
         }
 

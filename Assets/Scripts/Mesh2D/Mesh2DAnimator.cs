@@ -317,6 +317,18 @@ public class Mesh2DAnimator
         return -1;
     }
 
+    public List<int> GetFrameSequence(string name)
+    {
+        // Find the animation in the current list of animations.
+        foreach (Mesh2DAnimation animation in animations)
+        {
+            if (animation.name == name)
+                return animation.frameSequence;
+        }
+
+        return new List<int>();
+    }
+
     /// <summary>
     /// This should be called every frame to handle animation properly.
     /// </summary>

@@ -152,7 +152,7 @@ public class Mesh2DMaterial
     private int _frameId = 0;
     public int frameId
     {
-        get { return _frameId; }
+        get { return _animator.IsValid() ? _animator.GetCurrentFrame() : _frameId; }
         set { _frameId = value; }
     }
 
@@ -191,8 +191,7 @@ public class Mesh2DMaterial
     /// <returns></returns>
     public Vector2[] uv()
     {
-        int frameIdentifier = _animator.IsValid() ?
-            _animator.GetCurrentFrame() : _frameId;
+        int frameIdentifier = frameId;
 
         // Get the material of the current id/type.
         Material material = GetMaterial();
@@ -355,6 +354,16 @@ public class Mesh2DMaterial
         // Play the current animation if set.
         if (playImmediately)
             _animator.PlayAnimation();
+    }
+
+    /// <summary>
+    /// Get the frame sequence from an animation.
+    /// </summary>
+    /// <param name="name">The name of the animation.</param>
+    /// <returns>Returns the frame sequence for an animation.</returns>
+    public List<int> GetFrameSequence(string name)
+    {
+        return _animator.GetFrameSequence(name);
     }
 
     /// <summary>Play the currently set animation.</summary>

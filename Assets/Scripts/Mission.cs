@@ -62,7 +62,7 @@ public class Mission : MonoBehaviour
     /// <param name="actor">The actor to move.</param>
     /// <param name="end">The end position for the mesh to move towards.</param>
     /// <returns>Coruitine.</returns>
-    private IEnumerator SmoothMovement(Actor actor, Vector3 end)
+    private IEnumerator SmoothMovement(Actor actor, Vector3 end, bool withinRange)
     {
         Debug.LogFormat("Moving to {0}", end.ToString());
 
@@ -89,6 +89,10 @@ public class Mission : MonoBehaviour
         // If this is the last movement. Set to idle.
         if (currentPathing.Count == 0)
             actor.SetAnimation(ActorAnimation.IDLE);
+
+        // Determing if we should stop early because we are within range.
+        if (withinRange)
+            currentPathing.Clear();
 
         // Tell everyone that moving is complete.
         actor.moving = false;
@@ -422,26 +426,9 @@ public class Mission : MonoBehaviour
                     currentlySelectedActor.SetAnimation(ActorAnimation.WALKING);
                 }
 
-                // If this is a movement and attack, see if we can just stop here and attack.
-                if (actorToAttack != null)
-                {
-                    // Check and see if we can stop here!
-                    Actor actor = tileMap.GetActor(new Vector2(
-                        currentlySelectedActor.transform.position.x,
-                        currentlySelectedActor.transform.position.y));
-                    if (currentPathing.Count <= currentlySelectedActor.unit.baseMaxRange
-                        && currentPathing.Count >= currentlySelectedActor.unit.baseMinRange
-                        && actor != null)
-                    {
-                        // Stop all movement and go strait to attacking.
-                        currentPathing.Clear();
-                        return false;
-                    }
-                }
-
                 // Apply that smooth movement.
-                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position));
-
+                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position, currentPathing[0].withinRange));
+                
                 // After were done moving remove the first entry.
                 currentPathing.RemoveAt(0);
             }
@@ -639,9 +626,7 @@ public class Mission : MonoBehaviour
             // Find the nearest path to the unit you want to attack.
             Astar pathing = new Astar(tileMap,
                 currentlySelectedActor.transform.position,
-                actor.transform.position, currentFaction,
-                currentlySelectedActor.flying);
-            pathing.result.RemoveAt(0); // Ignore first entry.
+                actor.transform.position);
 
             // Track our movement that needs to be applied.
             if (pathing.result.Count != 0)
@@ -673,9 +658,7 @@ public class Mission : MonoBehaviour
             // Find the nearest path to the tile selected.
             Astar pathing = new Astar(tileMap,
                 currentlySelectedActor.transform.position,
-                tile.transform.position,
-                currentFaction,
-                currentlySelectedActor.flying);
+                tile.transform.position);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.

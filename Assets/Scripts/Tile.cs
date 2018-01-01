@@ -34,6 +34,20 @@ public class Tile : Mesh2D
     }
 
     /// <summary>
+    /// Set an opaque unit image where the unit will stop to attack when
+    /// displaying pathing information.
+    /// </summary>
+    /// <param name="unitId">The unit material id from GameManager.</param>
+    /// <param name="frameId">The frame id to display.</param>
+    /// <param name="cellWidth">The width of a cell within the sprite map.</param>
+    /// <param name="cellHeight">The height of a cell within the sprite map.</param>
+    public void SetUnitMaterial(int unitId, int frameId, int cellWidth = -1, int cellHeight = -1)
+    {
+        SetMaterial(Mesh2DLayer.LAYER_UNITS, unitId, MaterialType.UNIT, cellWidth, cellHeight, frameId, null);
+        mesh.SetColor(Mesh2DLayer.LAYER_UNITS, new Color(1f, 1f, 1f, .25f));
+    }
+
+    /// <summary>
     /// Set the material of the the floor tile that renders below all other tiles.
     /// </summary>
     /// <param name="tileId">The GameManager tile identifier of the material.</param>
@@ -118,6 +132,14 @@ public class Tile : Mesh2D
     public void RemoveArrowHighlightMaterial()
     {
         RemoveLayer(Mesh2DLayer.LAYER_ARROW_HIGHLIGHTS);
+    }
+
+    /// <summary>
+    /// Remove any alpha unit display.
+    /// </summary>
+    public void RemoveUnitMaterial()
+    {
+        RemoveLayer(Mesh2DLayer.LAYER_UNITS);
     }
 
     /// <summary>

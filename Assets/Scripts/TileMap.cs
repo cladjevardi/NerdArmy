@@ -387,13 +387,20 @@ public class TileMap : MonoBehaviour
     /// </summary>
     /// <param name="actor">The actor to check.</param>
     /// <param name="position">The position to check against.</param>
+    /// <param name="allowMovement">Check only current position or allow movement.</param>
     /// <returns>
     /// Returns whether the actor is within attack range of a given position.
     /// </returns>
-    private bool CanActorAttackPosition(Actor actor, Vector2 position)
+    public bool CanActorAttackPosition(Actor actor, Vector2 position, bool allowMovement = true)
     {
+        // Determine if we should account the Actors movement.
+        List<Vector2> movementTiles = new List<Vector2>();
+        if (allowMovement)
+            movementTiles = GetMovementTiles(actor);
+        else
+            movementTiles.Add(actor.transform.position);
+
         // Determine if the enemy is within attack range of a position.
-        List<Vector2> movementTiles = GetMovementTiles(actor);
         List<Vector2> attackTiles = GetAttackTiles(actor, movementTiles);
         foreach (Vector2 attackTile in attackTiles)
         {
@@ -598,7 +605,6 @@ public class TileMap : MonoBehaviour
             // Start off with what we know for sure we should check.
             toCheck.Add(validMovement);
 
-            bool shouldIgnoreGround = actor.flying;
             while (minRange + maxRange >= 0)
             {
                 // The next group of tiles to check.
@@ -618,13 +624,13 @@ public class TileMap : MonoBehaviour
 
                     // Check if we should add any given direction to the next
                     // potential list of tiles.
-                    if (ShouldAdd(north, visited, Owner.NONE, actors, shouldIgnoreGround))
+                    if (ShouldAdd(north, visited, Owner.NONE, actors, true))
                         newToCheck.Add(north);
-                    if (ShouldAdd(east, visited, Owner.NONE, actors, shouldIgnoreGround))
+                    if (ShouldAdd(east, visited, Owner.NONE, actors, true))
                         newToCheck.Add(east);
-                    if (ShouldAdd(south, visited, Owner.NONE, actors, shouldIgnoreGround))
+                    if (ShouldAdd(south, visited, Owner.NONE, actors, true))
                         newToCheck.Add(south);
-                    if (ShouldAdd(west, visited, Owner.NONE, actors, shouldIgnoreGround))
+                    if (ShouldAdd(west, visited, Owner.NONE, actors, true))
                         newToCheck.Add(west);
                 }
 
@@ -720,6 +726,10 @@ public class TileMap : MonoBehaviour
     public void ShowPath(Vector2 fromPosition, Vector2 toPosition,
         Owner owner = Owner.NONE, bool canFly = false)
     {
+        // Clear any previous path drawn currently.
+        if (currentArrowPathing.Count >= 1)
+            ClearCurrentPath();
+
         // If we are pointing at ourself, ignore.
         if (fromPosition.x == toPosition.x && fromPosition.y == toPosition.y)
             return;
@@ -728,10 +738,6 @@ public class TileMap : MonoBehaviour
         Tile tile = GetTile(toPosition);
         if (tile == null)
             return;
-
-        // Clear any previous path drawn currently.
-        if (currentArrowPathing.Count >= 1)
-            ClearCurrentPath();
 
         // If we don't have an actor in our from position, ignore. Shouldn't happen.
         Actor fromActor = GetActor(fromPosition);
@@ -745,26 +751,51 @@ public class TileMap : MonoBehaviour
             || tile.attackHighlight && !tile.movementHighlight)
         {
             color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
-
-            // We don't care about enemy collision so much for attack drags.
-            // TODO: Discuss this.
-            owner = Owner.NONE;
         }
 
         // Find the best path to the destination.
-        Astar pathing = new Astar(this, fromPosition, toPosition, owner, canFly);
+        Astar pathing = new Astar(this, fromPosition, toPosition);
 
         // Keep track of pathing for future cleanup.
         currentArrowPathing = pathing.result;
 
         // Begin drawing arrow.
         bool start = true;
+        bool displayedWithinRange = false;
         foreach (AStarVector vector in pathing.result)
         {
             Tile aStarTile = GetTile(vector.position);
             string mask = BitConverter.ToString(vector.mask, 0);
             aStarTile.SetGridArrowMask(start, mask, color);
             start = false;
+
+            // First instance we find that we're within range
+            // display a opaque unit that represents where the
+            // unit will stop when attacking.
+            Actor aStarActor = GetActor(vector.position);
+            if (vector.withinRange && !displayedWithinRange
+                && aStarActor == null)
+            {
+                // Ignore drawing unit over self.
+                if (fromActor != aStarActor)
+                {
+                    ActorFacing facing = ActorFacing.NORTH;
+                    if (vector.direction == AStarDirection.NORTH)
+                        facing = ActorFacing.NORTH;
+                    if (vector.direction == AStarDirection.EAST)
+                        facing = ActorFacing.EAST;
+                    if (vector.direction == AStarDirection.SOUTH)
+                        facing = ActorFacing.SOUTH;
+                    if (vector.direction == AStarDirection.WEST)
+                        facing = ActorFacing.WEST;
+                    List<int> frameSequence = fromActor.GetFrameSequence(
+                        ActorAnimation.IDLE, facing);
+                    aStarTile.SetUnitMaterial(fromActor.unit.materialId,
+                        frameSequence[0], fromActor.unit.cellWidth,
+                        fromActor.unit.cellHeight);
+                }
+                displayedWithinRange = true;
+            }
         }
     }
 
@@ -775,6 +806,7 @@ public class TileMap : MonoBehaviour
         {
             Tile tile = GetTile(vector.position);
             tile.RemoveArrowHighlightMaterial();
+            tile.RemoveUnitMaterial();
         }
     }
 

@@ -33,6 +33,9 @@ public class UnitDatabase
             unitSchematic.baseMovement = GetIntList(unitNode.SelectSingleNode(".//base_movement").InnerText);
             unitSchematic.baseArmor = int.Parse(unitNode.SelectSingleNode(".//base_armor").InnerText);
 
+            List<string> abilities = GetStringList(unitNode.SelectSingleNode(".//abilities").InnerText);
+            List<string> passives = GetStringList(unitNode.SelectSingleNode(".//passives").InnerText);
+
             // Fill in the range information.
             List<string> values = GetStringList(unitNode.SelectSingleNode(".//base_range").InnerText);
             foreach (var value in values)
