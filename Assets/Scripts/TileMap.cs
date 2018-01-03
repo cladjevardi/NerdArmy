@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-public class ThreatTile
+public class TileInfo
 {
     public Vector2 position = Vector2.zero;
     public double threat = 0f;
     public int attackers = 0;
+    public int distance = 0;
 }
 
 public class TileMap : MonoBehaviour
@@ -383,6 +384,115 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
+    /// Render an opaque image of an actors idle frame at a given position.
+    /// Used primarily for indicating where an actor might end up when
+    /// issuing a hovered action.
+    /// </summary>
+    /// <param name="position">The position of the unit.</param>
+    /// <param name="actor">The actor to render on the tile.</param>
+    /// <param name="facing">The direction of the actor.</param>
+    private void SetTileUnitMaterial(Vector2 position, Actor actor, ActorFacing facing)
+    {
+        // Get the first frame of the units idle animation.
+        int idleFrame = actor.GetFrameSequence(ActorAnimation.IDLE, facing)[0];
+
+        Tile tile = GetTile(position);
+        if (tile != null)
+        {
+            // Draw an opaque outline of this actor at this tile.
+            tile.SetUnitMaterial(actor.unit.materialId,
+                idleFrame, actor.unit.cellWidth,
+                actor.unit.cellHeight);
+        }
+    }
+
+    /// <summary>Convert from direction to facing.</summary>
+    /// <param name="direction">The direction to convert.</param>
+    /// <returns>Returns the facing equivilent.</returns>
+    private ActorFacing ConvertAstarDirectionToActorFacing(AStarDirection direction)
+    {
+        ActorFacing facing = ActorFacing.NORTH;
+        if (direction == AStarDirection.NORTH)
+            facing = ActorFacing.NORTH;
+        if (direction == AStarDirection.EAST)
+            facing = ActorFacing.EAST;
+        if (direction == AStarDirection.SOUTH)
+            facing = ActorFacing.SOUTH;
+        if (direction == AStarDirection.WEST)
+            facing = ActorFacing.WEST;
+        return facing;
+    }
+
+    /// <summary>
+    /// Calculate fuzzy pathing from two points.
+    /// </summary>
+    /// <param name="fromPosition">The starting coordinate.</param>
+    /// <param name="toPosition">The ending coordinate.</param>
+    /// <returns>Returns best pathing.</returns>
+    public List<AStarVector> GetBestPath(Vector2 fromPosition, Vector2 toPosition, ref Vector2 closestPosition)
+    {
+        // Get the owner to ignore.
+        Owner owner = GetActor(fromPosition).owner;
+
+        // Calculate the best path to the destination.
+        closestPosition = toPosition;
+        GetClosestEndTile(fromPosition, toPosition, ref closestPosition);
+        Debug.LogFormat("Closest end selected {0}.", closestPosition.ToString());
+
+        // Find the best path to the destination.
+        Astar pathing1 = new Astar(this, fromPosition, closestPosition, owner);
+        // Always ignore collision and enemy actors for attacks.
+        Astar pathing2 = new Astar(this, closestPosition, toPosition,
+            Owner.NONE, true);
+
+        // There is no good location within range.
+        if (pathing1.result.Count == 0)
+        {
+            Debug.LogFormat("Best move to {0} from {1} failed.",
+                fromPosition.ToString(), closestPosition.ToString());
+            return new List<AStarVector>();
+        }
+
+        // Closest position equals destination. No need to stitch
+        // Just send the first result.
+        if (closestPosition.x == toPosition.x
+            && closestPosition.y == toPosition.y)
+        {
+            Debug.LogFormat("Closest position and to position match {0}.",
+                closestPosition.ToString());
+            return pathing1.result;
+        }
+        
+        // Stitch the 2 pathings together.
+        byte[] newMask = pathing2.result[0].mask;
+        if (pathing1.result[pathing1.result.Count - 1].mask[0] == 0x1)
+            newMask[0] = 0x1;
+        if (pathing1.result[pathing1.result.Count - 1].mask[1] == 0x1)
+            newMask[1] = 0x1;
+        if (pathing1.result[pathing1.result.Count - 1].mask[2] == 0x1)
+            newMask[2] = 0x1;
+        if (pathing1.result[pathing1.result.Count - 1].mask[3] == 0x1)
+            newMask[3] = 0x1;
+
+        // TODO: Remove the need for this.
+        foreach (AStarVector astar in pathing1.result)
+            astar.withinRange = false;
+        foreach (AStarVector astar in pathing2.result)
+            astar.withinRange = false;
+
+        // Assign the new combined pathing and remove duplicate entry.
+        pathing1.result[pathing1.result.Count - 1].mask = newMask;
+        pathing1.result[pathing1.result.Count - 1].withinRange = true;
+        pathing2.result.RemoveAt(0);
+
+        // Combine the pathing into a giant result.
+        List<AStarVector> result = new List<AStarVector>();
+        result.AddRange(pathing1.result);
+        result.AddRange(pathing2.result);
+        return result;
+    }
+
+    /// <summary>
     /// Determine if an actor can attack a given position.
     /// </summary>
     /// <param name="actor">The actor to check.</param>
@@ -513,6 +623,9 @@ public class TileMap : MonoBehaviour
     {
         int movement = actor.unit.baseMovement;
 
+        List<Vector2> movementTiles = new List<Vector2>();
+        movementTiles.Add(actor.transform.position);
+
         List<Vector2> visited = new List<Vector2>();
         List<Vector2> toCheck = new List<Vector2>();
 
@@ -553,41 +666,34 @@ public class TileMap : MonoBehaviour
             movement--;
         }
 
-        foreach (Actor unit in actors)
+        // Iterate through visited and only add movement tiles
+        // that aren't occupied currently by other actors.
+        foreach (Vector2 coordinate in visited)
         {
-            // Remove all actor locations from the visitor list.
-            for (int index = 0; index != visited.Count; ++index)
-            {
-                if (unit.transform.position.x == visited[index].x
-                    && unit.transform.position.y == visited[index].y)
-                {
-                    visited.RemoveAt(index);
-                    break;
-                }
-            }
+            if (GetActor(coordinate) == null)
+                movementTiles.Add(coordinate);
         }
 
-        // Always add myself to the end list.
-        visited.Add(new Vector2(actor.transform.position.x, actor.transform.position.y));
-
-        return visited;
+        return movementTiles;
     }
 
-    /// <summary>
-    /// Get the list of tiles that the actor can issue an attack on.
-    /// </summary>
-    /// <param name="validMovementTiles">The list of movement tiles to check.</param>
-    /// <param name="actor">The current actor to get the list of attack tiles for.</param>
-    /// <param name="actors">The full list of actors on the board.</param>
-    /// <returns></returns>
-    public List<Vector2> GetAttackTiles(Actor actor, List<Vector2> validMovementTiles = null)
+    /// <summary>Get the full list of attackable tiles</summary>
+    /// <param name="position">The position of self.</param>
+    /// <param name="baseMinRange">The min range to calculate.</param>
+    /// <param name="baseMaxRange">The max range to calculate.</param>
+    /// <param name="validMovementTiles">
+    /// The list of movement tiles to process. If none is provided,
+    /// it uses position only.
+    /// </param>
+    /// <returns>Returns the full list of available attack tiles.</returns>
+    public List<Vector2> GetAttackTiles(Vector2 position, int baseMinRange, int baseMaxRange, List<Vector2> validMovementTiles = null)
     {
         // If no tiles were passed. Use current actors position as
         // the only tile to get attack information from.
         if (validMovementTiles == null)
         {
             validMovementTiles = new List<Vector2>();
-            validMovementTiles.Add(new Vector2(actor.transform.position.x, actor.transform.position.y));
+            validMovementTiles.Add(position);
         }
 
         // The full list of attack tiles to highlight.
@@ -596,8 +702,8 @@ public class TileMap : MonoBehaviour
         // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
         foreach (Vector2 validMovement in validMovementTiles)
         {
-            int minRange = actor.unit.baseMinRange;
-            int maxRange = actor.unit.baseMaxRange - actor.unit.baseMinRange;
+            int minRange = baseMinRange;
+            int maxRange = baseMaxRange - baseMinRange;
 
             List<Vector2> visited = new List<Vector2>();
             List<Vector2> toCheck = new List<Vector2>();
@@ -649,12 +755,25 @@ public class TileMap : MonoBehaviour
             {
                 // If we are not in the list, nor are we our current actor position. Add.
                 if (!IsVector2InVector2List(tile, attackTiles)
-                    && !(tile.x == actor.transform.position.x && tile.y == actor.transform.position.y))
+                    && !(tile.x == position.x && tile.y == position.y))
                     attackTiles.Add(tile);
             }
         }
 
         return attackTiles;
+    }
+
+    /// <summary>
+    /// Get the list of tiles that the actor can issue an attack on.
+    /// </summary>
+    /// <param name="validMovementTiles">The list of movement tiles to check.</param>
+    /// <param name="actor">The current actor to get the list of attack tiles for.</param>
+    /// <returns>Returns the full list of attackable tiles.</returns>
+    public List<Vector2> GetAttackTiles(Actor actor, List<Vector2> validMovementTiles = null)
+    {
+        return GetAttackTiles(actor.transform.position,
+            actor.unit.baseMinRange, actor.unit.baseMaxRange,
+            validMovementTiles);
     }
 
     /// <summary>
@@ -740,61 +859,49 @@ public class TileMap : MonoBehaviour
             return;
 
         // If we don't have an actor in our from position, ignore. Shouldn't happen.
+        // OR we are not currently highlighted as blue or red.
         Actor fromActor = GetActor(fromPosition);
         if (fromActor == null || (!tile.movementHighlight && !tile.attackHighlight))
             return;
 
         // Determine if a red arrow should be displayed.
         TileArrowHighlightColor color = TileArrowHighlightColor.ARROWHIGHLIGHT_BLUE;
-        Actor toActor = GetActor(fromPosition);
+        Actor toActor = GetActor(toPosition);
         if ((toActor != null && fromActor.owner != toActor.owner)
             || tile.attackHighlight && !tile.movementHighlight)
         {
             color = TileArrowHighlightColor.ARROWHIGHLIGHT_RED;
         }
 
-        // Find the best path to the destination.
-        Astar pathing = new Astar(this, fromPosition, toPosition);
+        // Combine the pathing into a giant result.
+        Vector2 closestPosition = toPosition;
+        List<AStarVector> result = GetBestPath(fromPosition, toPosition,
+            ref closestPosition);
 
         // Keep track of pathing for future cleanup.
-        currentArrowPathing = pathing.result;
+        currentArrowPathing = result;
 
         // Begin drawing arrow.
         bool start = true;
-        bool displayedWithinRange = false;
-        foreach (AStarVector vector in pathing.result)
+        bool alreadyDrawn = false;
+        foreach (AStarVector vector in result)
         {
             Tile aStarTile = GetTile(vector.position);
             string mask = BitConverter.ToString(vector.mask, 0);
             aStarTile.SetGridArrowMask(start, mask, color);
             start = false;
 
-            // First instance we find that we're within range
-            // display a opaque unit that represents where the
-            // unit will stop when attacking.
-            Actor aStarActor = GetActor(vector.position);
-            if (vector.withinRange && !displayedWithinRange
-                && aStarActor == null)
+            // Draw an opaque image of where the actor will move if
+            // the drag is initiated. For attacking this will draw
+            // where the unit will move before issuing the attack.
+            
+            if (vector.withinRange
+                && toActor != null
+                && !alreadyDrawn)
             {
-                // Ignore drawing unit over self.
-                if (fromActor != aStarActor)
-                {
-                    ActorFacing facing = ActorFacing.NORTH;
-                    if (vector.direction == AStarDirection.NORTH)
-                        facing = ActorFacing.NORTH;
-                    if (vector.direction == AStarDirection.EAST)
-                        facing = ActorFacing.EAST;
-                    if (vector.direction == AStarDirection.SOUTH)
-                        facing = ActorFacing.SOUTH;
-                    if (vector.direction == AStarDirection.WEST)
-                        facing = ActorFacing.WEST;
-                    List<int> frameSequence = fromActor.GetFrameSequence(
-                        ActorAnimation.IDLE, facing);
-                    aStarTile.SetUnitMaterial(fromActor.unit.materialId,
-                        frameSequence[0], fromActor.unit.cellWidth,
-                        fromActor.unit.cellHeight);
-                }
-                displayedWithinRange = true;
+                SetTileUnitMaterial(vector.position, fromActor,
+                    ConvertAstarDirectionToActorFacing(vector.direction));
+                alreadyDrawn = true;
             }
         }
     }
@@ -825,58 +932,121 @@ public class TileMap : MonoBehaviour
     /// <summary>Convert movement tiles to a list of threat ordered tiles for AI calculations.</summary>
     /// <param name="movementTiles">The list of tiles available.</param>
     /// <returns>Returns an ordered list of tiles and their threat.</returns>
-    public List<ThreatTile> CalculateThreat(List<Vector2> movementTiles, Owner currentFaction)
+    public List<TileInfo> CalculateThreat(List<Vector2> movementTiles, Owner currentFaction)
     {
-        List<ThreatTile> threatTiles = new List<ThreatTile>();
+        List<TileInfo> threatTiles = new List<TileInfo>();
 
         // Iterate through all the movement possibilities and assign data.
         foreach (Vector2 movementTile in movementTiles)
         {
-            ThreatTile threatTile = new ThreatTile();
-            threatTile.position = movementTile;
+            TileInfo tileInfo = new TileInfo();
+            tileInfo.position = movementTile;
             foreach (Actor actor in actors)
             {
                 if (actor.owner != currentFaction)
                 {
                     // Use manhatten algorithm to determine threat
-                    threatTile.threat += Math.Abs(movementTile.x - actor.transform.position.x)
+                    tileInfo.threat += Math.Abs(movementTile.x - actor.transform.position.x)
                         + Math.Abs(movementTile.y - actor.transform.position.y);
 
                     // Determine if the enemy is within attack range of a position.
                     if (CanActorAttackPosition(actor, movementTile))
-                        threatTile.attackers++;
+                        tileInfo.attackers++;
                 }
             }
-            threatTiles.Add(threatTile);
+            threatTiles.Add(tileInfo);
         }
 
         // Order the list by lowest attackers then lowest threat.
         // Unfortunately I need to create a new list for this and remove
         // each entry from the old list.
-        List<ThreatTile> threatList = new List<ThreatTile>();
+        List<TileInfo> threatList = new List<TileInfo>();
         while (threatTiles.Count != 0)
         {
-            int lowestIndex = 0;
-            ThreatTile lowest = null;
+            int lowestIndex = -1;
             for (int index = 0; index < threatTiles.Count; ++index)
             {
-                if (lowest == null)
-                    lowest = threatTiles[index];
-                if (threatTiles[index].attackers >= lowest.attackers)
+                if (lowestIndex == -1)
+                    lowestIndex = index;
+                if (threatTiles[index].attackers >= threatTiles[lowestIndex].attackers)
                 {
-                    if (threatTiles[index].threat > lowest.threat)
-                    {
-                        lowest = threatTiles[index];
+                    if (threatTiles[index].threat > threatTiles[lowestIndex].threat)
                         lowestIndex = index;
-                    }
                 }
             }
 
-            threatList.Add(lowest);
+            threatList.Add(threatTiles[lowestIndex]);
             threatTiles.RemoveAt(lowestIndex);
         }
 
         return threatList;
+    }
+
+    /// <summary>
+    /// Reconfigure the end tile to a position that is 'close enough'
+    /// </summary>
+    /// <param name="tileMap">The tile map information.</param>
+    /// <param name="start">The starting position.</param>
+    /// <param name="end">The ending position.</param>
+    /// <returns></returns>
+    public bool GetClosestEndTile(Vector2 start, Vector2 end, ref Vector2 newEnd)
+    {
+        // Check if there is an actor on the destination.
+        Actor startActor = GetActor(start);
+        Actor endActor = GetActor(end);
+        Tile endTile = GetTile(end);
+
+        // If the end tile is available or we have no actor information to
+        // base this calculation off of, just use end as the best tile.
+        if (startActor == null ||
+            (endActor == null && endTile.movementHighlight))
+        {
+            newEnd = end;
+            return true;
+        }
+
+        // Add all open tiles within range of end.
+        List<TileInfo> availableTiles = new List<TileInfo>();
+
+        // Get the full list of attackable tiles.
+        List<Vector2> tiles = GetAttackTiles(end,
+            startActor.unit.baseMinRange, startActor.unit.baseMaxRange);
+        foreach (Vector2 attackTile in tiles)
+        {
+            Tile tile = GetTile(attackTile);
+            if (startActor.flying ? tile.trueCollision : tile.groundCollision)
+                continue;
+
+            Actor availableTileActor = GetActor(attackTile);
+            bool isSelf = availableTileActor ? availableTileActor.transform.position.x == startActor.transform.position.x
+                && availableTileActor.transform.position.y == startActor.transform.position.y : false;
+            if (availableTileActor == null
+                || isSelf)
+            {
+                TileInfo closestTile = new TileInfo();
+                closestTile.position = attackTile;
+                closestTile.distance
+                    = Math.Abs((int)start.x - (int)attackTile.x)
+                    + Math.Abs((int)start.y - (int)attackTile.y)
+                    + Math.Abs((int)end.x - (int)attackTile.x)
+                    + Math.Abs((int)end.y - (int)attackTile.y);
+                availableTiles.Add(closestTile);
+            }
+        }
+
+        // Pick the best tile that is free and closest to start.
+        TileInfo lowest = null;
+        for (int index = 0; index < availableTiles.Count; ++index)
+        {
+            if (lowest == null)
+                lowest = availableTiles[index];
+            if (availableTiles[index].distance <= lowest.distance)
+                lowest = availableTiles[index];
+        }
+
+        // Assign the new end value to traverse to thats available.
+        newEnd = lowest != null ? lowest.position : end;
+        return (lowest != null);
     }
 
     /// <summary>Initialize the list of Tiles for a tilemap.</summary>

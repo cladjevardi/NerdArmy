@@ -427,7 +427,8 @@ public class Mission : MonoBehaviour
                 }
 
                 // Apply that smooth movement.
-                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position, currentPathing[0].withinRange));
+                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position,
+                    actorToAttack == null ? false : currentPathing[0].withinRange));
                 
                 // After were done moving remove the first entry.
                 currentPathing.RemoveAt(0);
@@ -546,7 +547,7 @@ public class Mission : MonoBehaviour
             // Ignore the mouse up when mouse up is issued on an attack tile
             // with no one on it. We do not want to issue a deselect of the
             // currently selected unit.
-            if (!tile.movementHighlight && actor == null)
+            if (tile != null && !tile.movementHighlight && actor == null)
                 return true;
         }
 
@@ -623,14 +624,15 @@ public class Mission : MonoBehaviour
             && tile != null
             && tile.attackHighlight)
         {
-            // Find the nearest path to the unit you want to attack.
-            Astar pathing = new Astar(tileMap,
+            // Calculate fuzzy pathing.
+            Vector2 bestPosition = actor.transform.position;
+            List<AStarVector> pathing = tileMap.GetBestPath(
                 currentlySelectedActor.transform.position,
-                actor.transform.position);
-
+                actor.transform.position, ref bestPosition);
+            
             // Track our movement that needs to be applied.
-            if (pathing.result.Count != 0)
-                currentPathing = pathing.result;
+            if (pathing.Count != 0)
+                currentPathing = pathing;
 
             // Queue up our actor to attack once we apply our pathing.
             actorToAttack = actor;
@@ -658,7 +660,8 @@ public class Mission : MonoBehaviour
             // Find the nearest path to the tile selected.
             Astar pathing = new Astar(tileMap,
                 currentlySelectedActor.transform.position,
-                tile.transform.position);
+                tile.transform.position, currentFaction,
+                currentlySelectedActor.flying);
             pathing.result.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.
@@ -820,7 +823,7 @@ public class Mission : MonoBehaviour
     {
         // Convert a list of movement tiles to a list of potential movement
         // tiles based on some threat/attacker calculations.
-        List<ThreatTile> possibilities = tileMap.CalculateThreat(movementTiles, currentFaction);
+        List<TileInfo> possibilities = tileMap.CalculateThreat(movementTiles, currentFaction);
         if (possibilities.Count == 0)
             return null;
 

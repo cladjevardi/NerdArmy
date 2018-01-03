@@ -183,7 +183,7 @@ public class Astar
     /// <param name="canFly">Wether we should ignore ground collision.</param>
     /// <returns>Returns whether we should add this tile as a successor.</returns>
     private bool ShouldAdd(Vector2 position, TileMap tileMap,
-        bool withinRange, Owner owner = Owner.NONE, bool canFly = false)
+        Owner owner = Owner.NONE, bool ignoreGroundCollision = false)
     {
         // Check if out of bounds.
         if (!(position.x >= 0 && position.x < tileMap.width
@@ -193,12 +193,12 @@ public class Astar
         Tile tile = tileMap.GetTile(position);
 
         // Check against ground or true collision based on situation.
-        if (canFly || withinRange ? tile.trueCollision : tile.groundCollision)
+        if (ignoreGroundCollision ? tile.trueCollision : tile.groundCollision)
             return false;
 
         // Beyond this point we only check for enemy actors. Exit
         // early if we know we can.
-        if (owner == Owner.NONE || withinRange)
+        if (owner == Owner.NONE)
             return true;
 
         // Check if the owner can navigate through/to this tile.
@@ -219,7 +219,7 @@ public class Astar
     /// <param name="tileMap">
     /// The tilemap data with collision data to check against.
     /// </param>
-    /// <param name="canFly">
+    /// <param name="ignoreGroundCollision">
     /// Whether the unit is chcking against the ground of air collision
     /// tilemap information.</param>
     /// <returns>
@@ -227,7 +227,7 @@ public class Astar
     /// for pathing.
     /// </returns>
     private AStarTile[] Successors(Vector2 position, TileMap tileMap,
-        bool withinRange, Owner owner = Owner.NONE, bool canFly = false)
+        Owner owner = Owner.NONE, bool ignoreGroundCollision = false)
     {
         int x = (int)position.x;
         int y = (int)position.y;
@@ -238,13 +238,13 @@ public class Astar
 
         int i = 0;
         AStarTile[] result = new AStarTile[4];
-        if (ShouldAdd(north, tileMap, withinRange, owner, canFly))
+        if (ShouldAdd(north, tileMap, owner, ignoreGroundCollision))
             result[i++] = new AStarTile(north);
-        if (ShouldAdd(east, tileMap, withinRange, owner, canFly))
+        if (ShouldAdd(east, tileMap, owner, ignoreGroundCollision))
             result[i++] = new AStarTile(east);
-        if (ShouldAdd(south, tileMap, withinRange, owner, canFly))
+        if (ShouldAdd(south, tileMap, owner, ignoreGroundCollision))
             result[i++] = new AStarTile(south);
-        if (ShouldAdd(west, tileMap, withinRange, owner, canFly))
+        if (ShouldAdd(west, tileMap, owner, ignoreGroundCollision))
             result[i++] = new AStarTile(west);
         return result;
     }
@@ -406,7 +406,8 @@ public class Astar
     /// <param name="canFly">
     /// Whether or not the unit can ignore ground collision.
     /// </param>
-    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end)
+    public Astar(TileMap tileMap, Vector2 _start, Vector2 _end,
+        Owner owner = Owner.NONE, bool ignoreGroundCollision = false)
     {
         // Create our destination tile.
         AStarTile end = new AStarTile(_end, GetIndex(_end, tileMap.width), 0, 0);
@@ -467,9 +468,7 @@ public class Astar
                 // We are not the destination tile.
                 // Get the list of the current tiles neighbors.
                 AStarTile[] next = Successors(current.position, tileMap,
-                    current.withinRange,
-                    startActor ? startActor.owner : Owner.NONE,
-                    startActor ? startActor.flying : false);
+                    owner, ignoreGroundCollision);
 
                 // Iterate through the neighbors found.
                 for (int i = 0; i < next.Length; ++i)
