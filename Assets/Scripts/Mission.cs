@@ -441,6 +441,26 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>Check the update state to determine field of view change inputs.</summary>
+    /// <returns>Returns whether the update loop should change the field of view.</returns>
+    private bool ZoomDetection()
+    {
+        float fov = Camera.main.orthographicSize;
+        float zoom = Input.GetAxis("Mouse ScrollWheel");
+        float minZoom = 1f;
+        float maxZoom = 5f;
+
+        // Detect mouse zoom inputs. Change camera field of view.
+        if (zoom != 0f)
+        {
+            fov -= Input.GetAxis("Mouse ScrollWheel");
+            fov = Mathf.Clamp(fov, minZoom, maxZoom);
+            Camera.main.orthographicSize = fov;
+            return true;
+        }
+        return false;
+    }
+
     /// <summary>Check the update state to determine mouse dragging inputs.</summary>
     /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
     private bool DragDetection()
@@ -860,6 +880,9 @@ public class Mission : MonoBehaviour
         // Figure out if we're clicking on an actor.
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
+
+        if (ZoomDetection())
+            return;
 
         // Detect mouse drag inputs. Move the camera.
         if (DragDetection())
