@@ -572,14 +572,14 @@ public class TileMap : MonoBehaviour
     /// </returns>
     public Tile GetTile(Vector2 position)
     {
-        // Round down to the nearest int.
-        Vector2Int coordinate = new Vector2Int(
+        // Round down to the nearest int
+        Vector2 coordinate = new Vector2(
             (int)Math.Floor(position.x),
             (int)Math.Floor(position.y));
         // Validate the tile position.
-        if (!IsValidTile(coordinate.x, coordinate.y))
+        if (!IsValidTile((int)coordinate.x, (int)coordinate.y))
             return null;
-        return tiles[coordinate.x][coordinate.y];
+        return tiles[(int)coordinate.x][(int)coordinate.y];
     }
 
     /// <summary>
