@@ -383,6 +383,9 @@ public class Mission : MonoBehaviour
     {
         if (actorToAttack != null)
         {
+            // Move to the action
+            ZoomDetection();
+
             // Display attacking animation.
             currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
 
@@ -398,6 +401,7 @@ public class Mission : MonoBehaviour
             //currentlySelectedActor.done = true;
             currentlySelectedActor = null;
             tileMap.RemoveAllHighlights();
+
             return true;
         }
 
@@ -445,13 +449,25 @@ public class Mission : MonoBehaviour
     /// <returns>Returns whether the update loop should change the field of view.</returns>
     private bool ZoomDetection()
     {
+        //Vector3 originalCameraPosition = Camera.main.transform.position;
         float fov = Camera.main.orthographicSize;
         float zoom = Input.GetAxis("Mouse ScrollWheel");
         float minZoom = 1f;
+        //float defaultZoom = 3f;
         float maxZoom = 5f;
 
+        if(actorToAttack != null)
+        {
+            // Moves the camera to the action
+            Vector3 pos = new Vector3((currentlySelectedActor.transform.position.x + actorToAttack.transform.position.x + 1.5f) / 2f,
+                (currentlySelectedActor.transform.position.y + actorToAttack.transform.position.y + 1f) / 2f, -10f);
+            Camera.main.transform.position = pos;
+            Camera.main.orthographicSize = 1f;
+
+            return true;
+        }
         // Detect mouse zoom inputs. Change camera field of view.
-        if (zoom != 0f)
+        else if (zoom != 0f)
         {
             fov -= Input.GetAxis("Mouse ScrollWheel");
             fov = Mathf.Clamp(fov, minZoom, maxZoom);
