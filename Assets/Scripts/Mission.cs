@@ -384,7 +384,7 @@ public class Mission : MonoBehaviour
         if (actorToAttack != null)
         {
             // Move to the action
-            ZoomDetection();
+            StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
 
             // Display attacking animation.
             currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
@@ -445,6 +445,44 @@ public class Mission : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Move the camera to and zoom in on currently battling Actors.
+    /// </summary>
+    private IEnumerator BattleCamera(Camera camera, Actor attacker, Actor attacked)
+    {
+        // Moves the camera to the action.
+        Vector3 destinationPos = new Vector3((attacker.transform.position.x + attacked.transform.position.x + 1.5f) / 2f,
+            (attacker.transform.position.y + attacked.transform.position.y + 1f) / 2f, -10f);
+
+        float zoomDistance = 3f; // Default zoom.
+        // Calculates the distance the camera should zoom.
+        if (Mathf.Abs(currentlySelectedActor.transform.position.x - actorToAttack.transform.position.x) > 0)
+            zoomDistance = Mathf.Abs(currentlySelectedActor.transform.position.x - actorToAttack.transform.position.x);
+        else
+            zoomDistance = Mathf.Abs(currentlySelectedActor.transform.position.y - actorToAttack.transform.position.y);
+
+        //Camera.main.transform.position = pos;
+
+        while (camera.transform.position != destinationPos && camera.orthographicSize != zoomDistance)
+        {
+            // Find a new position proportionally closer to the end, based on the moveTime.
+            Vector3 newPostion = Vector3.MoveTowards(
+                camera.transform.position, destinationPos, 5f * Time.deltaTime);
+
+            // Move towards correct zoom value.
+            if (camera.orthographicSize > zoomDistance)
+                camera.orthographicSize -= 0.01f;
+            else
+                camera.orthographicSize += 0.01f;
+
+            // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+            camera.transform.position = newPostion;
+
+            // Return and loop until sqrRemainingDistance is close enough to zero to end the function.
+            yield return null;
+        }
+    }
+
     /// <summary>Check the update state to determine field of view change inputs.</summary>
     /// <returns>Returns whether the update loop should change the field of view.</returns>
     private bool ZoomDetection()
@@ -456,18 +494,8 @@ public class Mission : MonoBehaviour
         //float defaultZoom = 3f;
         float maxZoom = 5f;
 
-        if(actorToAttack != null)
-        {
-            // Moves the camera to the action
-            Vector3 pos = new Vector3((currentlySelectedActor.transform.position.x + actorToAttack.transform.position.x + 1.5f) / 2f,
-                (currentlySelectedActor.transform.position.y + actorToAttack.transform.position.y + 1f) / 2f, -10f);
-            Camera.main.transform.position = pos;
-            Camera.main.orthographicSize = 1f;
-
-            return true;
-        }
         // Detect mouse zoom inputs. Change camera field of view.
-        else if (zoom != 0f)
+        if (zoom != 0f)
         {
             fov -= Input.GetAxis("Mouse ScrollWheel");
             fov = Mathf.Clamp(fov, minZoom, maxZoom);
@@ -483,7 +511,7 @@ public class Mission : MonoBehaviour
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Check if we let go of the drag
+        // Check if we let go of the drag.
         if (!Input.GetMouseButton(0)
             && mouseOriginalPosition != Vector3.zero)
         {
