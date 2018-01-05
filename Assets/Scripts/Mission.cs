@@ -386,22 +386,6 @@ public class Mission : MonoBehaviour
             // Move to the action
             StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
 
-            // Display attacking animation.
-            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
-
-            // Deal the damage.
-            ApplyDamage(currentlySelectedActor, actorToAttack);
-
-            // Unselect the attacked unit.
-            actorToAttack = null;
-
-            // Issue the currently selected actor as finished for this
-            // turn. On animation complete of the attack, the actor
-            // will be set to done.
-            //currentlySelectedActor.done = true;
-            currentlySelectedActor = null;
-            tileMap.RemoveAllHighlights();
-
             return true;
         }
 
@@ -456,31 +440,46 @@ public class Mission : MonoBehaviour
 
         float zoomDistance = 3f; // Default zoom.
         // Calculates the distance the camera should zoom.
-        if (Mathf.Abs(currentlySelectedActor.transform.position.x - actorToAttack.transform.position.x) > 0)
-            zoomDistance = Mathf.Abs(currentlySelectedActor.transform.position.x - actorToAttack.transform.position.x);
+        if (Mathf.Abs(attacker.transform.position.x - attacked.transform.position.x) > 0)
+            zoomDistance = Mathf.Abs(attacker.transform.position.x - attacked.transform.position.x);
         else
-            zoomDistance = Mathf.Abs(currentlySelectedActor.transform.position.y - actorToAttack.transform.position.y);
-
-        //Camera.main.transform.position = pos;
-
+            zoomDistance = Mathf.Abs(attacker.transform.position.y - attacked.transform.position.y);
+        
         while (camera.transform.position != destinationPos && camera.orthographicSize != zoomDistance)
         {
             // Find a new position proportionally closer to the end, based on the moveTime.
             Vector3 newPostion = Vector3.MoveTowards(
-                camera.transform.position, destinationPos, 5f * Time.deltaTime);
+                camera.transform.position, destinationPos, 0.25f * Time.deltaTime);
 
-            // Move towards correct zoom value.
-            if (camera.orthographicSize > zoomDistance)
-                camera.orthographicSize -= 0.01f;
-            else
-                camera.orthographicSize += 0.01f;
-
-            // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+            // Move the camera to it's new position.
             camera.transform.position = newPostion;
+
+            // TODO: This doesn't always zoom in to it's intended value.
+            // Zoom in the camera over time.
+            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, zoomDistance, 0.25f * Time.deltaTime);
 
             // Return and loop until sqrRemainingDistance is close enough to zero to end the function.
             yield return null;
         }
+
+        // TODO: Fix double attacking.
+        yield return new WaitForSeconds(0.25f); // This sometimes causes double attacks, with higher values.
+
+        // Display attacking animation.
+        attacker.SetAnimation(ActorAnimation.ATTACK);
+
+        // Deal the damage.
+        ApplyDamage(attacker, attacked);
+
+        // Unselect the attacked unit.
+        actorToAttack = null;
+
+        // Issue the currently selected actor as finished for this
+        // turn. On animation complete of the attack, the actor
+        // will be set to done.
+        //currentlySelectedActor.done = true;
+        currentlySelectedActor = null;
+        tileMap.RemoveAllHighlights();
     }
 
     /// <summary>Check the update state to determine field of view change inputs.</summary>
