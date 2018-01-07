@@ -22,6 +22,12 @@ public class Mission : MonoBehaviour
     /// <summary>Whether the mission is transitioning between factions.</summary>
     private bool transitioning = false;
 
+    /// <summary>Stores the camera's position, used to reset the camera position.</summary>
+    private Vector3 originalCameraPosition = Vector3.zero;
+
+    /// <summary>Stores the camera's zoom, used toreset the camera zoom.</summary>
+    private float originalCameraZoom = 3f;
+
     /// <summary>Movement not yet done.</summary>
     private List<AStarVector> currentPathing = new List<AStarVector>();
 
@@ -57,6 +63,9 @@ public class Mission : MonoBehaviour
 
     /// <summary>Keeps track of if the mouse has been dragged.</summary>
     private bool mouseDrag = false;
+
+    /// <summary>Check if camera should be reset.</summary>
+    private bool resetCamera = false;
 
     /// <summary>An async movement call that moves a Mesh from its current position, to the next.</summary>
     /// <param name="actor">The actor to move.</param>
@@ -383,12 +392,11 @@ public class Mission : MonoBehaviour
     {
         if (actorToAttack != null)
         {
-            // Move to the action
+            // Move to the action.
             StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
 
             return true;
         }
-
         return false;
     }
 
@@ -434,27 +442,28 @@ public class Mission : MonoBehaviour
     /// </summary>
     private IEnumerator BattleCamera(Camera camera, Actor attacker, Actor attacked)
     {
-        // Moves the camera to the action.
-        Vector3 destinationPos = new Vector3((attacker.transform.position.x + attacked.transform.position.x + 1.5f) / 2f,
-            (attacker.transform.position.y + attacked.transform.position.y + 1f) / 2f, -10f);
+        Vector3 battleCameraPosition = new Vector3((attacker.transform.position.x + attacked.transform.position.x + 1.5f) / 2f,
+            (attacker.transform.position.y + attacked.transform.position.y + 1f) / 2f, -10f); // Moves the camera to the action.
+        Vector3 newPosition;
 
-        float zoomDistance = 3f; // Default zoom.
+        float zoomDistance;
         // Calculates the distance the camera should zoom.
         if (Mathf.Abs(attacker.transform.position.x - attacked.transform.position.x) > 0)
             zoomDistance = Mathf.Abs(attacker.transform.position.x - attacked.transform.position.x);
         else
             zoomDistance = Mathf.Abs(attacker.transform.position.y - attacked.transform.position.y);
         
-        while (camera.transform.position != destinationPos && camera.orthographicSize != zoomDistance)
+        while (Mathf.Abs(camera.transform.position.x - battleCameraPosition.x) > 0.05f ||
+            Mathf.Abs(camera.transform.position.y - battleCameraPosition.y) > 0.05f || 
+            Mathf.Abs(camera.orthographicSize - zoomDistance) > 0.005f)
         {
             // Find a new position proportionally closer to the end, based on the moveTime.
-            Vector3 newPostion = Vector3.MoveTowards(
-                camera.transform.position, destinationPos, 0.25f * Time.deltaTime);
+            newPosition = Vector3.MoveTowards(
+                camera.transform.position, battleCameraPosition, 0.25f * Time.deltaTime);
 
             // Move the camera to it's new position.
-            camera.transform.position = newPostion;
+            camera.transform.position = newPosition;
 
-            // TODO: This doesn't always zoom in to it's intended value.
             // Zoom in the camera over time.
             camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, zoomDistance, 0.25f * Time.deltaTime);
 
@@ -462,14 +471,13 @@ public class Mission : MonoBehaviour
             yield return null;
         }
 
-        // TODO: Fix double attacking.
-        yield return new WaitForSeconds(0.25f); // This sometimes causes double attacks, with higher values.
-
         // Display attacking animation.
         attacker.SetAnimation(ActorAnimation.ATTACK);
 
         // Deal the damage.
         ApplyDamage(attacker, attacked);
+
+        yield return new WaitForSeconds(.25f);
 
         // Unselect the attacked unit.
         actorToAttack = null;
@@ -480,17 +488,44 @@ public class Mission : MonoBehaviour
         //currentlySelectedActor.done = true;
         currentlySelectedActor = null;
         tileMap.RemoveAllHighlights();
+
+        resetCamera = true;
+    }
+
+    private IEnumerator ResetCamera()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Vector3 newPosition;
+
+        while (Mathf.Abs(Camera.main.transform.position.x - originalCameraPosition.x) > 0.1f ||
+            Mathf.Abs(Camera.main.transform.position.y - originalCameraPosition.y) > 0.1f ||
+            Mathf.Abs(Camera.main.orthographicSize - originalCameraZoom) > 0.1f)
+        {
+            // Find a new position proportionally closer to the end, based on the moveTime.
+            newPosition = Vector3.MoveTowards(
+                Camera.main.transform.position, originalCameraPosition, 0.25f * Time.deltaTime);
+
+            // Move the camera to it's new position.
+            Camera.main.transform.position = newPosition;
+
+            // Zoom in the camera over time.
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, originalCameraZoom, 0.25f * Time.deltaTime);
+
+            // Return and loop until sqrRemainingDistance is close enough to zero to end the function.
+            yield return null;
+        }
+
+        resetCamera = false;
     }
 
     /// <summary>Check the update state to determine field of view change inputs.</summary>
     /// <returns>Returns whether the update loop should change the field of view.</returns>
     private bool ZoomDetection()
     {
-        //Vector3 originalCameraPosition = Camera.main.transform.position;
         float fov = Camera.main.orthographicSize;
         float zoom = Input.GetAxis("Mouse ScrollWheel");
         float minZoom = 1f;
-        //float defaultZoom = 3f;
         float maxZoom = 5f;
 
         // Detect mouse zoom inputs. Change camera field of view.
@@ -668,7 +703,6 @@ public class Mission : MonoBehaviour
             tileMap.RemoveAllHighlights();
             return true;
         }
-
         return false;
     }
 
@@ -704,7 +738,6 @@ public class Mission : MonoBehaviour
             tileMap.RemoveAllHighlights();
             return true;
         }
-
         return false;
     }
 
@@ -788,7 +821,6 @@ public class Mission : MonoBehaviour
                 return actor;
             }
         }
-
         // No available actor left.
         return null;
     }
@@ -841,7 +873,6 @@ public class Mission : MonoBehaviour
                     return true;
             }
         }
-
         return false;
     }
 
@@ -924,6 +955,8 @@ public class Mission : MonoBehaviour
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
 
+        // TODO: Change to touch controls
+        // Detect mouse scroll inputs.
         if (ZoomDetection())
             return;
 
@@ -1014,6 +1047,10 @@ public class Mission : MonoBehaviour
         sidebarRect.anchorMax = new Vector2(1, 1);
         sidebarRect.anchoredPosition = new Vector2(-64, 0);
         sidebarRect.sizeDelta = new Vector2(128, 0);
+
+        // TODO: I don't know where to put these values
+        originalCameraPosition = Camera.main.transform.position;
+        originalCameraZoom = Camera.main.orthographicSize;
     }
 
     /// <summary>The game loop for a mission.</summary>
@@ -1022,6 +1059,10 @@ public class Mission : MonoBehaviour
         // We have not fully initialized.
         if (currentFaction == Owner.NONE)
             return;
+
+        // Check if we need to reset the camera.
+        if (resetCamera)
+            StartCoroutine(ResetCamera());
 
         // Check if we are transitioning between players.
         if (transitioning)
