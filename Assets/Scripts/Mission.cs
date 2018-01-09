@@ -395,6 +395,22 @@ public class Mission : MonoBehaviour
             // Move to the action.
             StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
 
+            // Display attacking animation.
+            currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
+
+            // Deal the damage.
+            ApplyDamage(currentlySelectedActor, actorToAttack);
+
+            // Unselect the attacked unit.
+            actorToAttack = null;
+
+            // Issue the currently selected actor as finished for this
+            // turn. On animation complete of the attack, the actor
+            // will be set to done.
+            //currentlySelectedActor.done = true;
+            currentlySelectedActor = null;
+            tileMap.RemoveAllHighlights();
+
             return true;
         }
         return false;
@@ -459,36 +475,17 @@ public class Mission : MonoBehaviour
         {
             // Find a new position proportionally closer to the end, based on the moveTime.
             newPosition = Vector3.MoveTowards(
-                camera.transform.position, battleCameraPosition, 0.25f * Time.deltaTime);
+                camera.transform.position, battleCameraPosition, 4f * Time.deltaTime);
 
             // Move the camera to it's new position.
             camera.transform.position = newPosition;
 
             // Zoom in the camera over time.
-            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, zoomDistance, 0.25f * Time.deltaTime);
+            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, zoomDistance, 4f * Time.deltaTime);
 
             // Return and loop until sqrRemainingDistance is close enough to zero to end the function.
             yield return null;
         }
-
-        // Display attacking animation.
-        attacker.SetAnimation(ActorAnimation.ATTACK);
-
-        // Deal the damage.
-        ApplyDamage(attacker, attacked);
-
-        yield return new WaitForSeconds(.25f);
-
-        // Unselect the attacked unit.
-        actorToAttack = null;
-
-        // Issue the currently selected actor as finished for this
-        // turn. On animation complete of the attack, the actor
-        // will be set to done.
-        //currentlySelectedActor.done = true;
-        currentlySelectedActor = null;
-        tileMap.RemoveAllHighlights();
-
         resetCamera = true;
     }
 
@@ -504,13 +501,13 @@ public class Mission : MonoBehaviour
         {
             // Find a new position proportionally closer to the end, based on the moveTime.
             newPosition = Vector3.MoveTowards(
-                Camera.main.transform.position, originalCameraPosition, 0.25f * Time.deltaTime);
+                Camera.main.transform.position, originalCameraPosition, 1f * Time.deltaTime);
 
             // Move the camera to it's new position.
             Camera.main.transform.position = newPosition;
 
             // Zoom in the camera over time.
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, originalCameraZoom, 0.25f * Time.deltaTime);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, originalCameraZoom, 1f * Time.deltaTime);
 
             // Return and loop until sqrRemainingDistance is close enough to zero to end the function.
             yield return null;
@@ -955,6 +952,10 @@ public class Mission : MonoBehaviour
         Tile tile = GetTileSelected();
         Actor actor = GetSelectedActor(tile);
 
+        // Check if we need to reset the camera.
+        if (resetCamera)
+            StartCoroutine(ResetCamera());
+
         // TODO: Change to touch controls
         // Detect mouse scroll inputs.
         if (ZoomDetection())
@@ -1047,10 +1048,6 @@ public class Mission : MonoBehaviour
         sidebarRect.anchorMax = new Vector2(1, 1);
         sidebarRect.anchoredPosition = new Vector2(-64, 0);
         sidebarRect.sizeDelta = new Vector2(128, 0);
-
-        // TODO: I don't know where to put these values
-        originalCameraPosition = Camera.main.transform.position;
-        originalCameraZoom = Camera.main.orthographicSize;
     }
 
     /// <summary>The game loop for a mission.</summary>
@@ -1059,10 +1056,6 @@ public class Mission : MonoBehaviour
         // We have not fully initialized.
         if (currentFaction == Owner.NONE)
             return;
-
-        // Check if we need to reset the camera.
-        if (resetCamera)
-            StartCoroutine(ResetCamera());
 
         // Check if we are transitioning between players.
         if (transitioning)
@@ -1079,7 +1072,7 @@ public class Mission : MonoBehaviour
         // If we are currently moving a unit.
         if (ActorCurrentlyMoving())
             return;
-
+        
         // If we've queued up an attack.
         if (ActorCurrentlyAttacking())
             return;
@@ -1106,5 +1099,9 @@ public class Mission : MonoBehaviour
         
         // Set the current player.
         currentFaction = missionSchematic.startingPlayer;
+
+        // TODO: I don't know where to put these values
+        originalCameraPosition = new Vector3(tileMap.width / 2 + 0.75f, tileMap.height / 2, -10f);
+        originalCameraZoom = 3f;
     }
 }
