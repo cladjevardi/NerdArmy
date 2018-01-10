@@ -47,7 +47,7 @@
     <base_movement>1|2|3</base_movement>
     <base_armor>0</base_armor>
     <abilities>charge</abilities>
-    <passives></passives>
+    <passives>push</passives>
     <material id="2" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>11|10|9|10</north_sequence>

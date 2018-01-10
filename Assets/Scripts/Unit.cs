@@ -22,7 +22,7 @@ public enum Player
 }
 
 /// <summary>The type of usable abilities available for a unit.</summary>
-public enum AbiliyType
+public enum AbilityType
 {
     NONE = -1,
 
@@ -60,10 +60,16 @@ public enum PassiveType
     NONE,
 
     /// <summary>
-    /// Enemies attacked will now be pulled towards the the unit
+    /// Enemies attacked will now be pulled towards the unit
     /// stopping one square in front of her.
     /// </summary>
     PULL,
+
+    /// <summary>
+    /// Enemies attacked will be pushed back by the unit x distance 
+    /// or into a wall (whichever is less distance).
+    /// </summary>
+    PUSH,
 
     // TODO: Add more passives.
 }
@@ -189,8 +195,8 @@ public class Unit
     }
 
     /// <summary>The list of abilities the unit has available.</summary>
-    private List<AbiliyType> _abilities;
-    public List<AbiliyType> abilities
+    private List<AbilityType> _abilities;
+    public List<AbilityType> abilities
     {
         get { return _abilities; }
     }

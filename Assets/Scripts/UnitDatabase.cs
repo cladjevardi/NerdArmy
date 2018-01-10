@@ -34,7 +34,35 @@ public class UnitDatabase
             unitSchematic.baseArmor = int.Parse(unitNode.SelectSingleNode(".//base_armor").InnerText);
 
             List<string> abilities = GetStringList(unitNode.SelectSingleNode(".//abilities").InnerText);
+            foreach (string ability in abilities)
+            {
+                switch(ability)
+                {
+                    case "attack":
+                        unitSchematic.abilities.Add(AbilityType.ATTACK);
+                        break;
+                    case "grapple":
+                        unitSchematic.abilities.Add(AbilityType.GRAPPLE);
+                        break;
+                    case "charge":
+                        unitSchematic.abilities.Add(AbilityType.CHARGE);
+                        break;
+                }
+            }
+
             List<string> passives = GetStringList(unitNode.SelectSingleNode(".//passives").InnerText);
+            foreach (string passive in passives)
+            {
+                switch (passive)
+                {
+                    case "pull":
+                        unitSchematic.passives.Add(PassiveType.PULL);
+                        break;
+                    case "push":
+                        unitSchematic.passives.Add(PassiveType.PUSH);
+                        break;
+                }
+            }
 
             // Fill in the range information.
             List<string> values = GetStringList(unitNode.SelectSingleNode(".//base_range").InnerText);
@@ -236,7 +264,7 @@ public class UnitSchematic
     public bool flying;
 
     /// <summary>The list of abilities the unit has available.</summary>
-    public List<AbiliyType> abilities;
+    public List<AbilityType> abilities;
 
     /// <summary>The list of passives the unit has available.</summary>
     public List<PassiveType> passives;
