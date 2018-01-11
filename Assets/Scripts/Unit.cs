@@ -71,6 +71,12 @@ public enum PassiveType
     /// </summary>
     PUSH,
 
+    /// <summary>
+    /// Enemies with flying that are charged won't be hit and the charger
+    /// will travel x distance past the flying enemy.
+    /// </summary>
+    FLYING,
+
     // TODO: Add more passives.
 }
 
@@ -201,11 +207,37 @@ public class Unit
         get { return _abilities; }
     }
 
+    /// <summary>Check if the unit has a specific ability type.</summary>
+    /// <param name="ability">The ability to check for.</param>
+    /// <returns></returns>
+    public bool HasAbility(AbilityType ability)
+    {
+        foreach (AbilityType a in _abilities)
+        {
+            if (a.Equals(ability))
+                return true;
+        }
+        return false;
+    }
+
     /// <summary>The list of passives the unit has available.</summary>
     private List<PassiveType> _passives;
     public List<PassiveType> passives
     {
         get { return _passives; }
+    }
+
+    /// <summary>Check if the unit has a specific passive type.</summary>
+    /// <param name="passive">The passive to check for.</param>
+    /// <returns></returns>
+    public bool HasPassive(PassiveType passive)
+    {
+        foreach (PassiveType p in _passives)
+        {
+            if (p.Equals(passive))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>The upgrade level of the units health.</summary>

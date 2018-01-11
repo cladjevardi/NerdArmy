@@ -699,64 +699,134 @@ public class TileMap : MonoBehaviour
         // The full list of attack tiles to highlight.
         List<Vector2> attackTiles = new List<Vector2>();
 
-        // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
-        foreach (Vector2 validMovement in validMovementTiles)
+        // Check the ability type of the unit, different units have different movements.
+        // Check if the unit has charge
+        if (GetActor(position).unit.HasAbility(AbilityType.CHARGE))
         {
-            int minRange = baseMinRange;
-            int maxRange = baseMaxRange - baseMinRange;
-
-            List<Vector2> visited = new List<Vector2>();
-            List<Vector2> toCheck = new List<Vector2>();
-
-            // Start off with what we know for sure we should check.
-            toCheck.Add(validMovement);
-
-            while (minRange + maxRange >= 0)
+            // TODO: fill this in with charger movement
+            // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
+            foreach (Vector2 validMovement in validMovementTiles)
             {
-                // The next group of tiles to check.
-                List<Vector2> newToCheck = new List<Vector2>();
+                int minRange = baseMinRange;
+                int maxRange = baseMaxRange - baseMinRange;
 
-                // Iterate through our toCheck.
-                foreach (Vector2 coord in toCheck)
+                List<Vector2> visited = new List<Vector2>();
+                List<Vector2> toCheck = new List<Vector2>();
+
+                // Start off with what we know for sure we should check.
+                toCheck.Add(validMovement);
+
+                while (minRange + maxRange >= 0)
                 {
-                    // Add ourself to visited.
-                    if (!IsVector2InVector2List(coord, visited) && minRange == 0)
-                        visited.Add(new Vector2(coord.x, coord.y));
+                    // The next group of tiles to check.
+                    List<Vector2> newToCheck = new List<Vector2>();
 
-                    Vector2 north = new Vector2(coord.x, coord.y - 1);
-                    Vector2 east = new Vector2(coord.x + 1, coord.y);
-                    Vector2 south = new Vector2(coord.x, coord.y + 1);
-                    Vector2 west = new Vector2(coord.x - 1, coord.y);
+                    // Iterate through our toCheck.
+                    foreach (Vector2 coord in toCheck)
+                    {
+                        // Add ourself to visited.
+                        if (!IsVector2InVector2List(coord, visited) && minRange == 0)
+                            visited.Add(new Vector2(coord.x, coord.y));
 
-                    // Check if we should add any given direction to the next
-                    // potential list of tiles.
-                    if (ShouldAdd(north, visited, Owner.NONE, actors, true))
-                        newToCheck.Add(north);
-                    if (ShouldAdd(east, visited, Owner.NONE, actors, true))
-                        newToCheck.Add(east);
-                    if (ShouldAdd(south, visited, Owner.NONE, actors, true))
-                        newToCheck.Add(south);
-                    if (ShouldAdd(west, visited, Owner.NONE, actors, true))
-                        newToCheck.Add(west);
+                        Vector2 north = new Vector2(coord.x, coord.y - 1);
+                        Vector2 east = new Vector2(coord.x + 1, coord.y);
+                        Vector2 south = new Vector2(coord.x, coord.y + 1);
+                        Vector2 west = new Vector2(coord.x - 1, coord.y);
+
+                        // Check if we should add any given direction to the next
+                        // potential list of tiles.
+                        if (ShouldAdd(north, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(north);
+                        if (ShouldAdd(east, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(east);
+                        if (ShouldAdd(south, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(south);
+                        if (ShouldAdd(west, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(west);
+                    }
+
+                    toCheck = newToCheck;
+
+                    // Adjust minimum range first before subtracting against maxRange.
+                    if (minRange > 0)
+                        minRange--;
+                    else
+                        maxRange--;
                 }
 
-                toCheck = newToCheck;
-
-                // Adjust minimum range first before subtracting against maxRange.
-                if (minRange > 0)
-                    minRange--;
-                else
-                    maxRange--;
+                // Add all the list of current visited to our giant attack list.
+                // Exclude duplicates.
+                foreach (Vector2 tile in visited)
+                {
+                    // If we are not in the list, nor are we our current actor position. Add.
+                    if (!IsVector2InVector2List(tile, attackTiles)
+                        && !(tile.x == position.x && tile.y == position.y))
+                        attackTiles.Add(tile);
+                }
             }
-
-            // Add all the list of current visited to our giant attack list.
-            // Exclude duplicates.
-            foreach (Vector2 tile in visited)
+        }
+        // Normal unit movement
+        else
+        {
+            // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
+            foreach (Vector2 validMovement in validMovementTiles)
             {
-                // If we are not in the list, nor are we our current actor position. Add.
-                if (!IsVector2InVector2List(tile, attackTiles)
-                    && !(tile.x == position.x && tile.y == position.y))
-                    attackTiles.Add(tile);
+                int minRange = baseMinRange;
+                int maxRange = baseMaxRange - baseMinRange;
+
+                List<Vector2> visited = new List<Vector2>();
+                List<Vector2> toCheck = new List<Vector2>();
+
+                // Start off with what we know for sure we should check.
+                toCheck.Add(validMovement);
+
+                while (minRange + maxRange >= 0)
+                {
+                    // The next group of tiles to check.
+                    List<Vector2> newToCheck = new List<Vector2>();
+
+                    // Iterate through our toCheck.
+                    foreach (Vector2 coord in toCheck)
+                    {
+                        // Add ourself to visited.
+                        if (!IsVector2InVector2List(coord, visited) && minRange == 0)
+                            visited.Add(new Vector2(coord.x, coord.y));
+
+                        Vector2 north = new Vector2(coord.x, coord.y - 1);
+                        Vector2 east = new Vector2(coord.x + 1, coord.y);
+                        Vector2 south = new Vector2(coord.x, coord.y + 1);
+                        Vector2 west = new Vector2(coord.x - 1, coord.y);
+
+                        // Check if we should add any given direction to the next
+                        // potential list of tiles.
+                        if (ShouldAdd(north, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(north);
+                        if (ShouldAdd(east, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(east);
+                        if (ShouldAdd(south, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(south);
+                        if (ShouldAdd(west, visited, Owner.NONE, actors, true))
+                            newToCheck.Add(west);
+                    }
+
+                    toCheck = newToCheck;
+
+                    // Adjust minimum range first before subtracting against maxRange.
+                    if (minRange > 0)
+                        minRange--;
+                    else
+                        maxRange--;
+                }
+
+                // Add all the list of current visited to our giant attack list.
+                // Exclude duplicates.
+                foreach (Vector2 tile in visited)
+                {
+                    // If we are not in the list, nor are we our current actor position. Add.
+                    if (!IsVector2InVector2List(tile, attackTiles)
+                        && !(tile.x == position.x && tile.y == position.y))
+                        attackTiles.Add(tile);
+                }
             }
         }
 

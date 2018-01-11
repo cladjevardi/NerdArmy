@@ -32,36 +32,31 @@ public class UnitDatabase
             unitSchematic.baseMaxRange = new List<int>();
             unitSchematic.baseMovement = GetIntList(unitNode.SelectSingleNode(".//base_movement").InnerText);
             unitSchematic.baseArmor = int.Parse(unitNode.SelectSingleNode(".//base_armor").InnerText);
+            unitSchematic.abilities = new List<AbilityType>();
+            unitSchematic.passives = new List<PassiveType>();
 
+            // Iterate through the unit's abilities and add them.
             List<string> abilities = GetStringList(unitNode.SelectSingleNode(".//abilities").InnerText);
             foreach (string ability in abilities)
             {
-                switch(ability)
-                {
-                    case "attack":
-                        unitSchematic.abilities.Add(AbilityType.ATTACK);
-                        break;
-                    case "grapple":
-                        unitSchematic.abilities.Add(AbilityType.GRAPPLE);
-                        break;
-                    case "charge":
-                        unitSchematic.abilities.Add(AbilityType.CHARGE);
-                        break;
-                }
+                if (ability.Equals("attack"))
+                    unitSchematic.abilities.Add(AbilityType.ATTACK);
+                else if (ability.Equals("grapple"))
+                    unitSchematic.abilities.Add(AbilityType.GRAPPLE);
+                else if (ability.Equals("charge"))
+                    unitSchematic.abilities.Add(AbilityType.CHARGE);
             }
 
+            // Iterate through the unit's passives and add them.
             List<string> passives = GetStringList(unitNode.SelectSingleNode(".//passives").InnerText);
             foreach (string passive in passives)
             {
-                switch (passive)
-                {
-                    case "pull":
-                        unitSchematic.passives.Add(PassiveType.PULL);
-                        break;
-                    case "push":
-                        unitSchematic.passives.Add(PassiveType.PUSH);
-                        break;
-                }
+                if (passive.Equals("pull"))
+                    unitSchematic.passives.Add(PassiveType.PULL);
+                else if (passive.Equals("push"))
+                    unitSchematic.passives.Add(PassiveType.PUSH);
+                else if (passive.Equals("flying"))
+                    unitSchematic.passives.Add(PassiveType.FLYING);
             }
 
             // Fill in the range information.
