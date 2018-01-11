@@ -711,47 +711,34 @@ public class TileMap : MonoBehaviour
                 int maxRange = baseMaxRange - baseMinRange;
 
                 List<Vector2> visited = new List<Vector2>();
-                List<Vector2> toCheck = new List<Vector2>();
 
-                // Start off with what we know for sure we should check.
-                toCheck.Add(validMovement);
+                Vector2 north = new Vector2(validMovement.x, validMovement.y - 1);
+                Vector2 east = new Vector2(validMovement.x + 1, validMovement.y);
+                Vector2 south = new Vector2(validMovement.x, validMovement.y + 1);
+                Vector2 west = new Vector2(validMovement.x - 1, validMovement.y);
 
-                while (minRange + maxRange >= 0)
+                for (int i = 1; i < minRange + maxRange + 1; ++i)
                 {
-                    // The next group of tiles to check.
-                    List<Vector2> newToCheck = new List<Vector2>();
+                    // Add ourself to visited.
+                    if (!IsVector2InVector2List(validMovement, visited))// && minRange == 0)
+                        visited.Add(new Vector2(validMovement.x, validMovement.y));
 
-                    // Iterate through our toCheck.
-                    foreach (Vector2 coord in toCheck)
-                    {
-                        // Add ourself to visited.
-                        if (!IsVector2InVector2List(coord, visited) && minRange == 0)
-                            visited.Add(new Vector2(coord.x, coord.y));
+                    north = new Vector2(validMovement.x, validMovement.y - i);
+                    east = new Vector2(validMovement.x + i, validMovement.y);
+                    south = new Vector2(validMovement.x, validMovement.y + i);
+                    west = new Vector2(validMovement.x - i, validMovement.y);
 
-                        Vector2 north = new Vector2(coord.x, coord.y - 1);
-                        Vector2 east = new Vector2(coord.x + 1, coord.y);
-                        Vector2 south = new Vector2(coord.x, coord.y + 1);
-                        Vector2 west = new Vector2(coord.x - 1, coord.y);
+                    if (ShouldAdd(north, visited, Owner.NONE, actors, true))
+                        visited.Add(new Vector2(north.x, north.y));
 
-                        // Check if we should add any given direction to the next
-                        // potential list of tiles.
-                        if (ShouldAdd(north, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(north);
-                        if (ShouldAdd(east, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(east);
-                        if (ShouldAdd(south, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(south);
-                        if (ShouldAdd(west, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(west);
-                    }
+                    if (ShouldAdd(east, visited, Owner.NONE, actors, true))
+                        visited.Add(new Vector2(east.x, east.y));
 
-                    toCheck = newToCheck;
+                    if (ShouldAdd(south, visited, Owner.NONE, actors, true))
+                        visited.Add(new Vector2(south.x, south.y));
 
-                    // Adjust minimum range first before subtracting against maxRange.
-                    if (minRange > 0)
-                        minRange--;
-                    else
-                        maxRange--;
+                    if (ShouldAdd(west, visited, Owner.NONE, actors, true))
+                        visited.Add(new Vector2(west.x, west.y));
                 }
 
                 // Add all the list of current visited to our giant attack list.
