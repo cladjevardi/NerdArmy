@@ -43,8 +43,6 @@ public class UnitDatabase
                     unitSchematic.abilities.Add(AbilityType.ATTACK);
                 else if (ability.Equals("grapple"))
                     unitSchematic.abilities.Add(AbilityType.GRAPPLE);
-                else if (ability.Equals("charge"))
-                    unitSchematic.abilities.Add(AbilityType.CHARGE);
             }
 
             // Iterate through the unit's passives and add them.
@@ -53,8 +51,8 @@ public class UnitDatabase
             {
                 if (passive.Equals("pull"))
                     unitSchematic.passives.Add(PassiveType.PULL);
-                else if (passive.Equals("push"))
-                    unitSchematic.passives.Add(PassiveType.PUSH);
+                else if (passive.Equals("charge"))
+                    unitSchematic.passives.Add(PassiveType.CHARGE);
                 else if (passive.Equals("flying"))
                     unitSchematic.passives.Add(PassiveType.FLYING);
             }

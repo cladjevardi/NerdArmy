@@ -46,15 +46,15 @@
     <base_range>1-3|1-4|1-5</base_range>
     <base_movement>1|2|3</base_movement>
     <base_armor>0</base_armor>
-    <abilities>charge</abilities>
-    <passives>push</passives>
+    <abilities></abilities>
+    <passives>charge</passives>
     <material id="2" cell_width="256" cell_height="256">
       <animation name="idle" speed="0.5" loop="true">
         <north_sequence>11|10|9|10</north_sequence>
         <south_sequence>11|10|9|10</south_sequence>
         <east_sequence>11|10|9|10</east_sequence>
       </animation>
-      <animation name="attack" speed="0.25" on_complete="idle">
+      <animation name="attack" speed="0.10" on_complete="idle">
         <north_sequence>2|1|0</north_sequence>
         <south_sequence>2|1|0</south_sequence>
         <east_sequence>2|1|0</east_sequence>

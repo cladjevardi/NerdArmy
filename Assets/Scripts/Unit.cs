@@ -36,21 +36,6 @@ public enum AbilityType
     /// </summary>
     GRAPPLE,
 
-    /// <summary>
-    /// Charges into the first enemy in his way dealing damage to it,
-    /// knocking it back 2 spaces, and landing on the square just shy
-    /// of the enemy's initial position. If enemies are within knockback
-    /// range, they take damage as well.
-    /// 
-    /// In case of a friendly unit occupying the usual landing square,
-    /// the Charger will go to the next closest square to his original
-    /// position.
-    /// 
-    /// Similarly, the map's edges or impassable terrain can also trigger
-    /// "next closest square" logic.
-    /// </summary>
-    CHARGE,
-
     // TODO: Add more abilities.
 }
 
@@ -66,10 +51,19 @@ public enum PassiveType
     PULL,
 
     /// <summary>
-    /// Enemies attacked will be pushed back by the unit x distance 
-    /// or into a wall (whichever is less distance).
+    /// Charges into the first enemy in his way dealing damage to it,
+    /// knocking it back 2 spaces, and landing on the square just shy
+    /// of the enemy's initial position. If enemies are within knockback
+    /// range, they take damage as well.
+    /// 
+    /// In case of a friendly unit occupying the usual landing square,
+    /// the Charger will go to the next closest square to his original
+    /// position.
+    /// 
+    /// Similarly, the map's edges or impassable terrain can also trigger
+    /// "next closest square" logic.
     /// </summary>
-    PUSH,
+    CHARGE,
 
     /// <summary>
     /// Enemies with flying that are charged won't be hit and the charger

@@ -34,6 +34,7 @@ public class WorldManager : MonoBehaviour
 
         // Give the player a main character to start the game.
         roster.Add(new Unit("main_character"));
+        roster.Add(new Unit("bear"));
 
         // Start the game off at 1-1.
         world = 1;

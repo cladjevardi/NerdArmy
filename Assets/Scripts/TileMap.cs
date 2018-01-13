@@ -45,6 +45,9 @@ public class TileMap : MonoBehaviour
     /// <summary>The pathing arrow being displayed.</summary>
     private List<AStarVector> currentArrowPathing = new List<AStarVector>();
 
+    /// <summary>The position of a displaced unit to remove when clearing.</summary>
+    private Vector2 displacedUnitPosition = Vector2.zero;
+
     /// <summary>Populate the list of tiles of the tilemap.</summary>
     /// <param name="width">The width of the tilemap.</param>
     /// <param name="height">The height of the tilemap</param>
@@ -402,7 +405,7 @@ public class TileMap : MonoBehaviour
             // Draw an opaque outline of this actor at this tile.
             tile.SetUnitMaterial(actor.unit.materialId,
                 idleFrame, actor.unit.cellWidth,
-                actor.unit.cellHeight);
+                actor.unit.cellHeight, facing);
         }
     }
 
@@ -424,6 +427,208 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>
+    /// Get attack tiles for charger.
+    /// </summary>
+    /// <param name="position">The position of the charger</param>
+    /// <param name="baseMinRange">The base minimum range of the charge.</param>
+    /// <param name="baseMaxRange">The base maximum range of the charge.</param>
+    /// <param name="validMovementTiles">The tiles to base attack highlights from.</param>
+    /// <returns></returns>
+    private List<Vector2> GetAttackTilesForCharger(Vector2 position, int baseMinRange, int baseMaxRange, List<Vector2> validMovementTiles = null)
+    {
+        // The full list of attack tiles to highlight.
+        List<Vector2> attackTiles = new List<Vector2>();
+
+        // TODO: fill this in with charger movement
+        // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
+        foreach (Vector2 validMovement in validMovementTiles)
+        {
+            int minRange = baseMinRange;
+            int maxRange = baseMaxRange - baseMinRange;
+
+            List<Vector2> visited = new List<Vector2>();
+
+            // Tiles in cardinal directions from current tile
+            Vector2 north = new Vector2(validMovement.x, validMovement.y - 1);
+            Vector2 east = new Vector2(validMovement.x + 1, validMovement.y);
+            Vector2 south = new Vector2(validMovement.x, validMovement.y + 1);
+            Vector2 west = new Vector2(validMovement.x - 1, validMovement.y);
+
+            // Checks to see if we should stop adding tiles in a directions.
+            bool stopNorth = false;
+            bool stopEast = false;
+            bool stopSouth = false;
+            bool stopWest = false;
+
+            for (int i = 1; i < minRange + maxRange + 1; ++i)
+            {
+                // Add ourself to visited.
+                if (!IsVector2InVector2List(validMovement, visited))// && minRange == 0)
+                    visited.Add(new Vector2(validMovement.x, validMovement.y));
+
+                north = new Vector2(validMovement.x, validMovement.y - i);
+                east = new Vector2(validMovement.x + i, validMovement.y);
+                south = new Vector2(validMovement.x, validMovement.y + i);
+                west = new Vector2(validMovement.x - i, validMovement.y);
+
+                // Add north tiles.
+                if (ShouldAdd(north, visited, Owner.NONE, actors, false)
+                    && !stopNorth)
+                    visited.Add(new Vector2(north.x, north.y));
+                else
+                    stopNorth = true;
+
+                // Add east tiles.
+                if (ShouldAdd(east, visited, Owner.NONE, actors, false)
+                    && !stopEast)
+                    visited.Add(new Vector2(east.x, east.y));
+                else
+                    stopEast = true;
+
+                // Add south tiles.
+                if (ShouldAdd(south, visited, Owner.NONE, actors, false)
+                    && !stopSouth)
+                    visited.Add(new Vector2(south.x, south.y));
+                else
+                    stopSouth = true;
+
+                // Add west tiles.
+                if (ShouldAdd(west, visited, Owner.NONE, actors, false)
+                    && !stopWest)
+                    visited.Add(new Vector2(west.x, west.y));
+                else
+                    stopWest = true;
+            }
+
+            // Add all the list of current visited to our giant attack list.
+            // Exclude duplicates.
+            foreach (Vector2 tile in visited)
+            {
+                // If we are not in the list, nor are we our current actor position. Add.
+                if (!IsVector2InVector2List(tile, attackTiles)
+                    && !(tile.x == position.x && tile.y == position.y))
+                    attackTiles.Add(tile);
+            }
+        }
+
+        return attackTiles;
+    }
+
+    /// <summary>Get the full list of attackable tiles</summary>
+    /// <param name="position">The position of self.</param>
+    /// <param name="baseMinRange">The min range to calculate.</param>
+    /// <param name="baseMaxRange">The max range to calculate.</param>
+    /// <param name="validMovementTiles">
+    /// The list of movement tiles to process. If none is provided,
+    /// it uses position only.
+    /// </param>
+    /// <returns>Returns the full list of available attack tiles.</returns>
+    private List<Vector2> GetAttackTilesBasic(Vector2 position, int baseMinRange, int baseMaxRange, List<Vector2> validMovementTiles = null)
+    {
+        // The full list of attack tiles to highlight.
+        List<Vector2> attackTiles = new List<Vector2>();
+
+        // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
+        foreach (Vector2 validMovement in validMovementTiles)
+        {
+            int minRange = baseMinRange;
+            int maxRange = baseMaxRange - baseMinRange;
+
+            List<Vector2> visited = new List<Vector2>();
+            List<Vector2> toCheck = new List<Vector2>();
+
+            // Start off with what we know for sure we should check.
+            toCheck.Add(validMovement);
+
+            while (minRange + maxRange >= 0)
+            {
+                // The next group of tiles to check.
+                List<Vector2> newToCheck = new List<Vector2>();
+
+                // Iterate through our toCheck.
+                foreach (Vector2 coord in toCheck)
+                {
+                    // Add ourself to visited.
+                    if (!IsVector2InVector2List(coord, visited) && minRange == 0)
+                        visited.Add(new Vector2(coord.x, coord.y));
+
+                    Vector2 north = new Vector2(coord.x, coord.y - 1);
+                    Vector2 east = new Vector2(coord.x + 1, coord.y);
+                    Vector2 south = new Vector2(coord.x, coord.y + 1);
+                    Vector2 west = new Vector2(coord.x - 1, coord.y);
+
+                    // Check if we should add any given direction to the next
+                    // potential list of tiles.
+                    if (ShouldAdd(north, visited, Owner.NONE, actors, true))
+                        newToCheck.Add(north);
+                    if (ShouldAdd(east, visited, Owner.NONE, actors, true))
+                        newToCheck.Add(east);
+                    if (ShouldAdd(south, visited, Owner.NONE, actors, true))
+                        newToCheck.Add(south);
+                    if (ShouldAdd(west, visited, Owner.NONE, actors, true))
+                        newToCheck.Add(west);
+                }
+
+                toCheck = newToCheck;
+
+                // Adjust minimum range first before subtracting against maxRange.
+                if (minRange > 0)
+                    minRange--;
+                else
+                    maxRange--;
+            }
+
+            // Add all the list of current visited to our giant attack list.
+            // Exclude duplicates.
+            foreach (Vector2 tile in visited)
+            {
+                // If we are not in the list, nor are we our current actor position. Add.
+                if (!IsVector2InVector2List(tile, attackTiles)
+                    && !(tile.x == position.x && tile.y == position.y))
+                    attackTiles.Add(tile);
+            }
+        }
+
+        return attackTiles;
+    }
+
+    /// <summary>Get the opposite direction of the direction specified.</summary>
+    /// <param name="direction">The direction to flip.</param>
+    /// <returns>Returns the oppisote direction of the direction.</returns>
+    public AStarDirection GetOppositeDirection(AStarDirection direction)
+    {
+        if (direction == AStarDirection.NORTH)
+            return AStarDirection.SOUTH;
+        if (direction == AStarDirection.EAST)
+            return AStarDirection.WEST;
+        if (direction == AStarDirection.SOUTH)
+            return AStarDirection.NORTH;
+        if (direction == AStarDirection.WEST)
+            return AStarDirection.EAST;
+
+        return AStarDirection.NONE;
+    }
+
+    /// <summary>Get the next tile from a position.</summary>
+    /// <param name="position">The position to get the next from.</param>
+    /// <param name="direction">The direction to go for the position.</param>
+    /// <returns>Returns the next position in that direction.</returns>
+    public Vector2 GetNextTile(Vector2 position, AStarDirection direction)
+    {
+        // To get the end path of the actors in the way.
+        Vector2 end = Vector2.zero;
+        if (direction == AStarDirection.NORTH)
+            end = new Vector2(position.x, position.y + 1);
+        if (direction == AStarDirection.EAST)
+            end = new Vector2(position.x + 1, position.y);
+        if (direction == AStarDirection.SOUTH)
+            end = new Vector2(position.x, position.y - 1);
+        if (direction == AStarDirection.WEST)
+            end = new Vector2(position.x - 1, position.y);
+        return end;
+    }
+
+    /// <summary>
     /// Calculate fuzzy pathing from two points.
     /// </summary>
     /// <param name="fromPosition">The starting coordinate.</param>
@@ -431,8 +636,8 @@ public class TileMap : MonoBehaviour
     /// <returns>Returns best pathing.</returns>
     public List<AStarVector> GetBestPath(Vector2 fromPosition, Vector2 toPosition, ref Vector2 closestPosition)
     {
-        // Get the owner to ignore.
-        Owner owner = GetActor(fromPosition).owner;
+        // Get the actor on fromPosition.
+        Actor actor = GetActor(fromPosition);
 
         // Calculate the best path to the destination.
         closestPosition = toPosition;
@@ -440,7 +645,7 @@ public class TileMap : MonoBehaviour
         Debug.LogFormat("Closest end selected {0}.", closestPosition.ToString());
 
         // Find the best path to the destination.
-        Astar pathing1 = new Astar(this, fromPosition, closestPosition, owner);
+        Astar pathing1 = new Astar(this, fromPosition, closestPosition, actor.owner);
         // Always ignore collision and enemy actors for attacks.
         Astar pathing2 = new Astar(this, closestPosition, toPosition,
             Owner.NONE, true);
@@ -478,12 +683,23 @@ public class TileMap : MonoBehaviour
         foreach (AStarVector astar in pathing1.result)
             astar.withinRange = false;
         foreach (AStarVector astar in pathing2.result)
+        {
+            astar.pathId = 1;
             astar.withinRange = false;
+        }
 
         // Assign the new combined pathing and remove duplicate entry.
         pathing1.result[pathing1.result.Count - 1].mask = newMask;
-        pathing1.result[pathing1.result.Count - 1].withinRange = true;
         pathing2.result.RemoveAt(0);
+
+        // Set the within range field.
+        if (actor.unit.HasPassive(PassiveType.CHARGE))
+        {
+            if (pathing2.result.Count > 0) pathing2.result[pathing2.result.Count - 1].withinRange = true;
+            if (pathing2.result.Count > 1) pathing2.result[pathing2.result.Count - 2].withinRange = true;
+        }
+        else
+            pathing1.result[pathing1.result.Count - 1].withinRange = true;
 
         // Combine the pathing into a giant result.
         List<AStarVector> result = new List<AStarVector>();
@@ -696,128 +912,12 @@ public class TileMap : MonoBehaviour
             validMovementTiles.Add(position);
         }
 
-        // The full list of attack tiles to highlight.
-        List<Vector2> attackTiles = new List<Vector2>();
-
         // Check the ability type of the unit, different units have different movements.
         // Check if the unit has charge
-        if (GetActor(position).unit.HasAbility(AbilityType.CHARGE))
-        {
-            // TODO: fill this in with charger movement
-            // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
-            foreach (Vector2 validMovement in validMovementTiles)
-            {
-                int minRange = baseMinRange;
-                int maxRange = baseMaxRange - baseMinRange;
-
-                List<Vector2> visited = new List<Vector2>();
-
-                Vector2 north = new Vector2(validMovement.x, validMovement.y - 1);
-                Vector2 east = new Vector2(validMovement.x + 1, validMovement.y);
-                Vector2 south = new Vector2(validMovement.x, validMovement.y + 1);
-                Vector2 west = new Vector2(validMovement.x - 1, validMovement.y);
-
-                for (int i = 1; i < minRange + maxRange + 1; ++i)
-                {
-                    // Add ourself to visited.
-                    if (!IsVector2InVector2List(validMovement, visited))// && minRange == 0)
-                        visited.Add(new Vector2(validMovement.x, validMovement.y));
-
-                    north = new Vector2(validMovement.x, validMovement.y - i);
-                    east = new Vector2(validMovement.x + i, validMovement.y);
-                    south = new Vector2(validMovement.x, validMovement.y + i);
-                    west = new Vector2(validMovement.x - i, validMovement.y);
-
-                    if (ShouldAdd(north, visited, Owner.NONE, actors, true))
-                        visited.Add(new Vector2(north.x, north.y));
-
-                    if (ShouldAdd(east, visited, Owner.NONE, actors, true))
-                        visited.Add(new Vector2(east.x, east.y));
-
-                    if (ShouldAdd(south, visited, Owner.NONE, actors, true))
-                        visited.Add(new Vector2(south.x, south.y));
-
-                    if (ShouldAdd(west, visited, Owner.NONE, actors, true))
-                        visited.Add(new Vector2(west.x, west.y));
-                }
-
-                // Add all the list of current visited to our giant attack list.
-                // Exclude duplicates.
-                foreach (Vector2 tile in visited)
-                {
-                    // If we are not in the list, nor are we our current actor position. Add.
-                    if (!IsVector2InVector2List(tile, attackTiles)
-                        && !(tile.x == position.x && tile.y == position.y))
-                        attackTiles.Add(tile);
-                }
-            }
-        }
-        // Normal unit movement
+        if (GetActor(position).unit.HasPassive(PassiveType.CHARGE))
+            return GetAttackTilesForCharger(position, baseMinRange, baseMaxRange, validMovementTiles);
         else
-        {
-            // Iterate through each valid movement tile and add all the unique entries to the attackTiles list.
-            foreach (Vector2 validMovement in validMovementTiles)
-            {
-                int minRange = baseMinRange;
-                int maxRange = baseMaxRange - baseMinRange;
-
-                List<Vector2> visited = new List<Vector2>();
-                List<Vector2> toCheck = new List<Vector2>();
-
-                // Start off with what we know for sure we should check.
-                toCheck.Add(validMovement);
-
-                while (minRange + maxRange >= 0)
-                {
-                    // The next group of tiles to check.
-                    List<Vector2> newToCheck = new List<Vector2>();
-
-                    // Iterate through our toCheck.
-                    foreach (Vector2 coord in toCheck)
-                    {
-                        // Add ourself to visited.
-                        if (!IsVector2InVector2List(coord, visited) && minRange == 0)
-                            visited.Add(new Vector2(coord.x, coord.y));
-
-                        Vector2 north = new Vector2(coord.x, coord.y - 1);
-                        Vector2 east = new Vector2(coord.x + 1, coord.y);
-                        Vector2 south = new Vector2(coord.x, coord.y + 1);
-                        Vector2 west = new Vector2(coord.x - 1, coord.y);
-
-                        // Check if we should add any given direction to the next
-                        // potential list of tiles.
-                        if (ShouldAdd(north, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(north);
-                        if (ShouldAdd(east, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(east);
-                        if (ShouldAdd(south, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(south);
-                        if (ShouldAdd(west, visited, Owner.NONE, actors, true))
-                            newToCheck.Add(west);
-                    }
-
-                    toCheck = newToCheck;
-
-                    // Adjust minimum range first before subtracting against maxRange.
-                    if (minRange > 0)
-                        minRange--;
-                    else
-                        maxRange--;
-                }
-
-                // Add all the list of current visited to our giant attack list.
-                // Exclude duplicates.
-                foreach (Vector2 tile in visited)
-                {
-                    // If we are not in the list, nor are we our current actor position. Add.
-                    if (!IsVector2InVector2List(tile, attackTiles)
-                        && !(tile.x == position.x && tile.y == position.y))
-                        attackTiles.Add(tile);
-                }
-            }
-        }
-
-        return attackTiles;
+            return GetAttackTilesBasic(position, baseMinRange, baseMaxRange, validMovementTiles);
     }
 
     /// <summary>
@@ -941,6 +1041,8 @@ public class TileMap : MonoBehaviour
         // Begin drawing arrow.
         bool start = true;
         bool alreadyDrawn = false;
+        AStarVector previousVector = new AStarVector();
+        AStarDirection lastDirection = AStarDirection.NONE;
         foreach (AStarVector vector in result)
         {
             Tile aStarTile = GetTile(vector.position);
@@ -948,18 +1050,48 @@ public class TileMap : MonoBehaviour
             aStarTile.SetGridArrowMask(start, mask, color);
             start = false;
 
-            // Draw an opaque image of where the actor will move if
-            // the drag is initiated. For attacking this will draw
-            // where the unit will move before issuing the attack.
-            
-            if (vector.withinRange
-                && toActor != null
-                && !alreadyDrawn)
+            if (toActor != null)
             {
-                SetTileUnitMaterial(vector.position, fromActor,
-                    ConvertAstarDirectionToActorFacing(vector.direction));
-                alreadyDrawn = true;
+                // Draw an opaque image of where the actors in the path
+                // of the bear will end up if they are in the bear's path.
+                Actor pathActor = GetActor(vector.position);
+                if (vector.pathId == 1
+                    && pathActor != null
+                    && pathActor.owner == fromActor.owner
+                    && fromActor.unit.HasPassive(PassiveType.CHARGE))
+                {
+                    SetTileUnitMaterial(previousVector.position, pathActor,
+                        ConvertAstarDirectionToActorFacing(vector.direction));
+                }
+                
+                // Draw an opaque image of where the actor will move if
+                // the drag is initiated. For attacking this will draw
+                // where the unit will move before issuing the attack.
+                if (vector.withinRange
+                    && !alreadyDrawn)
+                {
+                    SetTileUnitMaterial(vector.position, fromActor,
+                        ConvertAstarDirectionToActorFacing(vector.direction));
+                    alreadyDrawn = true;
+                    lastDirection = vector.direction;
+                }
             }
+
+            // Set the previous vector.
+            previousVector = vector;
+        }
+
+        // If we displace any unit, we should show a ghost highlight of where its moving.
+        Vector2 nextPosition = GetNextTile(toActor.transform.position, lastDirection);
+        Tile nextTile = GetTile(nextPosition);
+        if (fromActor.unit.HasPassive(PassiveType.CHARGE)
+            && nextTile != null
+            && !nextTile.groundCollision
+            && !nextTile.trueCollision
+            && GetActor(nextPosition) == null)
+        {
+            displacedUnitPosition = nextPosition;
+            SetTileUnitMaterial(displacedUnitPosition, toActor, toActor.facing);
         }
     }
 
@@ -971,6 +1103,14 @@ public class TileMap : MonoBehaviour
             Tile tile = GetTile(vector.position);
             tile.RemoveArrowHighlightMaterial();
             tile.RemoveUnitMaterial();
+        }
+
+        if (displacedUnitPosition != Vector2.zero)
+        {
+            Tile tile = GetTile(displacedUnitPosition);
+            tile.RemoveArrowHighlightMaterial();
+            tile.RemoveUnitMaterial();
+            displacedUnitPosition = Vector2.zero;
         }
     }
 

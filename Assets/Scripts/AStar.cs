@@ -57,6 +57,16 @@ public class AStarVector
         get { return _withinRange; }
         set { _withinRange = value; }
     }
+
+    /// <summary>
+    /// The id of the pathing result for stitching.
+    /// </summary>
+    private int _pathId = 0;
+    public int pathId
+    {
+        get { return _pathId; }
+        set { _pathId = value; }
+    }
 }
 
 public class Astar

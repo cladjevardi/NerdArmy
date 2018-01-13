@@ -31,6 +31,9 @@ public class Mission : MonoBehaviour
     /// <summary>Movement not yet done.</summary>
     private List<AStarVector> currentPathing = new List<AStarVector>();
 
+    /// <summary>The direction of the current path.</summary>
+    private AStarDirection currentPathingDirection = AStarDirection.NONE;
+
     /// <summary>The currently selected actor.</summary>
     private Actor currentlySelectedActor = null;
 
@@ -71,7 +74,7 @@ public class Mission : MonoBehaviour
     /// <param name="actor">The actor to move.</param>
     /// <param name="end">The end position for the mesh to move towards.</param>
     /// <returns>Coruitine.</returns>
-    private IEnumerator SmoothMovement(Actor actor, Vector3 end, bool withinRange)
+    private IEnumerator SmoothMovement(Actor actor, Vector3 end, bool withinRange, bool isAttacking)
     {
         Debug.LogFormat("Moving to {0}", end.ToString());
 
@@ -81,12 +84,15 @@ public class Mission : MonoBehaviour
         // We need to apply the grid scale to animation.
         Vector3 realEnd = end;
 
+        // Movement Speed.
+        float speed = isAttacking ? actor.speed / 4f : actor.speed;
+
         // While that distance is greater than a very small amount (Epsilon, almost zero):
         while (actor.transform.position != realEnd)
         {
             // Find a new position proportionally closer to the end, based on the moveTime
             Vector2 newPostion = Vector2.MoveTowards(
-                actor.transform.position, end, (1f / actor.speed) * Time.deltaTime);
+                actor.transform.position, end, (1f / speed) * Time.deltaTime);
 
             // Call MovePosition on attached Rigidbody2D and move it to the calculated position.
             actor.transform.position = newPostion;
@@ -369,7 +375,7 @@ public class Mission : MonoBehaviour
     /// <summary>Helper function for dealing damage to an actor.</summary>
     /// <param name="attacker">The unit initiating the attack.</param>
     /// <param name="attacked">The unit recieving the damage.</param>
-    private void ApplyDamage(Actor attacker, Actor attacked)
+    private void ApplyDamage(Actor attacker, Actor attacked, bool displace)
     {
         // Calculate the total damage to deal.
         int damage = (int)Mathf.Clamp(
@@ -379,6 +385,32 @@ public class Mission : MonoBehaviour
         // Apply damage to unit.
         attacked.TakeDamage(damage);
         Debug.LogFormat("Damage dealt: {0}", damage);
+
+        // Apply displacement and damage to collided units.
+        if (displace)
+        {
+            Vector2 end = tileMap.GetNextTile(attacked.transform.position, currentPathingDirection);
+            Actor actor = tileMap.GetActor(end);
+            if (actor != null)
+            {
+                // We have an actor behind the attacked unit. Apply damage to non-owned units.
+                if (actor.owner != attacker.owner)
+                    ApplyDamage(attacker, actor, false);
+            }
+            else
+            {
+                // Push the attacked unit back one tile.
+                Tile tile = tileMap.GetTile(end);
+                if (tile != null && !tile.groundCollision && !tile.trueCollision)
+                    StartCoroutine(SmoothMovement(attacked, end, false, true));
+
+                // Damage anyone behind the first unit.
+                Vector2 end2 = tileMap.GetNextTile(end, currentPathingDirection);
+                Actor actor2 = tileMap.GetActor(end2);
+                if (actor2 != null && actor2.owner != attacker.owner)
+                    ApplyDamage(attacker, actor2, false);
+            }
+        }
 
         // Check if the unit will be dead. Damage is truely dealt
         // after the damage animation is complete.
@@ -393,13 +425,14 @@ public class Mission : MonoBehaviour
         if (actorToAttack != null)
         {
             // Move to the action.
-            StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
+            //StartCoroutine(BattleCamera(Camera.main, currentlySelectedActor, actorToAttack));
 
             // Display attacking animation.
             currentlySelectedActor.SetAnimation(ActorAnimation.ATTACK);
 
             // Deal the damage.
-            ApplyDamage(currentlySelectedActor, actorToAttack);
+            ApplyDamage(currentlySelectedActor, actorToAttack, 
+                currentlySelectedActor.unit.HasPassive(PassiveType.CHARGE));
 
             // Unselect the attacked unit.
             actorToAttack = null;
@@ -438,10 +471,19 @@ public class Mission : MonoBehaviour
                     currentlySelectedActor.SetAnimation(ActorAnimation.WALKING);
                 }
 
+                // Save the current direction.
+                currentPathingDirection = currentPathing[0].direction;
+
                 // Apply that smooth movement.
                 StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position,
-                    actorToAttack == null ? false : currentPathing[0].withinRange));
-                
+                    actorToAttack == null ? false : currentPathing[0].withinRange,
+                    currentPathing[0].pathId == 1 ? true : false));
+
+                // Push actors out of the chargers path.
+                if (currentlySelectedActor.unit.HasPassive(PassiveType.CHARGE) 
+                    && currentPathing[0].withinRange && currentPathing[0].pathId == 1)
+                    ShiftActorsInPath();
+
                 // After were done moving remove the first entry.
                 currentPathing.RemoveAt(0);
             }
@@ -701,6 +743,26 @@ public class Mission : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// Any actors in the charger's path are shifted out of the way.
+    /// </summary>
+    private void ShiftActorsInPath()
+    {
+        foreach (AStarVector path in currentPathing)
+        {
+            Actor pathActor = tileMap.GetActor(path.position);
+            if (path.pathId == 1
+                && pathActor != null
+                && pathActor.owner == currentlySelectedActor.owner)
+            {
+                pathActor.SetAnimation(ActorAnimation.DAMAGE);
+                StartCoroutine(SmoothMovement(pathActor, 
+                    tileMap.GetNextTile(pathActor.transform.position,
+                    tileMap.GetOppositeDirection(path.direction)), false, false));
+            }
+        }
     }
 
     /// <summary>Determine if an attack was issued this game loop.</summary>

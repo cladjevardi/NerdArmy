@@ -16,6 +16,7 @@ public enum ActorAnimation
 
 public enum ActorFacing
 {
+    NONE,
     NORTH,
     EAST,
     SOUTH,

@@ -41,10 +41,20 @@ public class Tile : Mesh2D
     /// <param name="frameId">The frame id to display.</param>
     /// <param name="cellWidth">The width of a cell within the sprite map.</param>
     /// <param name="cellHeight">The height of a cell within the sprite map.</param>
-    public void SetUnitMaterial(int unitId, int frameId, int cellWidth = -1, int cellHeight = -1)
+    /// <param name="facing">The direction to face the image.</param>
+    public void SetUnitMaterial(int unitId, int frameId, int cellWidth = -1, int cellHeight = -1,
+        ActorFacing facing = ActorFacing.NONE)
     {
         SetMaterial(Mesh2DLayer.LAYER_UNITS, unitId, MaterialType.UNIT, cellWidth, cellHeight, frameId, null);
         mesh.SetColor(Mesh2DLayer.LAYER_UNITS, new Color(1f, 1f, 1f, .25f));
+
+        // Flip the material if needed.
+        Mesh2DMaterial material = mesh.GetMaterial(Mesh2DLayer.LAYER_UNITS);
+        if (facing == ActorFacing.EAST)
+            material.flipX = false;
+        if (facing == ActorFacing.WEST)
+            material.flipX = true;
+        mesh.SetMaterial(Mesh2DLayer.LAYER_UNITS, material);
     }
 
     /// <summary>

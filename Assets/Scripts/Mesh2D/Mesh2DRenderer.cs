@@ -257,7 +257,8 @@ public class Mesh2DRenderer : MonoBehaviour
         // The mesh may receive animation updates. Update the material uv map
         // accordingly.
         MeshFilter filter = gameObjects[(int)layer].GetComponent<MeshFilter>();
-        filter.mesh.uv = materials[(int)layer].uv();
+        if (materials[(int)layer] != null)
+            filter.mesh.uv = materials[(int)layer].uv();
     }
 
     /// <summary>
