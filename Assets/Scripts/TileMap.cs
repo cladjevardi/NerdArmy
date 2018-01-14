@@ -474,28 +474,55 @@ public class TileMap : MonoBehaviour
                 // Add north tiles.
                 if (ShouldAdd(north, visited, Owner.NONE, actors, false)
                     && !stopNorth)
+                {
                     visited.Add(new Vector2(north.x, north.y));
+
+                    if (GetActor(north) != null
+                        && GetActor(north).owner != Owner.NONE
+                        && GetActor(north).owner != GetActor(position).owner)
+                        stopNorth = true;
+                }
                 else
                     stopNorth = true;
 
                 // Add east tiles.
                 if (ShouldAdd(east, visited, Owner.NONE, actors, false)
                     && !stopEast)
+                {
                     visited.Add(new Vector2(east.x, east.y));
+
+                    if (GetActor(east) != null
+                        && GetActor(east).owner != Owner.NONE
+                        && GetActor(east).owner != GetActor(position).owner)
+                        stopEast = true;
+                }
                 else
                     stopEast = true;
 
                 // Add south tiles.
                 if (ShouldAdd(south, visited, Owner.NONE, actors, false)
                     && !stopSouth)
+                {
                     visited.Add(new Vector2(south.x, south.y));
+                    if (GetActor(south) != null 
+                        && GetActor(south).owner != Owner.NONE 
+                        && GetActor(south).owner != GetActor(position).owner)
+                        stopSouth = true;
+                }
                 else
                     stopSouth = true;
 
                 // Add west tiles.
                 if (ShouldAdd(west, visited, Owner.NONE, actors, false)
                     && !stopWest)
+                {
                     visited.Add(new Vector2(west.x, west.y));
+
+                    if (GetActor(west) != null 
+                        && GetActor(west).owner != Owner.NONE
+                        && GetActor(west).owner != GetActor(position).owner)
+                        stopWest = true;
+                }
                 else
                     stopWest = true;
             }
