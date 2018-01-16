@@ -475,7 +475,7 @@ public class Mission : MonoBehaviour
                 currentPathingDirection = currentPathing[0].direction;
 
                 // Apply that smooth movement.
-                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].position,
+                StartCoroutine(SmoothMovement(currentlySelectedActor, currentPathing[0].Position(),
                     actorToAttack == null ? false : currentPathing[0].withinRange,
                     currentPathing[0].pathId == 1 ? true : false));
 
@@ -752,7 +752,7 @@ public class Mission : MonoBehaviour
     {
         foreach (AStarVector path in currentPathing)
         {
-            Actor pathActor = tileMap.GetActor(path.position);
+            Actor pathActor = tileMap.GetActor(path.Position());
             if (path.pathId == 1
                 && pathActor != null
                 && pathActor.owner == currentlySelectedActor.owner)
@@ -782,13 +782,13 @@ public class Mission : MonoBehaviour
         {
             // Calculate fuzzy pathing.
             Vector2 bestPosition = actor.transform.position;
-            List<AStarVector> pathing = tileMap.GetBestPath(
+            AStarPath pathing = tileMap.GetBestPath(
                 currentlySelectedActor.transform.position,
                 actor.transform.position, ref bestPosition);
             
             // Track our movement that needs to be applied.
-            if (pathing.Count != 0)
-                currentPathing = pathing;
+            if (pathing.path.Count != 0)
+                currentPathing = pathing.path;
 
             // Queue up our actor to attack once we apply our pathing.
             actorToAttack = actor;
@@ -813,15 +813,21 @@ public class Mission : MonoBehaviour
             && actor == null)
         {
             // Find the nearest path to the tile selected.
-            Astar pathing = new Astar(tileMap,
-                currentlySelectedActor.transform.position,
-                tile.transform.position, currentFaction,
-                currentlySelectedActor.flying);
-            pathing.result.RemoveAt(0); // Ignore first entry.
+            //Astar pathing = new Astar(tileMap,
+            //    currentlySelectedActor.transform.position,
+            //    tile.transform.position, currentFaction,
+            //    currentlySelectedActor.flying);
+            //pathing.result.RemoveAt(0); // Ignore first entry.
+
+            AStar pathing = new AStar(tileMap, currentlySelectedActor);
+            pathing.AddMovementDestination(tile.transform.position);
+            pathing.CalculatePathing();
+            AStarPath path = pathing.GetBestResult();
+            path.path.RemoveAt(0); // Ignore first entry.
 
             // Track our movement that needs to be applied.
-            if (pathing.result.Count != 0)
-                currentPathing = pathing.result;
+            if (path.path.Count > 0)
+                currentPathing = path.path;
 
             // Movement is complete. Remove all current highlights until
             // we reach our destination.

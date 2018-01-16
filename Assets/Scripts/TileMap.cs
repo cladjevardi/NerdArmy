@@ -43,7 +43,7 @@ public class TileMap : MonoBehaviour
     }
 
     /// <summary>The pathing arrow being displayed.</summary>
-    private List<AStarVector> currentArrowPathing = new List<AStarVector>();
+    private AStarPath currentArrowPathing = new AStarPath();
 
     /// <summary>The position of a displaced unit to remove when clearing.</summary>
     private Vector2 displacedUnitPosition = Vector2.zero;
@@ -661,8 +661,11 @@ public class TileMap : MonoBehaviour
     /// <param name="fromPosition">The starting coordinate.</param>
     /// <param name="toPosition">The ending coordinate.</param>
     /// <returns>Returns best pathing.</returns>
-    public List<AStarVector> GetBestPath(Vector2 fromPosition, Vector2 toPosition, ref Vector2 closestPosition)
+    public AStarPath GetBestPath(Vector2 fromPosition, Vector2 toPosition, ref Vector2 closestPosition)
     {
+        if (toPosition.x == 2 && toPosition.y == 3)
+            Debug.Log("Yes");
+
         // Get the actor on fromPosition.
         Actor actor = GetActor(fromPosition);
 
@@ -671,68 +674,11 @@ public class TileMap : MonoBehaviour
         GetClosestEndTile(fromPosition, toPosition, ref closestPosition);
         Debug.LogFormat("Closest end selected {0}.", closestPosition.ToString());
 
-        // Find the best path to the destination.
-        Astar pathing1 = new Astar(this, fromPosition, closestPosition, actor.owner);
-        // Always ignore collision and enemy actors for attacks.
-        Astar pathing2 = new Astar(this, closestPosition, toPosition,
-            Owner.NONE, true);
-
-        // There is no good location within range.
-        if (pathing1.result.Count == 0)
-        {
-            Debug.LogFormat("Best move to {0} from {1} failed.",
-                fromPosition.ToString(), closestPosition.ToString());
-            return new List<AStarVector>();
-        }
-
-        // Closest position equals destination. No need to stitch
-        // Just send the first result.
-        if (closestPosition.x == toPosition.x
-            && closestPosition.y == toPosition.y)
-        {
-            Debug.LogFormat("Closest position and to position match {0}.",
-                closestPosition.ToString());
-            return pathing1.result;
-        }
-        
-        // Stitch the 2 pathings together.
-        byte[] newMask = pathing2.result[0].mask;
-        if (pathing1.result[pathing1.result.Count - 1].mask[0] == 0x1)
-            newMask[0] = 0x1;
-        if (pathing1.result[pathing1.result.Count - 1].mask[1] == 0x1)
-            newMask[1] = 0x1;
-        if (pathing1.result[pathing1.result.Count - 1].mask[2] == 0x1)
-            newMask[2] = 0x1;
-        if (pathing1.result[pathing1.result.Count - 1].mask[3] == 0x1)
-            newMask[3] = 0x1;
-
-        // TODO: Remove the need for this.
-        foreach (AStarVector astar in pathing1.result)
-            astar.withinRange = false;
-        foreach (AStarVector astar in pathing2.result)
-        {
-            astar.pathId = 1;
-            astar.withinRange = false;
-        }
-
-        // Assign the new combined pathing and remove duplicate entry.
-        pathing1.result[pathing1.result.Count - 1].mask = newMask;
-        pathing2.result.RemoveAt(0);
-
-        // Set the within range field.
-        if (actor.unit.HasPassive(PassiveType.CHARGE))
-        {
-            if (pathing2.result.Count > 0) pathing2.result[pathing2.result.Count - 1].withinRange = true;
-            if (pathing2.result.Count > 1) pathing2.result[pathing2.result.Count - 2].withinRange = true;
-        }
-        else
-            pathing1.result[pathing1.result.Count - 1].withinRange = true;
-
-        // Combine the pathing into a giant result.
-        List<AStarVector> result = new List<AStarVector>();
-        result.AddRange(pathing1.result);
-        result.AddRange(pathing2.result);
-        return result;
+        AStar astar = new AStar(this, actor);
+        astar.AddMovementDestination(closestPosition);
+        astar.AddAttackDestination(toPosition);
+        astar.CalculatePathing();
+        return astar.GetBestResult();
     }
 
     /// <summary>
@@ -1030,7 +976,7 @@ public class TileMap : MonoBehaviour
         Owner owner = Owner.NONE, bool canFly = false)
     {
         // Clear any previous path drawn currently.
-        if (currentArrowPathing.Count >= 1)
+        if (currentArrowPathing.path.Count >= 1)
             ClearCurrentPath();
 
         // If we are pointing at ourself, ignore.
@@ -1039,7 +985,9 @@ public class TileMap : MonoBehaviour
 
         // If we are not facing a valid movement tile or attack tile, ignore.
         Tile tile = GetTile(toPosition);
-        if (tile == null)
+        if (tile == null || (!canFly && tile.groundCollision) 
+            || (!tile.movementHighlight && tile.attackHighlight 
+            && GetActor(toPosition) == null))
             return;
 
         // If we don't have an actor in our from position, ignore. Shouldn't happen.
@@ -1059,7 +1007,7 @@ public class TileMap : MonoBehaviour
 
         // Combine the pathing into a giant result.
         Vector2 closestPosition = toPosition;
-        List<AStarVector> result = GetBestPath(fromPosition, toPosition,
+        AStarPath result = GetBestPath(fromPosition, toPosition,
             ref closestPosition);
 
         // Keep track of pathing for future cleanup.
@@ -1070,9 +1018,9 @@ public class TileMap : MonoBehaviour
         bool alreadyDrawn = false;
         AStarVector previousVector = new AStarVector();
         AStarDirection lastDirection = AStarDirection.NONE;
-        foreach (AStarVector vector in result)
+        foreach (AStarVector vector in result.path)
         {
-            Tile aStarTile = GetTile(vector.position);
+            Tile aStarTile = GetTile(vector.Position());
             string mask = BitConverter.ToString(vector.mask, 0);
             aStarTile.SetGridArrowMask(start, mask, color);
             start = false;
@@ -1081,13 +1029,13 @@ public class TileMap : MonoBehaviour
             {
                 // Draw an opaque image of where the actors in the path
                 // of the bear will end up if they are in the bear's path.
-                Actor pathActor = GetActor(vector.position);
+                Actor pathActor = GetActor(vector.Position());
                 if (vector.pathId == 1
                     && pathActor != null
                     && pathActor.owner == fromActor.owner
                     && fromActor.unit.HasPassive(PassiveType.CHARGE))
                 {
-                    SetTileUnitMaterial(previousVector.position, pathActor,
+                    SetTileUnitMaterial(previousVector.Position(), pathActor,
                         ConvertAstarDirectionToActorFacing(vector.direction));
                 }
                 
@@ -1097,7 +1045,7 @@ public class TileMap : MonoBehaviour
                 if (vector.withinRange
                     && !alreadyDrawn)
                 {
-                    SetTileUnitMaterial(vector.position, fromActor,
+                    SetTileUnitMaterial(vector.Position(), fromActor,
                         ConvertAstarDirectionToActorFacing(vector.direction));
                     alreadyDrawn = true;
                     lastDirection = vector.direction;
@@ -1109,25 +1057,28 @@ public class TileMap : MonoBehaviour
         }
 
         // If we displace any unit, we should show a ghost highlight of where its moving.
-        Vector2 nextPosition = GetNextTile(toActor.transform.position, lastDirection);
-        Tile nextTile = GetTile(nextPosition);
-        if (fromActor.unit.HasPassive(PassiveType.CHARGE)
-            && nextTile != null
-            && !nextTile.groundCollision
-            && !nextTile.trueCollision
-            && GetActor(nextPosition) == null)
+        if (toActor != null)
         {
-            displacedUnitPosition = nextPosition;
-            SetTileUnitMaterial(displacedUnitPosition, toActor, toActor.facing);
+            Vector2 nextPosition = GetNextTile(toActor.transform.position, lastDirection);
+            Tile nextTile = GetTile(nextPosition);
+            if (fromActor.unit.HasPassive(PassiveType.CHARGE)
+                && nextTile != null
+                && !nextTile.groundCollision
+                && !nextTile.trueCollision
+                && GetActor(nextPosition) == null)
+            {
+                displacedUnitPosition = nextPosition;
+                SetTileUnitMaterial(displacedUnitPosition, toActor, toActor.facing);
+            }
         }
     }
 
     /// <summary>Clear any arrow pathing being displayed currently.</summary>
     public void ClearCurrentPath()
     {
-        foreach (AStarVector vector in currentArrowPathing)
+        foreach (AStarVector vector in currentArrowPathing.path)
         {
-            Tile tile = GetTile(vector.position);
+            Tile tile = GetTile(vector.Position());
             tile.RemoveArrowHighlightMaterial();
             tile.RemoveUnitMaterial();
         }
