@@ -642,6 +642,7 @@ public class AStar
         }
 
         int lowestCount = int.MaxValue;
+
         foreach (AStarPath path in paths)
         {
             if (path.path.Count < lowestCount)
@@ -660,7 +661,8 @@ public class AStar
     public AStarPath GetBestResult()
     {
         // Return the top result. We do not care about what it is.
-        return results[(int)Random.Range(0, results.Count)];
+        // TODO: return the best result
+        return results[0];
     }
 
     public List<AStarPath> GetTopResults()

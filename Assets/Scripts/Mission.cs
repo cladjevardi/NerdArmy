@@ -533,7 +533,7 @@ public class Mission : MonoBehaviour
 
     private IEnumerator ResetCamera()
     {
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
 
         Vector3 newPosition;
 

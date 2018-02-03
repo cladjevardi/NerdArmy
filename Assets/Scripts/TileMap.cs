@@ -615,7 +615,6 @@ public class TileMap : MonoBehaviour
                     attackTiles.Add(tile);
             }
         }
-
         return attackTiles;
     }
 
@@ -663,9 +662,6 @@ public class TileMap : MonoBehaviour
     /// <returns>Returns best pathing.</returns>
     public AStarPath GetBestPath(Vector2 fromPosition, Vector2 toPosition, ref Vector2 closestPosition)
     {
-        if (toPosition.x == 2 && toPosition.y == 3)
-            Debug.Log("Yes");
-
         // Get the actor on fromPosition.
         Actor actor = GetActor(fromPosition);
 
