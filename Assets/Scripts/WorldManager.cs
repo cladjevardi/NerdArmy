@@ -18,6 +18,14 @@ public class WorldManager : MonoBehaviour
     /// <summary>The entire map and list of units and enemies.</summary>
     private GameObject mission = null;
 
+    /// <summary>The menu and world selector.</summary>
+    private GameObject menu = null;
+
+    private void LoadMenu()
+    {
+        menu.GetComponent<Menu>();
+    }
+
     private void LoadLevel()
     {
         // Tell TileMap to generate the level.
@@ -34,21 +42,29 @@ public class WorldManager : MonoBehaviour
 
         // Give the player a main character to start the game.
         roster.Add(new Unit("main_character"));
-        roster.Add(new Unit("bear"));
+        //roster.Add(new Unit("bear"));
+
+        // Load the menu
+        LoadMenu();
 
         // Start the game off at 1-1.
-        world = 1;
-        level = 4;
+        //world = 0;
+        //level = 0;
 
         // TODO: Display some sort of world selection.
-        LoadLevel();
+        //LoadLevel();
     }
 
     private void Awake()
     {
         // Create the TileMap object.
-        mission = new GameObject("Mission");
-        mission.transform.SetParent(transform);
-        mission.AddComponent<Mission>();
+        //mission = new GameObject("Mission");
+        //mission.transform.SetParent(transform);
+        //mission.AddComponent<Mission>();
+
+        // Create the Menu object.
+        menu = new GameObject("Menu");
+        menu.transform.SetParent(transform);
+        menu.AddComponent<Menu>();
     }
 }

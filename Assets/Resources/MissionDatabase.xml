@@ -1,4 +1,8 @@
 <mission_database>
+  <world id="0">
+    <mission_schematic name="0-0" tile_width="8" tile_height="3">
+    </mission_schematic>
+  </world>
   <world id="1">
     <mission_schematic name="1-1" tile_width="8" tile_height="3">
       <tiles>

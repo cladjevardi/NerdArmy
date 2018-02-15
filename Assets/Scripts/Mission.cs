@@ -1104,7 +1104,7 @@ public class Mission : MonoBehaviour
         Canvas can = canvas.AddComponent<Canvas>();
         can.renderMode = RenderMode.ScreenSpaceOverlay;
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-
+        
         // Create the sidebar to contain the buttons.
         sideBar = new GameObject("Sidebar");
         sideBar.transform.SetParent(canvas.gameObject.transform);
@@ -1116,6 +1116,7 @@ public class Mission : MonoBehaviour
         sidebarRect.anchorMax = new Vector2(1, 1);
         sidebarRect.anchoredPosition = new Vector2(-64, 0);
         sidebarRect.sizeDelta = new Vector2(128, 0);
+        
     }
 
     /// <summary>The game loop for a mission.</summary>
