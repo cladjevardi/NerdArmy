@@ -8,6 +8,7 @@ public enum MaterialType
     TILE,
     UNIT,
     EFFECT,
+    UI,
 }
 
 /// <summary>
@@ -20,60 +21,43 @@ public enum Mesh2DLayer
     LAYER_INVISIBLE = 0,
 
     /// <summary>
-    /// The layer for all units hidden below the
-    /// floor.
-    /// </summary>
+    /// The layer for all units hidden below the floor.</summary>
     LAYER_BURROWED,
 
     /// <summary>The layer for all floor tiles.</summary>
     LAYER_FLOOR,
 
     /// <summary>
-    /// The layer of the grid. Or special effects.
-    /// </summary>
+    /// The layer of the grid. Or special effects.</summary>
     LAYER_GRID,
 
     /// <summary>
-    /// The layer for objects, items, or floor tiles with
-    /// transparency.
-    /// </summary>
+    /// The layer for objects, items, or floor tiles with transparency.</summary>
     LAYER_OBJECT,
 
     /// <summary>The layer for all units.</summary>
     LAYER_UNITS,
 
-    /// <summary>
-    /// The layer that can hide ground units. Has transparency and
-    /// adjustable alpha when gaining vision underneath.
-    /// </summary>
+    /// <summary>The layer that can hide ground units. Has transparency and 
+    /// adjustable alpha when gaining vision underneath.</summary>
     LAYER_ROOF,
 
     /// <summary>
-    /// The layer that flying units are on. These units appear above
-    /// trees and roofs.
-    /// </summary>
+    /// The layer that flying units are on. These units appear above trees and roofs.</summary>
     LAYER_FLYINGUNITS,
 
-    /// <summary>
-    /// The layers that displays health.
-    /// </summary>
+    /// <summary>The layers that displays health.</summary>
     LAYER_HEALTH_BASE,
     LAYER_HEALTH_DAMAGED,
     LAYER_HEALTH_REMAINING,
 
-    /// <summary>
-    /// The layer that displays the bomb attack used by the bomber.
-    /// </summary>
+    /// <summary>The layer that displays the bomb attack used by the bomber.</summary>
     LAYER_EMP,
 
-    /// <summary>
-    /// The layer that buffs are rendered on.
-    /// </summary>
+    /// <summary>The layer that buffs are rendered on.</summary>
     LAYER_BUFFS,
 
-    /// <summary>
-    /// The layer that displays damage.
-    /// </summary>
+    /// <summary>The layer that displays damage.</summary>
     LAYER_DAMAGE,
 
     /// <summary>The layer for red tile highlighted effects.</summary>
@@ -85,10 +69,11 @@ public enum Mesh2DLayer
     /// <summary>The layer for astar pathing arrow effects.</summary>
     LAYER_ARROW_HIGHLIGHTS,
 
-    /// <summary>
-    /// The layer for the attack marker.
-    /// </summary>
+    /// <summary>The layer for the attack marker.</summary>
     LAYER_ATTACK_MARKER,
+
+    /// <summary>The layer for the buttons.</summary>
+    LAYER_BUTTON,
 
     /// <summary>Total count of layers.</summary>
     LAYER_COUNT,
@@ -251,6 +236,8 @@ public class Mesh2DMaterial
                 return GameManager.instance.unitMaterials[id];
             case MaterialType.EFFECT:
                 return GameManager.instance.effectMaterials[id];
+            case MaterialType.UI:
+                return GameManager.instance.uiMaterials[id];
 
             // We should never reach here is IsValid is doing its
             // job properly.
@@ -423,6 +410,8 @@ public class Mesh2DMaterial
         if (type == MaterialType.UNIT)
             arrayLength = GameManager.instance.unitMaterials.Length;
         if (type == MaterialType.EFFECT)
+            arrayLength = GameManager.instance.effectMaterials.Length;
+        if (type == MaterialType.UI)
             arrayLength = GameManager.instance.effectMaterials.Length;
 
         // The id cannot exceed the bounds of the array nor be assigned to none.

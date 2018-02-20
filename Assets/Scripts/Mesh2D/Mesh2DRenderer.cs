@@ -310,6 +310,8 @@ public class Mesh2DRenderer : MonoBehaviour
                 return -0.014f;
             case Mesh2DLayer.LAYER_ATTACK_MARKER:
                 return -0.015f;
+            case Mesh2DLayer.LAYER_BUTTON:
+                return -0.016f;
             default:
                 return 0f;
         }

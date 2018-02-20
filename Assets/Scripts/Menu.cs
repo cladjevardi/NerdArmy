@@ -18,15 +18,22 @@ public class Menu : MonoBehaviour
     /// <summary>The playDemoButton for the menu UI.</summary>
     private GameObject playDemoButton = null;
 
+    /// <summary>List of all the game objects to be destroyed upon loading a level</summary>
+    private List<GameObject> gameObjects = new List<GameObject>();
+
     // Use this for initialization
     void Awake ()
     {
+        // Clear any previously existing objects
+        gameObjects.Clear();
+
         // Setup the Canvas for drawing UI elements.
         canvas = new GameObject("Canvas");
         canvas.transform.SetParent(transform);
         Canvas can = canvas.AddComponent<Canvas>();
         can.renderMode = RenderMode.ScreenSpaceOverlay;
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        gameObjects.Add(canvas);
 
         // Create the Menu Background to contain the buttons.
         menuBackground = new GameObject("Menu Background");
@@ -36,16 +43,18 @@ public class Menu : MonoBehaviour
         RectTransform menuBackgroundRect = menuBackgroundImage.GetComponent<RectTransform>();
         menuBackgroundRect.anchoredPosition = new Vector2(0, 0);
         menuBackgroundRect.sizeDelta = new Vector2(768, 768);
+        gameObjects.Add(menuBackground);
 
         // Create the Menu Title.
-        menuTitle = new GameObject("menuTitle");
+        menuTitle = new GameObject("Menu Title");
         menuTitle.transform.SetParent(canvas.gameObject.transform);
         Image menuTitleImage = menuTitle.AddComponent<Image>();
         menuTitleImage.material = GameManager.instance.uiMaterials[1];
         RectTransform menuTitleRect = menuTitleImage.GetComponent<RectTransform>();
         menuTitleRect.anchoredPosition = new Vector2(0, 120);
         menuTitleRect.sizeDelta = new Vector2(557, 191);
-
+        gameObjects.Add(menuTitle);
+        
         /*
         // Create the Play Demo Button.
         playDemoButton = new GameObject("Play Demo playDemoButton");
@@ -58,32 +67,48 @@ public class Menu : MonoBehaviour
         RectTransform playDemoButtonRect = playDemoButtonImage.GetComponent<RectTransform>();
         playDemoButtonRect.anchoredPosition = new Vector2(-170, -130);
         playDemoButtonRect.sizeDelta = new Vector2(320, 215);
+        gameObjects.Add(playDemoButton);
         */
 
         // Create the Play Demo Button
-        UiButton(GameManager.instance.uiMaterials[4], 
-            new Vector2(320, 215), new Vector2(-170, -130), canvas);
+        UiButton("Play Demo", GameManager.instance.uiMaterials[4], 
+            new Vector2(320, 112.5f), new Vector2(-170, -130), gameObjects);
+
+        // Create the Options Button
+        UiButton("Options", GameManager.instance.uiMaterials[3],
+            new Vector2(196, 64), new Vector2(220, -190), gameObjects);
+
+        // Create the Mia's Story Button
+        UiButton("Mia's Story", GameManager.instance.uiMaterials[2],
+            new Vector2(321, 82), new Vector2(170, -105), gameObjects);
     }
 
     /// <summary>Create a UI button</summary>
+    /// <param name="name">The name of the button.</param>
     /// <param name="material">The material for the button.</param>
     /// <param name="size">The Vector2 width and height of the button.</param>
     /// <param name="position">The Vector2 x and y anchor position of the button.</param>
-    /// <param name="canvas">The canvas object to create the button on.</param>
-    /// <returns>Returns whether the update loop should process the current frame as handled.</returns>
-    public static UnityEngine.UI.Button UiButton(Material material, 
-        Vector2 size, Vector2 position, GameObject canvas)
+    /// <param name="gameObjects">The list of all game objects, used to find the canvas
+    /// to create the buttons on and to add the button to the list of game objects.</param>
+    /// <returns>Returns the button that is created from the parameters.</returns>
+    public static UnityEngine.UI.Button UiButton(String name, Material material, 
+        Vector2 size, Vector2 position, List<GameObject> gameObjects)
     {
-        GameObject gameObject = new GameObject("Textured button (" + material.name + ")");
+        GameObject gameObject = new GameObject(name + " Button");
 
         Image image = gameObject.AddComponent<Image>();
         image.material = material;
 
         UnityEngine.UI.Button button = gameObject.AddComponent<UnityEngine.UI.Button>();
-        gameObject.transform.SetParent(canvas.transform, false);
+        gameObject.transform.SetParent(gameObjects[0].transform, false);
 
         image.rectTransform.sizeDelta = size;
         image.rectTransform.anchoredPosition = position;
+
+        // Add the button game object to the list
+        gameObjects.Add(gameObject);
+
+        // TODO: Make the button work
 
         return button;
     }

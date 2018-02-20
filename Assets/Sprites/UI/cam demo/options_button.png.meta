@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: 1d1eea33648ad1a4f99f7b2dd01012cf
-timeCreated: 1518822967
+guid: 1c377b39e21ab4340a5374e9bf298dae
+timeCreated: 1518838361
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: options button_0
+    21300000: options_button_0
+    21300002: options_button_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -92,11 +93,25 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: options button_0
+      name: options_button_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
+        y: 132
+        width: 392
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: options_button_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
         width: 392
         height: 132
       alignment: 0

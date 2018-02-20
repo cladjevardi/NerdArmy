@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: 1d31cb657b0226c49a7aef4a3967a491
-timeCreated: 1518822932
+guid: 87ae8b18488a0264aa49f7c4f10e95a6
+timeCreated: 1518838393
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: mia's story button_0
+    21300000: play_demo_button_0
+    21300002: play_demo_button_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -92,13 +93,27 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mia's story button_0
+      name: play_demo_button_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 160
-        width: 642
-        height: 164
+        y: 268
+        width: 766
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: play_demo_button_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 766
+        height: 268
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
