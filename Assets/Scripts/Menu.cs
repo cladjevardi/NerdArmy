@@ -36,7 +36,7 @@ public class Menu : MonoBehaviour
         gameObjects.Add(canvas);
 
         // Create the Menu Background to contain the buttons.
-        menuBackground = new GameObject("Menu Background");
+        menuBackground = new GameObject("Menu_Background");
         menuBackground.transform.SetParent(canvas.gameObject.transform);
         Image menuBackgroundImage = menuBackground.AddComponent<Image>();
         menuBackgroundImage.material = GameManager.instance.uiMaterials[5];
@@ -46,7 +46,7 @@ public class Menu : MonoBehaviour
         gameObjects.Add(menuBackground);
 
         // Create the Menu Title.
-        menuTitle = new GameObject("Menu Title");
+        menuTitle = new GameObject("Menu_Title");
         menuTitle.transform.SetParent(canvas.gameObject.transform);
         Image menuTitleImage = menuTitle.AddComponent<Image>();
         menuTitleImage.material = GameManager.instance.uiMaterials[1];
@@ -71,16 +71,16 @@ public class Menu : MonoBehaviour
         */
 
         // Create the Play Demo Button
-        UiButton("Play Demo", GameManager.instance.uiMaterials[4], 
-            new Vector2(320, 112.5f), new Vector2(-170, -130), gameObjects);
+        UiButton("Play_Demo", GameManager.instance.uiMaterials[4], 
+            new Vector2(348.18f, 121.18f), new Vector2(-160, -64), gameObjects);
 
         // Create the Options Button
-        UiButton("Options", GameManager.instance.uiMaterials[3],
-            new Vector2(196, 64), new Vector2(220, -190), gameObjects);
+        UiButton("Menu_Options", GameManager.instance.uiMaterials[3],
+            new Vector2(178.18f, 60), new Vector2(230, -120), gameObjects);
 
         // Create the Mia's Story Button
-        UiButton("Mia's Story", GameManager.instance.uiMaterials[2],
-            new Vector2(321, 82), new Vector2(170, -105), gameObjects);
+        UiButton("Mia's_Story", GameManager.instance.uiMaterials[2],
+            new Vector2(291.81f, 74.54f), new Vector2(175, -40), gameObjects);
     }
 
     /// <summary>Create a UI button</summary>
@@ -96,8 +96,11 @@ public class Menu : MonoBehaviour
     {
         GameObject gameObject = new GameObject(name + " Button");
 
+        // Load the button sprite sheet that appears in the Resources/Demo folder
+        Sprite[] spriteSheetSprites = Resources.LoadAll<Sprite>("Demo/" + name);
+
         Image image = gameObject.AddComponent<Image>();
-        image.material = material;
+        image.sprite = spriteSheetSprites[0];
 
         UnityEngine.UI.Button button = gameObject.AddComponent<UnityEngine.UI.Button>();
         gameObject.transform.SetParent(gameObjects[0].transform, false);

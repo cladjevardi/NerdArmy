@@ -59,8 +59,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: c7d17f2286f4dff47b1cb499f7d2ca83, type: 2}
   - {fileID: 2100000, guid: 5a5597d5cbd11a74e9f323ab884d29e9, type: 2}
   - {fileID: 2100000, guid: eeaaaad1b418eb148822293b4b33b9af, type: 2}
-  - {fileID: 2100000, guid: 38a846db1354c0a41b5ccff92c23801f, type: 2}
   - {fileID: 2100000, guid: df73faa404ec10b4fa4c9e407359ae48, type: 2}
+  - {fileID: 2100000, guid: 5557e8a60752d50478e66719a5165edf, type: 2}
   - {fileID: 2100000, guid: 5a22f64ec6549294b8429ab4a065c215, type: 2}
   - {fileID: 2100000, guid: 354c1dfa7aba6734892d0fedc1f33d59, type: 2}
   - {fileID: 2100000, guid: 4b297af1ae538b54c902e6001181aa86, type: 2}
@@ -80,4 +80,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: c0aea2f849b6f49478c8bfaf9f6cb877, type: 2}
   uiMaterials:
   - {fileID: 2100000, guid: da5c8ddc8bf73734598f0ada7fa0dd37, type: 2}
+  - {fileID: 2100000, guid: a4c32ef9eaa96f74a8359a592e9af14d, type: 2}
+  - {fileID: 2100000, guid: 4cc10473f910c314c9cdc6fb4458c52e, type: 2}
+  - {fileID: 2100000, guid: 7b7d92c620e07f84bac6c3bc2252b44d, type: 2}
+  - {fileID: 2100000, guid: 28cfac48f2dee234091e4f96d52904ee, type: 2}
+  - {fileID: 2100000, guid: d6b8f7f971ea3b042815cb9f343d99f3, type: 2}
   gridScale: 1

@@ -412,7 +412,7 @@ public class Mesh2DMaterial
         if (type == MaterialType.EFFECT)
             arrayLength = GameManager.instance.effectMaterials.Length;
         if (type == MaterialType.UI)
-            arrayLength = GameManager.instance.effectMaterials.Length;
+            arrayLength = GameManager.instance.uiMaterials.Length;
 
         // The id cannot exceed the bounds of the array nor be assigned to none.
         return id < arrayLength
