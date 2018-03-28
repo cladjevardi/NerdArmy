@@ -8,6 +8,8 @@ using UnityEditor.Events;
 
 public class Menu : MonoBehaviour
 {
+    private WorldManager world = null;
+
     /// <summary>The canvas for UI.</summary>
     private GameObject canvas = null;
 
@@ -73,15 +75,18 @@ public class Menu : MonoBehaviour
         */
 
         // Create the Play Demo Button.
-        UiButton("Play_Demo", GameManager.instance.uiMaterials[4], 
+        Button playDemoButton = UiButton("Play_Demo", GameManager.instance.uiMaterials[4], 
             new Vector2(348.18f, 121.18f), new Vector2(-160, -64), gameObjects);
+        // TODO: Make the button do what it's supposed to do.
+        UnityAction action = new UnityAction(PlayDemo);
+        UnityEventTools.AddPersistentListener(playDemoButton.onClick, action);
 
         // Create the Options Button.
-        UiButton("Menu_Options", GameManager.instance.uiMaterials[3],
+        Button menuOptionsButton = UiButton("Menu_Options", GameManager.instance.uiMaterials[3],
             new Vector2(178.18f, 60), new Vector2(230, -120), gameObjects);
 
         // Create the Mia's Story Button.
-        UiButton("Mia's_Story", GameManager.instance.uiMaterials[2],
+        Button miasStoryButton = UiButton("Mia's_Story", GameManager.instance.uiMaterials[2],
             new Vector2(291.81f, 74.54f), new Vector2(175, -40), gameObjects);
     }
 
@@ -113,16 +118,19 @@ public class Menu : MonoBehaviour
         // Add button component.
         Button button = gameObject.AddComponent<Button>();
 
-        // TODO: Make the button do what it's supposed to do.
-        UnityAction action = new UnityAction(HandleClick);
-        UnityEventTools.AddPersistentListener(button.onClick, action);
-
         // Add the button game object to the list.
         gameObjects.Add(gameObject);
 
-        Debug.Log("You have created the button.");
-
         return button;
+    }
+    
+    public void PlayDemo()
+    {
+        foreach (GameObject g in gameObjects)
+            Destroy(g);
+        WorldManager.instance.world = 1;
+        WorldManager.instance.level = 1;
+        WorldManager.instance.LoadLevel();
     }
 
     public void HandleClick()

@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class WorldManager : MonoBehaviour
 {
+    /// <summary>
+    /// The static instance of the world manager. Allows other scripts to
+    /// reference it.
+    /// </summary>
+    public static WorldManager instance = null;
+
     /// <summary>The world of the current mission. Tied to a tilemap theme.</summary>
     public int world = 0;
 
@@ -21,12 +27,12 @@ public class WorldManager : MonoBehaviour
     /// <summary>The menu and world selector.</summary>
     private GameObject menu = null;
 
-    private void LoadMenu()
+    public void LoadMenu()
     {
         menu.GetComponent<Menu>();
     }
 
-    private void LoadLevel()
+    public void LoadLevel()
     {
         // Tell TileMap to generate the level.
         MissionSchematic missionSchematic = missionDatabase.GetMission(world, level);
@@ -57,10 +63,19 @@ public class WorldManager : MonoBehaviour
 
     private void Awake()
     {
+        // Keep track of our singleton instance
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+
+        // Reloading scene will not trigger the world manager to be destroyed.
+        DontDestroyOnLoad(gameObject);
+
         // Create the TileMap object.
-        //mission = new GameObject("Mission");
-        //mission.transform.SetParent(transform);
-        //mission.AddComponent<Mission>();
+        mission = new GameObject("Mission");
+        mission.transform.SetParent(transform);
+        mission.AddComponent<Mission>();
 
         // Create the Menu object.
         menu = new GameObject("Menu");
