@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,17 @@ public class GameManager : MonoBehaviour
     {
         get { return _worldManager; }
         internal set { _worldManager = value; }
+    }
+
+    /// <summary>
+    /// The event system for the game. This class can be invoked through
+    /// GameManager.instance.eventSystem.
+    /// </summary>
+    private GameObject _eventSystem = null;
+    public GameObject eventSystem
+    {
+        get { return _eventSystem; }
+        internal set { _eventSystem = value; }
     }
 
     /// <summary>
@@ -94,6 +106,14 @@ public class GameManager : MonoBehaviour
             worldManager = new GameObject("WorldManager");
             worldManager.transform.SetParent(transform);
             worldManager.AddComponent<WorldManager>();
+        }
+
+        if (eventSystem == null)
+        {
+            eventSystem = new GameObject("EventSystem");
+            eventSystem.transform.SetParent(transform);
+            eventSystem.AddComponent<EventSystem>();
+            eventSystem.AddComponent<StandaloneInputModule>();
         }
     }
 }

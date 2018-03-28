@@ -48,8 +48,8 @@ public class WorldManager : MonoBehaviour
         LoadMenu();
 
         // Start the game off at 1-1.
-        //world = 0;
-        //level = 0;
+        world = 1;
+        level = 1;
 
         // TODO: Display some sort of world selection.
         //LoadLevel();
